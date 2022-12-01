@@ -6,13 +6,13 @@ import { MoonIcon, SunIcon } from "@heroicons/react/24/outline";
 import type { UserPreferences } from "@prisma/client";
 import toast from "react-hot-toast";
 import useSWR from "swr";
+import Link from "next/link";
 
 interface PreferenceResponse {
   preferences: UserPreferences;
 }
 
-const classNames = (...classes) => classes.filter(Boolean).join(" ");
-const fetcher = (...args) => fetch(...args).then((res) => res.json());
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 const NavBar = () => {
   const { data: session } = useSession();
@@ -46,9 +46,9 @@ const NavBar = () => {
   return (
     <header className="flex items-center justify-between max-w-3xl mx-auto pt-6 w-full">
       <div>
-        <a href="/app">
+        <Link href="/app">
           <h1 className="font-[Chewy] text-gray-800 text-2xl">airproxy</h1>
-        </a>
+        </Link>
       </div>
 
       <div className="flex items-center gap-3">
@@ -88,10 +88,9 @@ const NavBar = () => {
                 {({ active }) => (
                   <a
                     href="#"
-                    className={classNames(
-                      active ? "bg-gray-100" : "",
-                      "block px-4 py-2 text-sm text-gray-700"
-                    )}
+                    className={`block px-4 py-2 text-sm text-gray-700 ${
+                      active ? "bg-gray-100" : ""
+                    }`}
                   >
                     Your Profile
                   </a>
@@ -101,10 +100,9 @@ const NavBar = () => {
                 {({ active }) => (
                   <a
                     href="#"
-                    className={classNames(
-                      active ? "bg-gray-100" : "",
-                      "block px-4 py-2 text-sm text-gray-700"
-                    )}
+                    className={`block px-4 py-2 text-sm text-gray-700 ${
+                      active ? "bg-gray-100" : ""
+                    }`}
                   >
                     Billing
                   </a>
@@ -114,10 +112,9 @@ const NavBar = () => {
                 {({ active }) => (
                   <a
                     href="#"
-                    className={classNames(
-                      active ? "bg-gray-100" : "",
-                      "block px-4 py-2 text-sm text-gray-700"
-                    )}
+                    className={`block px-4 py-2 text-sm text-gray-700 ${
+                      active ? "bg-gray-100" : ""
+                    }`}
                   >
                     Settings
                   </a>
@@ -127,10 +124,9 @@ const NavBar = () => {
                 {({ active }) => (
                   <a
                     href="#"
-                    className={classNames(
-                      active ? "bg-gray-100" : "",
-                      "block px-4 py-2 text-sm text-gray-700"
-                    )}
+                    className={`block px-4 py-2 text-sm text-gray-700 ${
+                      active ? "bg-gray-100" : ""
+                    }`}
                   >
                     API
                   </a>
@@ -140,10 +136,9 @@ const NavBar = () => {
                 {({ active }) => (
                   <button
                     onClick={() => signOut()}
-                    className={classNames(
-                      active ? "bg-gray-100" : "",
-                      "w-full text-left block px-4 py-2 text-sm text-gray-700"
-                    )}
+                    className={`w-full text-left block px-4 py-2 text-sm text-gray-700 ${
+                      active ? "bg-gray-100" : ""
+                    }`}
                   >
                     Sign out
                   </button>

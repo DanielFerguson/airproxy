@@ -10,6 +10,7 @@
 - [ ] Setup checkout link
 - [ ] Create callback function for stripe
 - [ ] Create subscriptions table
+
 - [ ] Add rate limiter
 
 - [ ] Create home page

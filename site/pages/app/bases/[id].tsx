@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import Head from "next/head";
 import toast, { Toaster } from "react-hot-toast";
 import NavBar from "../../../components/NavBar";
-import useSWR, { mutate } from "swr";
+import useSWR from "swr";
 import { Prisma } from "@prisma/client";
 import StatCard from "../../../components/StatCard";
 import {
@@ -12,8 +12,6 @@ import {
   ClockIcon,
   InboxIcon,
   PauseIcon,
-  PencilIcon,
-  PencilSquareIcon,
   PhotoIcon,
   PlayIcon,
   QuestionMarkCircleIcon,
@@ -21,12 +19,8 @@ import {
   Square2StackIcon,
   Squares2X2Icon,
   ViewColumnsIcon,
-  CheckIcon,
-  ChevronUpDownIcon,
 } from "@heroicons/react/20/solid";
 import { Tooltip } from "react-tippy";
-import { Fragment, useState } from "react";
-import { Listbox, Transition } from "@headlessui/react";
 
 type Base = Prisma.BaseGetPayload<{
   include: {
@@ -42,7 +36,7 @@ interface BaseResponse {
   base: Base;
 }
 
-const fetcher = (...args) => fetch(...args).then((res) => res.json());
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
 const copyToClipboard = (value: string) => {
   toast.success("Copied API URL to clipboard!");
   navigator.clipboard.writeText(value);
@@ -79,9 +73,6 @@ function toTitleCase(str: string) {
     return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
   });
 }
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
 
 // !DEBUG
 const stats = [
@@ -90,7 +81,6 @@ const stats = [
   { name: "Customers", stat: "24.4K" },
 ];
 
-// !DEBUG
 const ttlOptions = [
   { name: "10m", seconds: 600 },
   { name: "15m", seconds: 900 },
@@ -366,6 +356,7 @@ const Page = () => {
                                   key={table.views[0].id}
                                   className="inline-flex items-center rounded bg-indigo-100 px-2 py-0.5 text-xs font-medium text-indigo-800"
                                 >
+                                  {/* @ts-ignore */}
                                   <Tooltip
                                     title={`${toTitleCase(
                                       table.views[0].type
@@ -432,6 +423,7 @@ const Page = () => {
                                   onClick={() => console.log("TODO")}
                                   className="text-indigo-600 hover:text-indigo-900"
                                 >
+                                  {/* @ts-ignore */}
                                   <Tooltip
                                     title="Refresh data"
                                     position="top"
@@ -455,6 +447,7 @@ const Page = () => {
                                       : "text-gray-500"
                                   }`}
                                 >
+                                  {/* @ts-ignore */}
                                   <Tooltip
                                     title={
                                       !baseResponse.base.active
@@ -477,6 +470,7 @@ const Page = () => {
                                   onClick={() => copyToClipboard(`TODO`)}
                                   className="text-indigo-600 hover:text-indigo-900"
                                 >
+                                  {/* @ts-ignore */}
                                   <Tooltip
                                     title="Copy the API URL"
                                     position="top"

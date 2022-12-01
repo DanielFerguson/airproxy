@@ -40,7 +40,7 @@ interface BaseResponse {
   bases: Base[];
 }
 
-const fetcher = (...args) => fetch(...args).then((res) => res.json());
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 // !DEBUG
 const data = [
@@ -142,6 +142,7 @@ export default function Page() {
               <a
                 href="https://airtable.com/create/tokens"
                 target="_blank"
+                rel="noreferrer"
                 className="text-indigo-700"
               >
                 available here.
@@ -284,6 +285,7 @@ export default function Page() {
                             </Link>
                             <div>
                               {base.active ? (
+                                // @ts-ignore
                                 <Tooltip
                                   title="Accessible via API"
                                   position="top"
@@ -292,6 +294,7 @@ export default function Page() {
                                   <CheckCircleIcon className="h-5 w-5 text-green-700" />
                                 </Tooltip>
                               ) : (
+                                // @ts-ignore
                                 <Tooltip
                                   title="Inaccessible via API"
                                   position="top"
@@ -307,7 +310,7 @@ export default function Page() {
                               <b>{base.tables.length}</b> tables
                             </li>
                             <li>
-                              Updated{" "}
+                              Updated {/* @ts-ignore */}
                               <Tooltip
                                 title="Updated by TTL"
                                 position="top"
@@ -320,6 +323,7 @@ export default function Page() {
                           </ul>
                           <div className="flex justify-end gap-x-3 mt-5">
                             <button onClick={() => toggleBaseStatus(base)}>
+                              {/* @ts-ignore */}
                               <Tooltip
                                 title={
                                   base.active
