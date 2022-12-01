@@ -62,7 +62,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   const { action } = JSON.parse(req.body);
 
-  if (!action || action !== "TOGGLE_STATUS") {
+  if (
+    !action ||
+    (action !== "TOGGLE_STATUS" && action !== "UPDATE_TABLE_TTL")
+  ) {
     res.status(400).json({
       message: "`action` is missing from the request.",
     });
@@ -82,6 +85,27 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       },
       data: {
         active: enabled,
+      },
+    });
+
+    res.status(200).json({
+      message: "Status is now active.",
+    });
+  }
+
+  //
+  // Update a tables TTL
+  //
+
+  if (action === "UPDATE_TABLE_TTL" && req.method === "POST") {
+    const { ttl } = JSON.parse(req.body);
+
+    await prisma.table.update({
+      where: {
+        id,
+      },
+      data: {
+        ttl: parseInt(ttl),
       },
     });
 

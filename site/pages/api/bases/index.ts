@@ -40,6 +40,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             id: true,
             name: true,
             views: true,
+            ttl: true,
           },
         },
       },

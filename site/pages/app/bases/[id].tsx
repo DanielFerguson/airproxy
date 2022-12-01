@@ -8,14 +8,25 @@ import StatCard from "../../../components/StatCard";
 import {
   ArrowPathIcon,
   ArrowTrendingUpIcon,
-  HomeIcon,
+  CalendarDaysIcon,
+  ClockIcon,
+  InboxIcon,
   PauseIcon,
   PencilIcon,
   PencilSquareIcon,
+  PhotoIcon,
   PlayIcon,
+  QuestionMarkCircleIcon,
   ShareIcon,
+  Square2StackIcon,
+  Squares2X2Icon,
+  ViewColumnsIcon,
+  CheckIcon,
+  ChevronUpDownIcon,
 } from "@heroicons/react/20/solid";
 import { Tooltip } from "react-tippy";
+import { Fragment, useState } from "react";
+import { Listbox, Transition } from "@headlessui/react";
 
 type Base = Prisma.BaseGetPayload<{
   include: {
@@ -36,12 +47,59 @@ const copyToClipboard = (value: string) => {
   toast.success("Copied API URL to clipboard!");
   navigator.clipboard.writeText(value);
 };
+const viewTypeIcon = (type: string): JSX.Element => {
+  switch (type) {
+    case "grid":
+      return <Squares2X2Icon className="h-3 w-3 mr-1.5" />;
+
+    case "form":
+      return <InboxIcon className="h-3 w-3 mr-1.5" />;
+
+    case "calendar":
+      return <CalendarDaysIcon className="h-3 w-3 mr-1.5" />;
+
+    case "gallery":
+      return <PhotoIcon className="h-3 w-3 mr-1.5" />;
+
+    case "kanban":
+      return <ViewColumnsIcon className="h-3 w-3 mr-1.5" />;
+
+    case "timeline":
+      return <ClockIcon className="h-3 w-3 mr-1.5" />;
+
+    case "block":
+      return <Square2StackIcon className="h-3 w-3 mr-1.5" />;
+
+    default:
+      return <QuestionMarkCircleIcon className="h-3 w-3 mr-1.5" />;
+  }
+};
+function toTitleCase(str: string) {
+  return str.replace(/\w\S*/g, function (txt) {
+    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+  });
+}
+function classNames(...classes) {
+  return classes.filter(Boolean).join(" ");
+}
 
 // !DEBUG
 const stats = [
   { name: "Total Requests", stat: "171.4k" },
   { name: "Egress", stat: "58.9GB" },
   { name: "Customers", stat: "24.4K" },
+];
+
+// !DEBUG
+const ttlOptions = [
+  { name: "10m", seconds: 600 },
+  { name: "15m", seconds: 900 },
+  { name: "30m", seconds: 1800 },
+  { name: "1h", seconds: 3600 },
+  { name: "4h", seconds: 14400 },
+  { name: "12h", seconds: 43200 },
+  { name: "1d", seconds: 86400 },
+  { name: "1w", seconds: 604800 },
 ];
 
 const Page = () => {
@@ -127,6 +185,26 @@ const Page = () => {
     await mutate();
   };
 
+  const updateTableTtl = async (
+    ttl: string,
+    tableId: string,
+    tableName: string
+  ) => {
+    await toast.promise(
+      fetch(`/api/tables/${tableId}`, {
+        method: "POST",
+        body: JSON.stringify({ action: "UPDATE_TABLE_TTL", ttl: ttl }),
+      }),
+      {
+        loading: `Updating ${tableName} TTL...`,
+        error: "Whoops! Something went wrong.",
+        success: `Updated ${tableName}s TTL!`,
+      }
+    );
+
+    await mutate();
+  };
+
   return (
     <div>
       <Head>
@@ -172,7 +250,8 @@ const Page = () => {
               onClick={() => toggleBaseStatus()}
               className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
             >
-              {baseResponse?.base.active ? "Disable" : "Enable"}
+              {baseResponse?.base.active ? "Disable" : "Enable"}{" "}
+              {baseResponse?.base.name}
             </button>
           </div>
         </div>
@@ -191,6 +270,7 @@ const Page = () => {
 
         {/* Tables */}
         <div>
+          {/* Header */}
           <div className="sm:flex sm:items-center">
             <div className="sm:flex-auto">
               <h1 className="text-xl font-semibold text-gray-900">Tables</h1>
@@ -221,6 +301,7 @@ const Page = () => {
               )}
             </div>
           </div>
+          {/* Table */}
           <div className="mt-8 flex flex-col">
             <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
               <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
@@ -238,7 +319,7 @@ const Page = () => {
                           scope="col"
                           className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                         >
-                          Views
+                          View
                         </th>
                         <th
                           scope="col"
@@ -252,6 +333,13 @@ const Page = () => {
                         >
                           Status
                         </th>
+
+                        <th
+                          scope="col"
+                          className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                        >
+                          TTL
+                        </th>
                         <th
                           scope="col"
                           className="relative py-3.5 pl-3 pr-4 sm:pr-6"
@@ -261,119 +349,146 @@ const Page = () => {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200 bg-white">
-                      {baseResponse?.base.tables.map((table) => (
-                        <tr key={table.id}>
-                          {/* Name */}
-                          <td className="whitespace-nowrap py-6 pl-4 pr-3 text-sm sm:pl-6">
-                            <div className="flex items-center">
-                              <div>
-                                <div className="font-medium text-gray-900">
-                                  {table.name}
-                                </div>
-                                {/* <div className="text-gray-500">{table.id}</div> */}
+                      {baseResponse?.base.tables
+                        .sort((a, b) => a.name.localeCompare(b.name))
+                        .map((table) => (
+                          <tr key={table.id}>
+                            {/* Name */}
+                            <td className="whitespace-nowrap py-6 pl-4 pr-3 text-sm sm:pl-6">
+                              <div className="font-medium text-gray-900">
+                                {table.name}
                               </div>
-                            </div>
-                          </td>
-                          {/* Views */}
-                          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                            <div className="flex">
-                              <span className="inline-flex items-center rounded bg-indigo-100 px-2 py-0.5 text-xs font-medium text-indigo-800">
-                                Grid View
-                              </span>
-                            </div>
-                          </td>
-                          {/* Requests */}
-                          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                            <div className="text-gray-900 flex items-center gap-3">
-                              24.7k{" "}
-                              <span className="inline-flex gap-1 items-center rounded bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800">
-                                <ArrowTrendingUpIcon className="h-4 w-4 text-green-700" />
-                                12.5%
-                              </span>
-                            </div>
-                          </td>
-                          {/* Status */}
-                          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                            {baseResponse.base.active && table.active ? (
-                              <span className="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">
-                                Active
-                              </span>
-                            ) : (
-                              <span className="inline-flex rounded-full bg-gray-100 px-2 text-xs font-semibold leading-5 text-gray-800">
-                                Inactive{" "}
-                                {!baseResponse.base.active && "(Base Inactive)"}
-                              </span>
-                            )}
-                          </td>
-                          {/* Actions */}
-                          <td className="whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                            <div className="flex justify-end items-center gap-x-3">
-                              <button
-                                onClick={() => console.log("TODO")}
-                                className="text-indigo-600 hover:text-indigo-900"
-                              >
-                                <Tooltip
-                                  title="Refresh data"
-                                  position="top"
-                                  trigger="mouseenter"
+                            </td>
+                            {/* Views */}
+                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                              <div className="flex">
+                                <span
+                                  key={table.views[0].id}
+                                  className="inline-flex items-center rounded bg-indigo-100 px-2 py-0.5 text-xs font-medium text-indigo-800"
                                 >
-                                  <ArrowPathIcon className="h-4 w-4" />
-                                </Tooltip>
-                              </button>
-                              <button
-                                onClick={() => console.log("TODO")}
-                                className="text-indigo-600 hover:text-indigo-900"
-                              >
-                                <Tooltip
-                                  title="Toggle views"
-                                  position="top"
-                                  trigger="mouseenter"
-                                >
-                                  <PencilSquareIcon className="h-4 w-4" />
-                                </Tooltip>
-                              </button>
-                              <button
-                                onClick={() =>
-                                  toggleTableStatus(
+                                  <Tooltip
+                                    title={`${toTitleCase(
+                                      table.views[0].type
+                                    )} type`}
+                                    position="top"
+                                    trigger="mouseenter"
+                                  >
+                                    {viewTypeIcon(table.views[0].type)}
+                                  </Tooltip>{" "}
+                                  {table.views[0].name}
+                                </span>
+                              </div>
+                            </td>
+                            {/* Requests */}
+                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                              <div className="text-gray-900 flex items-center gap-3">
+                                24.7k{" "}
+                                <span className="inline-flex gap-1 items-center rounded bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800">
+                                  <ArrowTrendingUpIcon className="h-4 w-4 text-green-700" />
+                                  12.5%
+                                </span>
+                              </div>
+                            </td>
+                            {/* Status */}
+                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                              {baseResponse.base.active && table.active ? (
+                                <span className="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">
+                                  Active
+                                </span>
+                              ) : (
+                                <span className="inline-flex rounded-full bg-gray-100 px-2 text-xs font-semibold leading-5 text-gray-800">
+                                  Inactive
+                                </span>
+                              )}
+                            </td>
+                            {/* TTL */}
+                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                              <select
+                                className="mt-1 block w-full rounded-md border-white cursor-pointer hover:border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                                defaultValue={table.ttl}
+                                onChange={(e) =>
+                                  updateTableTtl(
+                                    e.target.value,
                                     table.id,
-                                    table.name,
-                                    !table.active
+                                    table.name
                                   )
                                 }
-                                className="text-indigo-600 hover:text-indigo-900"
                               >
-                                <Tooltip
-                                  title={
-                                    table.active
-                                      ? "Disable API access"
-                                      : "Enable API access"
+                                {ttlOptions.map((option) => (
+                                  <option
+                                    key={option.name}
+                                    value={option.seconds}
+                                  >
+                                    {option.name}
+                                  </option>
+                                ))}
+                              </select>
+                            </td>
+                            {/* Actions */}
+                            <td className="whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                              <div className="flex justify-end items-center gap-x-3">
+                                {/* Bust Cache */}
+                                <button
+                                  onClick={() => console.log("TODO")}
+                                  className="text-indigo-600 hover:text-indigo-900"
+                                >
+                                  <Tooltip
+                                    title="Refresh data"
+                                    position="top"
+                                    trigger="mouseenter"
+                                  >
+                                    <ArrowPathIcon className="h-4 w-4" />
+                                  </Tooltip>
+                                </button>
+                                <button
+                                  onClick={() =>
+                                    toggleTableStatus(
+                                      table.id,
+                                      table.name,
+                                      !table.active
+                                    )
                                   }
-                                  position="top"
-                                  trigger="mouseenter"
+                                  disabled={!baseResponse.base.active}
+                                  className={`${
+                                    baseResponse.base.active
+                                      ? "text-indigo-600 hover:text-indigo-900"
+                                      : "text-gray-500"
+                                  }`}
                                 >
-                                  {table.active ? (
-                                    <PauseIcon className="h-4 w-4" />
-                                  ) : (
-                                    <PlayIcon className="h-4 w-4" />
-                                  )}
-                                </Tooltip>
-                              </button>
-                              <button
-                                onClick={() => copyToClipboard(`TODO`)}
-                                className="text-indigo-600 hover:text-indigo-900"
-                              >
-                                <Tooltip
-                                  title="Copy the API URL"
-                                  position="top"
-                                  trigger="mouseenter"
+                                  <Tooltip
+                                    title={
+                                      !baseResponse.base.active
+                                        ? "Base is inactive"
+                                        : table.active
+                                        ? "Disable API access"
+                                        : "Enable API access"
+                                    }
+                                    position="top"
+                                    trigger="mouseenter"
+                                  >
+                                    {table.active ? (
+                                      <PauseIcon className="h-4 w-4" />
+                                    ) : (
+                                      <PlayIcon className="h-4 w-4" />
+                                    )}
+                                  </Tooltip>
+                                </button>
+                                <button
+                                  onClick={() => copyToClipboard(`TODO`)}
+                                  className="text-indigo-600 hover:text-indigo-900"
                                 >
-                                  <ShareIcon className="h-4 w-4" />
-                                </Tooltip>
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
+                                  <Tooltip
+                                    title="Copy the API URL"
+                                    position="top"
+                                    trigger="mouseenter"
+                                  >
+                                    <ShareIcon className="h-4 w-4" />
+                                  </Tooltip>
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
                     </tbody>
                   </table>
                 </div>

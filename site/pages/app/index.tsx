@@ -268,76 +268,78 @@ export default function Page() {
                   role="list"
                   className="grid grid-cols-1 mt-5 gap-6 sm:grid-cols-2 lg:grid-cols-3"
                 >
-                  {baseResponse.bases?.map((base) => (
-                    <li
-                      key={base.id}
-                      className="col-span-1 divide-y divide-gray-200 rounded-lg bg-white shadow"
-                    >
-                      <div className="flex flex-col w-full justify-between gap-y-6 p-6">
-                        <div className="flex items-center justify-between">
-                          <Link href={`/app/bases/${base.id}`}>
-                            <h3 className="text-lg font-medium text-gray-900">
-                              {base.name}
-                            </h3>
-                          </Link>
-                          <div>
-                            {base.active ? (
+                  {baseResponse.bases
+                    ?.sort((a, b) => a.name.localeCompare(b.name))
+                    .map((base) => (
+                      <li
+                        key={base.id}
+                        className="col-span-1 divide-y divide-gray-200 rounded-lg bg-white shadow"
+                      >
+                        <div className="flex flex-col w-full justify-between gap-y-6 p-6">
+                          <div className="flex items-center justify-between">
+                            <Link href={`/app/bases/${base.id}`}>
+                              <h3 className="text-lg font-medium text-gray-900">
+                                {base.name}
+                              </h3>
+                            </Link>
+                            <div>
+                              {base.active ? (
+                                <Tooltip
+                                  title="Accessible via API"
+                                  position="top"
+                                  trigger="mouseenter"
+                                >
+                                  <CheckCircleIcon className="h-5 w-5 text-green-700" />
+                                </Tooltip>
+                              ) : (
+                                <Tooltip
+                                  title="Inaccessible via API"
+                                  position="top"
+                                  trigger="mouseenter"
+                                >
+                                  <XCircleIcon className="h-5 w-5 text-red-700" />
+                                </Tooltip>
+                              )}
+                            </div>
+                          </div>
+                          <ul className="space-y-3">
+                            <li>
+                              <b>{base.tables.length}</b> tables
+                            </li>
+                            <li>
+                              Updated{" "}
                               <Tooltip
-                                title="Accessible via API"
+                                title="Updated by TTL"
                                 position="top"
                                 trigger="mouseenter"
                               >
-                                <CheckCircleIcon className="h-5 w-5 text-green-700" />
-                              </Tooltip>
-                            ) : (
+                                <b>14 mins</b>
+                              </Tooltip>{" "}
+                              ago
+                            </li>
+                          </ul>
+                          <div className="flex justify-end gap-x-3 mt-5">
+                            <button onClick={() => toggleBaseStatus(base)}>
                               <Tooltip
-                                title="Inaccessible via API"
+                                title={
+                                  base.active
+                                    ? "Block access to table"
+                                    : "Allow access to table"
+                                }
                                 position="top"
                                 trigger="mouseenter"
                               >
-                                <XCircleIcon className="h-5 w-5 text-red-700" />
+                                {base.active ? (
+                                  <PauseIcon className="h-5 w-5 text-gray-700 hover:text-gray-900" />
+                                ) : (
+                                  <PlayIcon className="h-5 w-5 text-gray-700 hover:text-gray-900" />
+                                )}
                               </Tooltip>
-                            )}
+                            </button>
                           </div>
                         </div>
-                        <ul className="space-y-3">
-                          <li>
-                            <b>{base.tables.length}</b> tables
-                          </li>
-                          <li>
-                            Updated{" "}
-                            <Tooltip
-                              title="Updated by TTL"
-                              position="top"
-                              trigger="mouseenter"
-                            >
-                              <b>14 mins</b>
-                            </Tooltip>{" "}
-                            ago
-                          </li>
-                        </ul>
-                        <div className="flex justify-end gap-x-3 mt-5">
-                          <button onClick={() => toggleBaseStatus(base)}>
-                            <Tooltip
-                              title={
-                                base.active
-                                  ? "Block access to table"
-                                  : "Allow access to table"
-                              }
-                              position="top"
-                              trigger="mouseenter"
-                            >
-                              {base.active ? (
-                                <PauseIcon className="h-5 w-5 text-gray-700 hover:text-gray-900" />
-                              ) : (
-                                <PlayIcon className="h-5 w-5 text-gray-700 hover:text-gray-900" />
-                              )}
-                            </Tooltip>
-                          </button>
-                        </div>
-                      </div>
-                    </li>
-                  ))}
+                      </li>
+                    ))}
                 </ul>
               </div>
             </main>
