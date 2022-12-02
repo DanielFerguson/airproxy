@@ -23,8 +23,12 @@ function getRandomViewType(): string {
 
 async function main() {
   setInterval(async function () {
-    const lat = parseFloat(faker.address.latitude());
-    const lng = parseFloat(faker.address.longitude());
+    const lat = parseFloat(
+      faker.address.latitude(-10.6681857235, -43.6345972634)
+    );
+    const lng = parseFloat(
+      faker.address.longitude(153.569469029, 113.338953078)
+    );
 
     await prisma.request.create({
       data: {

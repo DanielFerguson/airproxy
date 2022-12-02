@@ -41,8 +41,9 @@ type Base = Prisma.BaseGetPayload<{
   };
 }>;
 
-interface RequestsResponse {
-  requests: Object[];
+interface Request {
+  requests: number;
+  time: string;
 }
 
 interface StatsResponse {
@@ -90,14 +91,6 @@ function toTitleCase(str: string) {
   });
 }
 
-const dateTimeFormat = new Intl.DateTimeFormat("en", {
-  timeStyle: "short",
-  dateStyle: "medium",
-});
-
-const toLocalDateTime = (datetime: string): string =>
-  dateTimeFormat.format(new Date(`${datetime} UTC`));
-
 const ttlOptions = [
   { name: "10m", seconds: 600 },
   { name: "15m", seconds: 900 },
@@ -132,6 +125,11 @@ const data = [
   { requests: 250, time: "2022-12-02 00:30:00" },
 ];
 
+const fetchTableRequestsCount = async (tableId: string) => {
+  const result = await fetch(`/api/tables/${tableId}/requests`);
+  return result.json();
+};
+
 const Page = () => {
   const router = useRouter();
   const { id } = router.query;
@@ -141,7 +139,7 @@ const Page = () => {
     isPaused: () => !id,
   });
 
-  const { data: requestsResponse } = useSWR<RequestsResponse>(
+  const { data: requests } = useSWR<Request[]>(
     `/api/bases/${id}/requests`,
     fetcher,
     {
@@ -382,7 +380,7 @@ const Page = () => {
 
             <ResponsiveContainer>
               <BarChart
-                data={requestsResponse ? requestsResponse.requests : data}
+                data={requests}
                 margin={{
                   top: 0,
                   right: 0,
@@ -392,7 +390,6 @@ const Page = () => {
               >
                 <Bar dataKey="requests" fill="#8884d8" />
                 <ChartTooltip
-                  labelFormatter={(val) => toLocalDateTime(val)}
                   formatter={(value, name, props) => [value, "Requests"]}
                 />
                 <XAxis domain={[0, "dataMax"]} dataKey="time" />

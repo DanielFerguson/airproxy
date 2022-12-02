@@ -34,29 +34,22 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   //
-  // Get requests for all bases
+  // Get the number of requests for this table in the last 24 hours
   //
 
-  // @ts-ignore
-  BigInt.prototype.toJSON = function () {
-    const int = Number.parseInt(this.toString());
-    return int ?? this.toString();
-  };
+  if (req.method === "GET") {
+    const response = await prisma.$queryRaw`
+        SELECT
+            COUNT(r.id) AS count
+        FROM
+            Table AS t
+            LEFT JOIN Request AS r ON r.tableId = t.id
+                AND r.createdAt > NOW() - INTERVAL 24 HOUR
+        WHERE
+            t.id = ${id};
+    `;
 
-  const result = await prisma.$queryRaw`
-    SELECT
-        count(id) AS requests,
-        date_format(createdAt, '%Y-%m-%d %H:%i:00') AS time
-    FROM
-        Request
-    WHERE
-        baseId = ${id} AND
-        createdAt > NOW() - INTERVAL 60 MINUTE
-    GROUP BY
-        time
-    ORDER BY
-        time ASC
-  `;
-
-  res.status(200).json(result);
+    res.status(200).json(response);
+    return;
+  }
 };

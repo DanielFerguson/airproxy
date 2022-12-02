@@ -25,6 +25,9 @@
 
 ## Later
 
+- [ ] Setup live demo page
+- [ ] Setup requests visualiser on the home page
+
 - [ ] Fix how last chart value changes (gets lower over time)
 - [ ] Chart request time
 - [ ] Chart egress p/h
@@ -35,8 +38,6 @@
 - [ ] Set allowed origins globally and per base
 
 - [ ] Add ability to delete account, wipe data from database
-
-- [ ] Create home page
 
 - [ ] Setup google search console
 - [ ] Setup blog index page (w/ seo metatags)

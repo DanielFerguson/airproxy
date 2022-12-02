@@ -6,6 +6,11 @@
 @tailwind components;
 @tailwind utilities;
 
+html,
+body {
+  @apply scroll-smooth;
+}
+
 .rsm-geography {
   outline: none;
 }
