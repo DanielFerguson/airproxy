@@ -2,31 +2,33 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
 
 import { unstable_getServerSession } from "next-auth/next";
-import { authOptions } from "./auth/[...nextauth]";
+import { authOptions } from "../../auth/[...nextauth]";
 
 const prisma = new PrismaClient();
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method !== "GET") {
-    res.status(405).json({
-      message: "Unauthorized.",
+  const session = await unstable_getServerSession(req, res, authOptions);
+  const email = session?.user?.email;
+  const { id } = req.query;
+
+  if (!session || !email) {
+    res.status(401).json({
+      message:
+        "You must be signed in to view the protected content on this page.",
     });
     return;
   }
 
-  const session = await unstable_getServerSession(req, res, authOptions);
-
-  if (!session) {
-    res.status(401).json({
-      message: "You must be signed in.",
+  if (typeof id !== "string") {
+    res.status(400).json({
+      message: "The id is malformed.",
     });
+    return;
   }
 
-  const email = session?.user?.email;
-
-  if (!email) {
-    res.status(500).send({
-      message: "Whoops! Something went wrong on our end.",
+  if (req.method !== "GET" && req.method !== "POST") {
+    res.status(406).json({
+      message: "Method not acceptable.",
     });
     return;
   }
@@ -48,11 +50,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     FROM
       Request
     WHERE
-      baseId IN(
-        SELECT
-          id FROM Base
-        WHERE
-          email = ${email}) AND
+      baseId = ${id} AND
       createdAt > NOW() - INTERVAL 30 DAY
   `;
 

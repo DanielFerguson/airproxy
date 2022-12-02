@@ -35,16 +35,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   // Get stats for the account
   //
 
-  // @ts-ignore
-  BigInt.prototype.toJSON = function () {
-    const int = Number.parseInt(this.toString());
-    return int ?? this.toString();
-  };
-
-  const results = await prisma.$queryRaw`
+  const recentRequests = await prisma.$queryRaw`
     SELECT
-      count(id) as totalRequests,
-      COUNT(DISTINCT(latlng)) as customerCount
+      id, latitude, longitude
     FROM
       Request
     WHERE
@@ -52,12 +45,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         SELECT
           id FROM Base
         WHERE
-          email = ${email}) AND
-      createdAt > NOW() - INTERVAL 30 DAY
+          email = 'thedanielfergusonkid@gmail.com')
+      AND createdAt > NOW() - INTERVAL 1 SECOND
   `;
 
-  // @ts-ignore
-  const data = results[0];
-
-  res.status(200).json(data);
+  res.status(200).json(recentRequests);
 };

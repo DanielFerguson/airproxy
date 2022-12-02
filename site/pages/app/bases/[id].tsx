@@ -21,6 +21,15 @@ import {
   ViewColumnsIcon,
 } from "@heroicons/react/20/solid";
 import { Tooltip } from "react-tippy";
+import {
+  Bar,
+  BarChart,
+  ResponsiveContainer,
+  Tooltip as ChartTooltip,
+  XAxis,
+} from "recharts";
+import millify from "millify";
+import { ClipboardDocumentIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
 type Base = Prisma.BaseGetPayload<{
   include: {
@@ -32,15 +41,21 @@ type Base = Prisma.BaseGetPayload<{
   };
 }>;
 
-interface BaseResponse {
-  base: Base;
+interface RequestsResponse {
+  requests: Object[];
+}
+
+interface StatsResponse {
+  totalRequests: number;
+  customerCount: number;
 }
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
+
 const copyToClipboard = (value: string) => {
-  toast.success("Copied API URL to clipboard!");
   navigator.clipboard.writeText(value);
 };
+
 const viewTypeIcon = (type: string): JSX.Element => {
   switch (type) {
     case "grid":
@@ -68,18 +83,20 @@ const viewTypeIcon = (type: string): JSX.Element => {
       return <QuestionMarkCircleIcon className="h-3 w-3 mr-1.5" />;
   }
 };
+
 function toTitleCase(str: string) {
   return str.replace(/\w\S*/g, function (txt) {
     return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
   });
 }
 
-// !DEBUG
-const stats = [
-  { name: "Total Requests", stat: "171.4k" },
-  { name: "Egress", stat: "58.9GB" },
-  { name: "Customers", stat: "24.4K" },
-];
+const dateTimeFormat = new Intl.DateTimeFormat("en", {
+  timeStyle: "short",
+  dateStyle: "medium",
+});
+
+const toLocalDateTime = (datetime: string): string =>
+  dateTimeFormat.format(new Date(`${datetime} UTC`));
 
 const ttlOptions = [
   { name: "10m", seconds: 600 },
@@ -92,24 +109,61 @@ const ttlOptions = [
   { name: "1w", seconds: 604800 },
 ];
 
+const data = [
+  { requests: 210, time: "2022-12-02 00:11:00" },
+  { requests: 370, time: "2022-12-02 00:12:00" },
+  { requests: 340, time: "2022-12-02 00:13:00" },
+  { requests: 270, time: "2022-12-02 00:14:00" },
+  { requests: 280, time: "2022-12-02 00:15:00" },
+  { requests: 310, time: "2022-12-02 00:16:00" },
+  { requests: 330, time: "2022-12-02 00:17:00" },
+  { requests: 300, time: "2022-12-02 00:18:00" },
+  { requests: 290, time: "2022-12-02 00:19:00" },
+  { requests: 260, time: "2022-12-02 00:20:00" },
+  { requests: 340, time: "2022-12-02 00:21:00" },
+  { requests: 260, time: "2022-12-02 00:22:00" },
+  { requests: 340, time: "2022-12-02 00:23:00" },
+  { requests: 340, time: "2022-12-02 00:24:00" },
+  { requests: 350, time: "2022-12-02 00:25:00" },
+  { requests: 280, time: "2022-12-02 00:26:00" },
+  { requests: 350, time: "2022-12-02 00:27:00" },
+  { requests: 330, time: "2022-12-02 00:28:00" },
+  { requests: 310, time: "2022-12-02 00:29:00" },
+  { requests: 250, time: "2022-12-02 00:30:00" },
+];
+
 const Page = () => {
   const router = useRouter();
   const { id } = router.query;
 
-  const { data: baseResponse, mutate } = useSWR<BaseResponse>(
-    `/api/bases/${id}`,
+  const { data: base, mutate } = useSWR<Base>(`/api/bases/${id}`, fetcher, {
+    refreshInterval: 1000 * 60,
+    isPaused: () => !id,
+  });
+
+  const { data: requestsResponse } = useSWR<RequestsResponse>(
+    `/api/bases/${id}/requests`,
     fetcher,
     {
-      refreshInterval: 1000 * 60,
+      refreshInterval: 1000 * 5,
+      isPaused: () => !id,
+    }
+  );
+
+  const { data: stats } = useSWR<StatsResponse>(
+    `/api/bases/${id}/stats`,
+    fetcher,
+    {
+      refreshInterval: 1000 * 5,
       isPaused: () => !id,
     }
   );
 
   const updateAllTables = async (disable: boolean) => {
-    if (!baseResponse) return;
+    if (!base) return;
 
     await toast.promise(
-      fetch(`/api/bases/${baseResponse.base.id}`, {
+      fetch(`/api/bases/${base.id}`, {
         method: "POST",
         body: JSON.stringify({
           action: disable ? "DISABLE_ALL_TABLES" : "ENABLE_ALL_TABLES",
@@ -132,7 +186,7 @@ const Page = () => {
     tableName: string,
     enabled: boolean
   ) => {
-    if (!baseResponse) return;
+    if (!base) return;
 
     await toast.promise(
       fetch(`/api/tables/${tableId}`, {
@@ -153,22 +207,20 @@ const Page = () => {
   };
 
   const toggleBaseStatus = async () => {
-    if (!baseResponse) return;
+    if (!base) return;
 
     await toast.promise(
       fetch(`/api/bases/${id}`, {
         method: "POST",
         body: JSON.stringify({
-          active: !baseResponse.base.active,
+          active: !base.active,
           action: "UPDATE_ACTIVE_STATUS",
         }),
       }),
       {
         error: "Whoops! Something went wrong.",
-        loading: `Updating ${baseResponse.base.name} status.`,
-        success: `${baseResponse.base.name} is now ${
-          baseResponse.base.active ? "inactive." : "active!"
-        }`,
+        loading: `Updating ${base.name} status.`,
+        success: `${base.name} is now ${base.active ? "disabled." : "active!"}`,
       }
     );
 
@@ -188,12 +240,58 @@ const Page = () => {
       {
         loading: `Updating ${tableName} TTL...`,
         error: "Whoops! Something went wrong.",
-        success: `Updated ${tableName}s TTL!`,
+        success: `Updated TTL for ${tableName}!`,
       }
     );
 
     await mutate();
   };
+
+  const copyToken = async (apiToken: string) => {
+    copyToClipboard(apiToken);
+    toast.success("Copied token");
+  };
+
+  const removeTokenFromBase = async () => {
+    await toast.promise(
+      fetch(`/api/bases/${base?.id}`, {
+        method: "POST",
+        body: JSON.stringify({ action: "REMOVE_TOKEN_FROM_BASE" }),
+      }),
+      {
+        error: "Whoops! Something went wrong.",
+        loading: "Removing token from base...",
+        success: "Removed token",
+      }
+    );
+
+    await mutate();
+  };
+
+  const createAndAttachToken = async () => {
+    if (!base) return;
+
+    await toast.promise(
+      fetch(`/api/bases/${base.id}`, {
+        method: "POST",
+        body: JSON.stringify({ action: "CREATE_AND_ADD_TOKEN_TO_BASE" }),
+      }),
+      {
+        error: "Whoops! Something went wrong.",
+        loading: "Protecting the APIs...",
+        success: "Protected!",
+      }
+    );
+
+    await mutate();
+  };
+
+  const copyApiUrl = (url: string) => {
+    copyToClipboard(url);
+    toast.success("Copied API URL.");
+  };
+
+  if (!base) return <></>;
 
   return (
     <div>
@@ -212,10 +310,8 @@ const Page = () => {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-5">
-            <h2 className="text-3xl font-medium text-gray-900">
-              {baseResponse?.base.name}
-            </h2>
-            {baseResponse && baseResponse.base.active ? (
+            <h2 className="text-3xl font-medium text-gray-900">{base?.name}</h2>
+            {base && base.active ? (
               <span className="inline-flex items-center rounded-md bg-green-100 px-2.5 py-0.5 text-sm font-medium text-green-800">
                 <span className="-ml-0.5 mr-1.5 relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
@@ -229,33 +325,130 @@ const Page = () => {
                   <span className="absolute inline-flex h-full w-full rounded-full bg-gray-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-gray-500"></span>
                 </span>
-                Inactive
+                Disabled
               </span>
             )}
           </div>
 
           <div>
-            <button
-              type="button"
-              onClick={() => toggleBaseStatus()}
-              className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            {/* Toggle Base Active Status */}
+            {/* @ts-ignore */}
+            <Tooltip
+              title={base?.active ? "Disable base" : "Enable base"}
+              position="top"
+              trigger="mouseenter"
             >
-              {baseResponse?.base.active ? "Disable" : "Enable"}{" "}
-              {baseResponse?.base.name}
-            </button>
+              <button type="button" onClick={() => toggleBaseStatus()}>
+                {base?.active ? (
+                  <PauseIcon className="h-5 w-5" />
+                ) : (
+                  <PlayIcon className="h-5 w-5" />
+                )}
+              </button>
+            </Tooltip>
           </div>
         </div>
 
         {/* Stats */}
         <div>
+          {/* Cards */}
           <h3 className="text-lg font-medium leading-6 text-gray-900">
             Last 30 days
           </h3>
           <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
-            {stats.map((item) => (
-              <StatCard key={item.name} name={item.name} stat={item.stat} />
-            ))}
+            <StatCard
+              name="Total Requests"
+              stat={
+                stats ? millify(stats.totalRequests, { precision: 2 }) : "0"
+              }
+              limit={millify(100000, { precision: 2 })}
+            />
+            <StatCard
+              name="Customers"
+              stat={
+                stats ? millify(stats.customerCount, { precision: 2 }) : "0"
+              }
+            />
+            <StatCard name="Egress" stat={"Coming soon"} />
           </dl>
+
+          {/* Chart */}
+          <div className="w-full h-64 overflow-hidden rounded-lg bg-white shadow mt-5">
+            <div className="px-4 py-5 sm:p-6">
+              <h3 className="text-base font-normal text-gray-900">
+                Requests (Live)
+              </h3>
+            </div>
+
+            <ResponsiveContainer>
+              <BarChart
+                data={requestsResponse ? requestsResponse.requests : data}
+                margin={{
+                  top: 0,
+                  right: 0,
+                  bottom: 40,
+                  left: 0,
+                }}
+              >
+                <Bar dataKey="requests" fill="#8884d8" />
+                <ChartTooltip
+                  labelFormatter={(val) => toLocalDateTime(val)}
+                  formatter={(value, name, props) => [value, "Requests"]}
+                />
+                <XAxis domain={[0, "dataMax"]} dataKey="time" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* API Tokens */}
+        <div>
+          {/* Header */}
+          <div className="sm:flex sm:items-center">
+            <div className="sm:flex-auto">
+              <h1 className="text-xl font-semibold text-gray-900">
+                {base?.apiToken ? "Protected" : "Unprotected"}
+              </h1>
+              <p className="mt-2 text-sm text-gray-700">
+                {base?.apiToken
+                  ? "The APIs under this base are protected with an API key."
+                  : "The APIs under this base are unprotected and can be accessed by anyone."}
+              </p>
+            </div>
+
+            {/* Protected Actions */}
+            {base?.apiToken ? (
+              <div className="flex gap-3">
+                {/* @ts-ignore */}
+                <Tooltip title="Remove Key" position="top" trigger="mouseenter">
+                  <button
+                    type="button"
+                    onClick={() => removeTokenFromBase()}
+                    className="inline-flex items-center rounded-md border border-white bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                  >
+                    <XMarkIcon className="h-5 w-5" />
+                  </button>
+                </Tooltip>
+                <button
+                  type="button"
+                  onClick={() => copyToken(base.apiToken ?? "")}
+                  className="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                >
+                  <ClipboardDocumentIcon className="h-5 w-5" />
+                </button>
+              </div>
+            ) : (
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => createAndAttachToken()}
+                  className="inline-flex items-center rounded-md border border-transparent bg-indigo-100 px-4 py-2 text-sm font-medium text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                >
+                  Create token
+                </button>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Tables */}
@@ -263,16 +456,17 @@ const Page = () => {
           {/* Header */}
           <div className="sm:flex sm:items-center">
             <div className="sm:flex-auto">
-              <h1 className="text-xl font-semibold text-gray-900">Tables</h1>
+              <h1 className="text-xl font-semibold text-gray-900">
+                API Routes
+              </h1>
               <p className="mt-2 text-sm text-gray-700">
                 A list of all the users in your account including their name,
                 title, email and role.
               </p>
             </div>
             <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-              {baseResponse &&
-              baseResponse.base.tables.filter((table) => table.active).length >
-                0 ? (
+              {base &&
+              base.tables.filter((table) => table.active).length > 0 ? (
                 <button
                   type="button"
                   onClick={() => updateAllTables(true)}
@@ -339,7 +533,7 @@ const Page = () => {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200 bg-white">
-                      {baseResponse?.base.tables
+                      {base?.tables
                         .sort((a, b) => a.name.localeCompare(b.name))
                         .map((table) => (
                           <tr key={table.id}>
@@ -374,21 +568,21 @@ const Page = () => {
                             <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                               <div className="text-gray-900 flex items-center gap-3">
                                 24.7k{" "}
-                                <span className="inline-flex gap-1 items-center rounded bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800">
+                                {/* <span className="inline-flex gap-1 items-center rounded bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800">
                                   <ArrowTrendingUpIcon className="h-4 w-4 text-green-700" />
                                   12.5%
-                                </span>
+                                </span> */}
                               </div>
                             </td>
                             {/* Status */}
                             <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                              {baseResponse.base.active && table.active ? (
+                              {base.active && table.active ? (
                                 <span className="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">
                                   Active
                                 </span>
                               ) : (
                                 <span className="inline-flex rounded-full bg-gray-100 px-2 text-xs font-semibold leading-5 text-gray-800">
-                                  Inactive
+                                  Disabled
                                 </span>
                               )}
                             </td>
@@ -440,9 +634,9 @@ const Page = () => {
                                       !table.active
                                     )
                                   }
-                                  disabled={!baseResponse.base.active}
+                                  disabled={!base.active}
                                   className={`${
-                                    baseResponse.base.active
+                                    base.active
                                       ? "text-indigo-600 hover:text-indigo-900"
                                       : "text-gray-500"
                                   }`}
@@ -450,8 +644,8 @@ const Page = () => {
                                   {/* @ts-ignore */}
                                   <Tooltip
                                     title={
-                                      !baseResponse.base.active
-                                        ? "Base is inactive"
+                                      !base.active
+                                        ? "Base is disabled"
                                         : table.active
                                         ? "Disable API access"
                                         : "Enable API access"
@@ -468,8 +662,8 @@ const Page = () => {
                                 </button>
                                 <button
                                   onClick={() =>
-                                    copyToClipboard(
-                                      `https://api.airproxy.app/${baseResponse.base.id}/${table.id}`
+                                    copyApiUrl(
+                                      `https://api.airproxy.app/${base.id}/${table.id}`
                                     )
                                   }
                                   className="text-indigo-600 hover:text-indigo-900"

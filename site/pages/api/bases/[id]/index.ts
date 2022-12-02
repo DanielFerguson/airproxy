@@ -1,8 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
+import { v4 as uuidv4 } from "uuid";
 
 import { unstable_getServerSession } from "next-auth/next";
-import { authOptions } from "../auth/[...nextauth]";
+import { authOptions } from "../../auth/[...nextauth]";
 
 const prisma = new PrismaClient();
 
@@ -47,6 +48,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         id: true,
         name: true,
         active: true,
+        apiToken: true,
         tables: {
           select: {
             id: true,
@@ -59,9 +61,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       },
     });
 
-    res.status(200).json({
-      base: response,
-    });
+    res.status(200).json(response);
     return;
   }
 
@@ -75,7 +75,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     !action ||
     (action !== "UPDATE_ACTIVE_STATUS" &&
       action !== "DISABLE_ALL_TABLES" &&
-      action !== "ENABLE_ALL_TABLES")
+      action !== "ENABLE_ALL_TABLES" &&
+      action !== "REMOVE_TOKEN_FROM_BASE" &&
+      action !== "CREATE_AND_ADD_TOKEN_TO_BASE")
   ) {
     res.status(400).json({
       message: "`action` is missing from the request.",
@@ -139,6 +141,45 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     res.status(200).json({
       message: "All tables have been enabled.",
+    });
+  }
+
+  //
+  // Remove token from base
+  //
+
+  if (action === "REMOVE_TOKEN_FROM_BASE" && req.method === "POST") {
+    await prisma.base.updateMany({
+      where: {
+        id,
+        email,
+      },
+      data: {
+        apiToken: null,
+      },
+    });
+
+    res.status(200).json({
+      message: "Successfully removed token from base.",
+    });
+  }
+
+  //
+  // Create and attach a token to the base
+  //
+
+  if (action === "CREATE_AND_ADD_TOKEN_TO_BASE" && req.method === "POST") {
+    await prisma.base.update({
+      where: {
+        id,
+      },
+      data: {
+        apiToken: uuidv4(),
+      },
+    });
+
+    res.status(200).json({
+      message: "Successfully created and attached API token to base.",
     });
   }
 };

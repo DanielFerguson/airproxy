@@ -7,7 +7,7 @@ import { authOptions } from "./auth/[...nextauth]";
 const prisma = new PrismaClient();
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method !== "GET") {
+  if (req.method !== "POST" && req.method !== "GET") {
     res.status(405).json({
       message: "Unauthorized.",
     });
@@ -32,32 +32,25 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   //
-  // Get stats for the account
+  // Get the keys for this user
   //
 
-  // @ts-ignore
-  BigInt.prototype.toJSON = function () {
-    const int = Number.parseInt(this.toString());
-    return int ?? this.toString();
-  };
+  if (req.method === "GET") {
+    const results = await prisma.base.findMany({
+      where: {
+        keysEmail: email,
+        apiToken: {
+          not: null,
+        },
+      },
+      select: {
+        id: true,
+        apiToken: true,
+        name: true,
+      },
+    });
 
-  const results = await prisma.$queryRaw`
-    SELECT
-      count(id) as totalRequests,
-      COUNT(DISTINCT(latlng)) as customerCount
-    FROM
-      Request
-    WHERE
-      baseId IN(
-        SELECT
-          id FROM Base
-        WHERE
-          email = ${email}) AND
-      createdAt > NOW() - INTERVAL 30 DAY
-  `;
-
-  // @ts-ignore
-  const data = results[0];
-
-  res.status(200).json(data);
+    res.status(200).json(results);
+    return;
+  }
 };

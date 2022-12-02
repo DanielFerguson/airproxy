@@ -35,6 +35,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         id: true,
         name: true,
         active: true,
+        apiToken: true,
         tables: {
           select: {
             id: true,

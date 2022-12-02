@@ -4,30 +4,6 @@
 
 <!-- App -->
 
-- [ ] Get request data from database and chart them (overall, per base)
-- [ ] Move from keys to OAuth https://airtable.com/developers/web/api/authentication#types-of-token
-- [ ] Will need to set some sort of `fetching` flag somewhere on the API so multiple simultaneous request wont timeout Airtable's API
-- [ ] Show threshold level for req p/m on chart or in stats like PlanetScale (see if you're going to cap out)?
-
-<!-- API -->
-
-- [ ] Add rate limiter
-- [ ] Add ability to pass optional viewId to API
-
-  - if none found, use the default
-  - if found, check that its active status in the DB
-
-- [ ] API keys (business)
-
-  - create, regenerate (and read), update and delete api keys
-  - protect everything, base, table, view with api key
-
-- [ ] Notify client (SMS, Email, Discord, Slack) if there was an issue with fetching their table data (all, SMS business)
-- [ ] Add the ability for the API to fetch multiple pages (w/ Airtable offset) (hobbyist)
-
-<!-- App -->
-
-- [ ] Ability to set public or private status for bases and tables, whether they need an api key (hobbyist)
 - [ ] Review the onboarding process
 - [ ] Setup stripe locally
 - [ ] Create Stripe subscription product and prices
@@ -35,11 +11,26 @@
 - [ ] Create callback function for stripe
 - [ ] Create subscriptions table
 
+<!-- API -->
+
+- [ ] Protect API routes if Base has API key
+- [ ] Will need to set some sort of `fetching` flag somewhere on the API so multiple simultaneous request wont timeout Airtable's API
+- [ ] Add rate limiter
+- [ ] Add ability to pass optional viewId to API
+- [ ] Notify client (SMS, Email, Discord, Slack) if there was an issue with fetching their table data (all, SMS business)
+- [ ] Add the ability for the API to fetch multiple pages (w/ Airtable offset) (hobbyist)
+
+- [ ] Add the ability to reimport Airtable bases and tables
+- [ ] Automate this process as well
+
 ## Later
 
+- [ ] Fix how last chart value changes (gets lower over time)
 - [ ] Chart request time
 - [ ] Chart egress p/h
 - [ ] Chart egress p/base and p/table
+
+- [ ] Move from keys to OAuth https://airtable.com/developers/web/api/authentication#types-of-token
 
 - [ ] Set allowed origins globally and per base
 
@@ -89,3 +80,4 @@
   - 1m req p/m
   - Ability to set cron timeout for data
   - Strongly consistent reads (needs to use R2 over KV)
+  - Protect bases with API keys

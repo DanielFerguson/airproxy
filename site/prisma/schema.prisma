@@ -21,12 +21,13 @@ model Keys {
 }
 
 model Base {
-  id     String  @unique(map: "P") @db.VarChar(50)
-  email  String  @db.VarChar(100)
-  name   String  @db.VarChar(255)
-  active Boolean @default(true)
-  tables Table[]
-  key    Keys    @relation(fields: [keysEmail], references: [email])
+  id       String  @unique(map: "P") @db.VarChar(50)
+  email    String  @db.VarChar(100)
+  name     String  @db.VarChar(255)
+  active   Boolean @default(true)
+  tables   Table[]
+  key      Keys    @relation(fields: [keysEmail], references: [email])
+  apiToken String?
 
   keysEmail String    @db.VarChar(100)
   Request   Request[]

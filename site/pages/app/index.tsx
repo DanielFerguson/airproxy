@@ -11,8 +11,6 @@ import toast, { Toaster } from "react-hot-toast";
 import {
   Tooltip as ChartTooltip,
   ResponsiveContainer,
-  AreaChart,
-  Area,
   BarChart,
   Bar,
   XAxis,
@@ -23,6 +21,12 @@ import NavBar from "../../components/NavBar";
 import Link from "next/link";
 import StatCard from "../../components/StatCard";
 import millify from "millify";
+import {
+  ComposableMap,
+  Geographies,
+  Geography,
+  Marker,
+} from "react-simple-maps";
 
 type Base = Prisma.BaseGetPayload<{
   include: {
@@ -47,15 +51,44 @@ interface StatsResponse {
   customerCount: number;
 }
 
+interface LatLng {
+  id: number;
+  latitude: number;
+  longitude: number;
+}
+
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
-const dateTimeFormat = new Intl.DateTimeFormat("en", {
-  timeStyle: "short",
-  dateStyle: "medium",
-});
+const geoUrl = "/features.json";
 
-const toLocalDateTime = (datetime: string): string =>
-  dateTimeFormat.format(new Date(`${datetime} UTC`));
+const markers = [
+  {
+    markerOffset: -30,
+    name: "Buenos Aires",
+    coordinates: [-58.3816, -34.6037],
+  },
+  { markerOffset: 15, name: "La Paz", coordinates: [-68.1193, -16.4897] },
+  { markerOffset: 15, name: "Brasilia", coordinates: [-47.8825, -15.7942] },
+  { markerOffset: 15, name: "Santiago", coordinates: [-70.6693, -33.4489] },
+  { markerOffset: 15, name: "Bogota", coordinates: [-74.0721, 4.711] },
+  { markerOffset: 15, name: "Quito", coordinates: [-78.4678, -0.1807] },
+  { markerOffset: -30, name: "Georgetown", coordinates: [-58.1551, 6.8013] },
+  { markerOffset: -30, name: "Asuncion", coordinates: [-57.5759, -25.2637] },
+  { markerOffset: 15, name: "Paramaribo", coordinates: [-55.2038, 5.852] },
+  { markerOffset: 15, name: "Montevideo", coordinates: [-56.1645, -34.9011] },
+  { markerOffset: 15, name: "Caracas", coordinates: [-66.9036, 10.4806] },
+  { markerOffset: 15, name: "Lima", coordinates: [-77.0428, -12.0464] },
+];
+
+// const dateTimeFormat = new Intl.DateTimeFormat("en", {
+//   timeStyle: "short",
+//   dateStyle: "medium",
+// });
+
+// const toLocalDateTime = (datetime: string): string =>
+//   dateTimeFormat.format(new Date(`${datetime}`));
+
+// const toLocalDateTime = (datetime: string) => datetime;
 
 // !DEBUG
 const data = [
@@ -74,13 +107,13 @@ const data = [
 ];
 
 export default function Page() {
-  const {
-    data: baseResponse,
-    error,
-    mutate,
-  } = useSWR<BaseResponse>("/api/bases", fetcher, {
-    refreshInterval: 1000 * 60,
-  });
+  const { data: baseResponse, mutate } = useSWR<BaseResponse>(
+    "/api/bases",
+    fetcher,
+    {
+      refreshInterval: 1000 * 60,
+    }
+  );
 
   const { data: requests } = useSWR<RequestsResponse>(
     "/api/requests",
@@ -90,11 +123,17 @@ export default function Page() {
     }
   );
 
-  const { data: stats } = useSWR<StatsResponse>("/api/stats", fetcher, {
-    refreshInterval: 1000 * 5,
-  });
+  const { data: recentRequests } = useSWR<LatLng[]>(
+    "/api/recent-requests",
+    fetcher,
+    {
+      refreshInterval: 1000,
+    }
+  );
 
-  console.log(stats);
+  const { data: stats } = useSWR<StatsResponse>("/api/stats", fetcher, {
+    refreshInterval: 1000 * 10,
+  });
 
   const [keyValue, setKeyValue] = useState("");
 
@@ -151,7 +190,7 @@ export default function Page() {
       <NavBar />
 
       {/* Register */}
-      {baseResponse?.bases?.length === 0 ? (
+      {baseResponse?.bases?.length === 0 && (
         <main className="max-w-3xl mx-auto mt-16">
           {/* Register a Token */}
           <div className="text-center">
@@ -208,156 +247,194 @@ export default function Page() {
             </p>
           </div>
         </main>
-      ) : (
-        <>
+      )}
+
+      {baseResponse?.bases?.length && (
+        <main className="max-w-3xl mx-auto mt-16 grid gap-y-12 pb-24">
           {/* Bases */}
-          {baseResponse?.bases && (
-            <main className="max-w-3xl mx-auto mt-16 grid gap-y-12 pb-24">
-              {/* Stats */}
-              <div>
-                {/* Cards */}
-                <h3 className="text-lg font-medium leading-6 text-gray-900">
-                  Last 30 days
-                </h3>
-                <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
-                  <StatCard
-                    name="Total Requests"
-                    stat={
-                      stats
-                        ? millify(stats.totalRequests, { precision: 2 })
-                        : "0"
-                    }
-                    limit={millify(100000, { precision: 2 })}
-                  />
-                  <StatCard
-                    name="Customers"
-                    stat={
-                      stats
-                        ? millify(stats.customerCount, { precision: 2 })
-                        : "0"
-                    }
-                  />
-                  <StatCard name="Egress" stat={"Coming soon"} />
-                </dl>
-
-                {/* Chart */}
-                <div className="w-full h-64 overflow-hidden rounded-lg bg-white shadow mt-5">
-                  <div className="px-4 py-5 sm:p-6">
-                    <h3 className="text-sm font-medium leading-6 text-gray-700">
-                      Request (Live)
-                    </h3>
-                  </div>
-
-                  <ResponsiveContainer>
-                    <BarChart
-                      data={requests ? requests.requests : data}
-                      margin={{
-                        top: 0,
-                        right: 0,
-                        bottom: 40,
-                        left: 0,
-                      }}
-                    >
-                      <Bar dataKey="requests" fill="#8884d8" />
-                      <ChartTooltip
-                        labelFormatter={(val) => toLocalDateTime(val)}
-                        formatter={(value, name, props) => [value, "Requests"]}
-                      />
-                      <XAxis domain={[0, "dataMax"]} dataKey="time" />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-              </div>
-
-              {/* Bases */}
-              <div>
-                <h3 className="text-lg font-medium leading-6 text-gray-900">
-                  Bases
-                </h3>
-                <ul
-                  role="list"
-                  className="grid grid-cols-1 mt-5 gap-6 sm:grid-cols-2 lg:grid-cols-3"
-                >
-                  {baseResponse.bases
-                    ?.sort((a, b) => a.name.localeCompare(b.name))
-                    .map((base) => (
-                      <li
-                        key={base.id}
-                        className="col-span-1 divide-y divide-gray-200 rounded-lg bg-white shadow"
-                      >
-                        <div className="flex flex-col w-full justify-between gap-y-6 p-6">
-                          <div className="flex items-center justify-between">
-                            <Link href={`/app/bases/${base.id}`}>
-                              <h3 className="text-lg font-semibold text-indigo-600">
-                                {base.name}
-                              </h3>
-                            </Link>
-                            <div>
-                              {base.active ? (
-                                // @ts-ignore
-                                <Tooltip
-                                  title="Accessible via API"
-                                  position="top"
-                                  trigger="mouseenter"
-                                >
-                                  <CheckCircleIcon className="h-5 w-5 text-green-700" />
-                                </Tooltip>
-                              ) : (
-                                // @ts-ignore
-                                <Tooltip
-                                  title="Inaccessible via API"
-                                  position="top"
-                                  trigger="mouseenter"
-                                >
-                                  <XCircleIcon className="h-5 w-5 text-red-700" />
-                                </Tooltip>
-                              )}
-                            </div>
-                          </div>
-                          <ul className="space-y-3">
-                            <li>
-                              <b>{base.tables.length}</b> tables
-                            </li>
-                            <li>
-                              Updated {/* @ts-ignore */}
-                              <Tooltip
-                                title="Updated by TTL"
-                                position="top"
-                                trigger="mouseenter"
-                              >
-                                <b>14 mins</b>
-                              </Tooltip>{" "}
-                              ago
-                            </li>
-                          </ul>
-                          <div className="flex justify-end gap-x-3 mt-5">
-                            <button onClick={() => toggleBaseStatus(base)}>
-                              {/* @ts-ignore */}
-                              <Tooltip
-                                title={
-                                  base.active
-                                    ? "Block access to table"
-                                    : "Allow access to table"
-                                }
-                                position="top"
-                                trigger="mouseenter"
-                              >
-                                {base.active ? (
-                                  <PauseIcon className="h-5 w-5 text-gray-700 hover:text-gray-900" />
-                                ) : (
-                                  <PlayIcon className="h-5 w-5 text-gray-700 hover:text-gray-900" />
-                                )}
-                              </Tooltip>
-                            </button>
-                          </div>
+          <div>
+            <h3 className="text-lg font-medium leading-6 text-gray-900">
+              Bases
+            </h3>
+            <ul
+              role="list"
+              className="grid grid-cols-1 mt-5 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+            >
+              {baseResponse.bases
+                ?.sort((a, b) => a.name.localeCompare(b.name))
+                .map((base) => (
+                  <li
+                    key={base.id}
+                    className="col-span-1 divide-y divide-gray-200 rounded-lg bg-white shadow"
+                  >
+                    <div className="flex flex-col w-full justify-between gap-y-6 p-6">
+                      <div className="flex items-center justify-between">
+                        <Link href={`/app/bases/${base.id}`}>
+                          <h3 className="text-lg font-semibold text-indigo-600">
+                            {base.name}
+                          </h3>
+                        </Link>
+                        <div className="flex items-center gap-2">
+                          {/* Protected status */}
+                          {base.apiToken && (
+                            // @ts-ignore
+                            <Tooltip
+                              title="Protected by token"
+                              position="top"
+                              trigger="mouseenter"
+                            >
+                              <KeyIcon className="h-5 w-5 text-green-700" />
+                            </Tooltip>
+                          )}
+                          {/* Active status */}
+                          {/* @ts-ignore */}
+                          <Tooltip
+                            title={
+                              base.active
+                                ? "Accessible via API"
+                                : "Inaccessible via API"
+                            }
+                            position="top"
+                            trigger="mouseenter"
+                          >
+                            {base.active ? (
+                              <CheckCircleIcon className="h-5 w-5 text-green-700" />
+                            ) : (
+                              <XCircleIcon className="h-5 w-5 text-red-700" />
+                            )}
+                          </Tooltip>
                         </div>
-                      </li>
-                    ))}
-                </ul>
+                      </div>
+                      <ul className="space-y-3">
+                        <li>
+                          <b>{base.tables.length}</b> tables
+                        </li>
+                        <li>
+                          Updated {/* @ts-ignore */}
+                          <Tooltip
+                            title="Updated by TTL"
+                            position="top"
+                            trigger="mouseenter"
+                          >
+                            <b>14 mins</b>
+                          </Tooltip>{" "}
+                          ago
+                        </li>
+                      </ul>
+                      <div className="flex justify-end gap-x-3 mt-5">
+                        <button onClick={() => toggleBaseStatus(base)}>
+                          {/* @ts-ignore */}
+                          <Tooltip
+                            title={
+                              base.active
+                                ? "Block access to table"
+                                : "Allow access to table"
+                            }
+                            position="top"
+                            trigger="mouseenter"
+                          >
+                            {base.active ? (
+                              <PauseIcon className="h-5 w-5 text-gray-700 hover:text-gray-900" />
+                            ) : (
+                              <PlayIcon className="h-5 w-5 text-gray-700 hover:text-gray-900" />
+                            )}
+                          </Tooltip>
+                        </button>
+                      </div>
+                    </div>
+                  </li>
+                ))}
+            </ul>
+          </div>
+
+          {/* Stats */}
+          <div>
+            {/* Cards */}
+            <h3 className="text-lg font-medium leading-6 text-gray-900">
+              Last 30 days
+            </h3>
+            <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
+              <StatCard
+                name="Total Requests"
+                stat={
+                  stats ? millify(stats.totalRequests, { precision: 2 }) : "0"
+                }
+                limit={millify(100000, { precision: 2 })}
+              />
+              <StatCard
+                name="Customers"
+                stat={
+                  stats ? millify(stats.customerCount, { precision: 2 }) : "0"
+                }
+              />
+              <StatCard name="Egress" stat={"Coming soon"} />
+            </dl>
+
+            {/* Chart */}
+            <div className="w-full overflow-hidden rounded-lg bg-white shadow mt-5">
+              <div className="px-4 py-5 sm:p-6">
+                <h3 className="text-base font-normal text-gray-900">
+                  Requests (Live)
+                </h3>
               </div>
-            </main>
-          )}
-        </>
+
+              {/* Map */}
+              <ComposableMap
+                projection="geoMercator"
+                width={1000}
+                height={600}
+                projectionConfig={{
+                  rotate: [-10, 0, 0],
+                  scale: 147,
+                }}
+              >
+                <Geographies geography={geoUrl}>
+                  {({ geographies }) =>
+                    geographies.map((geo) => (
+                      <Geography
+                        key={geo.rsmKey}
+                        geography={geo}
+                        fill="#FFF"
+                        stroke="#4f46e5"
+                        strokeWidth={1.25}
+                      />
+                    ))
+                  }
+                </Geographies>
+                {recentRequests &&
+                  recentRequests.map(({ id, latitude, longitude }) => (
+                    <Marker key={id} coordinates={[longitude, latitude]}>
+                      <circle
+                        r="12"
+                        className="animate-ping-once fill-indigo-600"
+                      />
+                    </Marker>
+                  ))}
+              </ComposableMap>
+
+              {/* Bar Chart */}
+              <div className="relative h-48">
+                <ResponsiveContainer>
+                  <BarChart
+                    data={requests ? requests.requests : data}
+                    margin={{
+                      top: 0,
+                      right: 0,
+                      bottom: 0,
+                      left: 0,
+                    }}
+                  >
+                    <Bar dataKey="requests" fill="#8884d8" />
+                    <ChartTooltip
+                      formatter={(value, name, props) => [value, "Requests"]}
+                    />
+                    <XAxis domain={[0, "dataMax"]} dataKey="time" hide />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+          </div>
+        </main>
       )}
     </div>
   );
