@@ -5,3 +5,7 @@ compatibility_date = "2022-11-29"
 kv_namespaces = [
   { binding = "KV_STORE", id = "d8f23409891f406585a9a63a894f2e84", preview_id = "c5def7564dc9459bb88116309cbb5c44" }
 ]
+
+routes = [	
+  { pattern = "api.airproxy.app", custom_domain = true, zone_name = "airproxy.app" }
+]

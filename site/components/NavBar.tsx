@@ -17,6 +17,9 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json());
 const NavBar = () => {
   const { data: session } = useSession();
 
+  // TODO
+  const userHasSubscription = false;
+
   const { data: preferenceResponse, mutate } = useSWR<PreferenceResponse>(
     "/api/preferences",
     fetcher
@@ -47,7 +50,10 @@ const NavBar = () => {
     <header className="flex items-center justify-between max-w-3xl mx-auto pt-6 w-full">
       <div>
         <Link href="/app">
-          <h1 className="font-[Chewy] text-gray-800 text-2xl">airproxy</h1>
+          <h1 className="font-[Chewy] text-2xl text-gray-800">
+            <span className="mr-2.5">☁️</span>
+            <span>airproxy</span>
+          </h1>
         </Link>
       </div>
 
@@ -56,9 +62,9 @@ const NavBar = () => {
         <button onClick={() => toggleDarkModePreference()}>
           {preferenceResponse &&
           preferenceResponse.preferences.prefersDarkMode ? (
-            <SunIcon className="h-5 w-5" />
+            <SunIcon className="h-5 w-5 text-gray-800" />
           ) : (
-            <MoonIcon className="h-5 w-5" />
+            <MoonIcon className="h-5 w-5 text-gray-800" />
           )}
         </button>
 
@@ -84,7 +90,7 @@ const NavBar = () => {
             leaveTo="transform opacity-0 scale-95"
           >
             <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-              <Menu.Item>
+              {/* <Menu.Item>
                 {({ active }) => (
                   <a
                     href="#"
@@ -95,16 +101,20 @@ const NavBar = () => {
                     Your Profile
                   </a>
                 )}
-              </Menu.Item>
+              </Menu.Item> */}
               <Menu.Item>
                 {({ active }) => (
                   <a
-                    href="#"
+                    href={
+                      userHasSubscription
+                        ? "https://billing.stripe.com/p/login/aEU3gh5bbeZD3Pq4gg"
+                        : "/billing"
+                    }
                     className={`block px-4 py-2 text-sm text-gray-700 ${
                       active ? "bg-gray-100" : ""
                     }`}
                   >
-                    Billing
+                    Subscriptions
                   </a>
                 )}
               </Menu.Item>

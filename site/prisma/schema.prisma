@@ -61,7 +61,7 @@ model View {
 
 model Request {
   id        Int      @id @default(autoincrement())
-  createdAt DateTime
+  createdAt DateTime @db.DateTime(0)
   base      Base     @relation(fields: [baseId], references: [id])
   table     Table    @relation(fields: [tableId], references: [id])
   asn       Int      @db.UnsignedMediumInt
@@ -69,10 +69,14 @@ model Request {
   country   String   @db.VarChar(100)
   region    String   @db.VarChar(100)
   city      String   @db.VarChar(100)
+  latitude  Float
+  longitude Float
+  latlng    String
   baseId    String   @db.VarChar(50)
   tableId   String   @db.VarChar(50)
 
   @@index([baseId])
   @@index([tableId])
   @@index([baseId, tableId, createdAt])
+  @@index(latlng)
 }

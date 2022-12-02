@@ -1,11 +1,6 @@
 import Head from "next/head";
 import useSWR from "swr";
-import {
-  ShareIcon,
-  PlusIcon,
-  PauseIcon,
-  PlayIcon,
-} from "@heroicons/react/20/solid";
+import { PlusIcon, PauseIcon, PlayIcon } from "@heroicons/react/20/solid";
 import {
   CheckCircleIcon,
   KeyIcon,
@@ -18,6 +13,8 @@ import {
   ResponsiveContainer,
   AreaChart,
   Area,
+  BarChart,
+  Bar,
   XAxis,
 } from "recharts";
 import { useState } from "react";
@@ -25,6 +22,7 @@ import { Tooltip } from "react-tippy";
 import NavBar from "../../components/NavBar";
 import Link from "next/link";
 import StatCard from "../../components/StatCard";
+import millify from "millify";
 
 type Base = Prisma.BaseGetPayload<{
   include: {
@@ -40,7 +38,24 @@ interface BaseResponse {
   bases: Base[];
 }
 
+interface RequestsResponse {
+  requests: Object[];
+}
+
+interface StatsResponse {
+  totalRequests: number;
+  customerCount: number;
+}
+
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
+
+const dateTimeFormat = new Intl.DateTimeFormat("en", {
+  timeStyle: "short",
+  dateStyle: "medium",
+});
+
+const toLocalDateTime = (datetime: string): string =>
+  dateTimeFormat.format(new Date(`${datetime} UTC`));
 
 // !DEBUG
 const data = [
@@ -58,13 +73,6 @@ const data = [
   { time: "2:30pm", requests: 450 },
 ];
 
-// !DEBUG
-const stats = [
-  { name: "Total Requests", stat: "171.4k" },
-  { name: "Egress", stat: "58.9GB" },
-  { name: "Customers", stat: "24.4K" },
-];
-
 export default function Page() {
   const {
     data: baseResponse,
@@ -73,6 +81,20 @@ export default function Page() {
   } = useSWR<BaseResponse>("/api/bases", fetcher, {
     refreshInterval: 1000 * 60,
   });
+
+  const { data: requests } = useSWR<RequestsResponse>(
+    "/api/requests",
+    fetcher,
+    {
+      refreshInterval: 1000 * 5,
+    }
+  );
+
+  const { data: stats } = useSWR<StatsResponse>("/api/stats", fetcher, {
+    refreshInterval: 1000 * 5,
+  });
+
+  console.log(stats);
 
   const [keyValue, setKeyValue] = useState("");
 
@@ -193,17 +215,28 @@ export default function Page() {
             <main className="max-w-3xl mx-auto mt-16 grid gap-y-12 pb-24">
               {/* Stats */}
               <div>
+                {/* Cards */}
                 <h3 className="text-lg font-medium leading-6 text-gray-900">
                   Last 30 days
                 </h3>
                 <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
-                  {stats.map((item) => (
-                    <StatCard
-                      key={item.name}
-                      name={item.name}
-                      stat={item.stat}
-                    />
-                  ))}
+                  <StatCard
+                    name="Total Requests"
+                    stat={
+                      stats
+                        ? millify(stats.totalRequests, { precision: 2 })
+                        : "0"
+                    }
+                  />
+                  <StatCard
+                    name="Customers"
+                    stat={
+                      stats
+                        ? millify(stats.customerCount, { precision: 2 })
+                        : "0"
+                    }
+                  />
+                  <StatCard name="Egress" stat={"Coming"} />
                 </dl>
 
                 {/* Chart */}
@@ -215,10 +248,8 @@ export default function Page() {
                   </div>
 
                   <ResponsiveContainer>
-                    <AreaChart
-                      width={400}
-                      height={400}
-                      data={data}
+                    <BarChart
+                      data={requests ? requests.requests : data}
                       margin={{
                         top: 0,
                         right: 0,
@@ -226,36 +257,13 @@ export default function Page() {
                         left: 0,
                       }}
                     >
-                      <defs>
-                        <linearGradient
-                          id="colorRequests"
-                          x1="0"
-                          y1="0"
-                          x2="0"
-                          y2="1"
-                        >
-                          <stop
-                            offset="5%"
-                            stopColor="#8884d8"
-                            stopOpacity={0.8}
-                          />
-                          <stop
-                            offset="95%"
-                            stopColor="#8884d8"
-                            stopOpacity={0}
-                          />
-                        </linearGradient>
-                      </defs>
-                      <Area
-                        type="monotone"
-                        dataKey="requests"
-                        stroke="#8884d8"
-                        fillOpacity={1}
-                        fill="url(#colorRequests)"
+                      <Bar dataKey="requests" fill="#8884d8" />
+                      <ChartTooltip
+                        labelFormatter={(val) => toLocalDateTime(val)}
+                        formatter={(value, name, props) => [value, "Requests"]}
                       />
-                      <ChartTooltip />
-                      <XAxis dataKey="time" />
-                    </AreaChart>
+                      <XAxis domain={[0, "dataMax"]} dataKey="time" />
+                    </BarChart>
                   </ResponsiveContainer>
                 </div>
               </div>

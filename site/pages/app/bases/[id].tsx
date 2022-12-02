@@ -467,7 +467,11 @@ const Page = () => {
                                   </Tooltip>
                                 </button>
                                 <button
-                                  onClick={() => copyToClipboard(`TODO`)}
+                                  onClick={() =>
+                                    copyToClipboard(
+                                      `https://api.airproxy.app/${baseResponse.base.id}/${table.id}`
+                                    )
+                                  }
                                   className="text-indigo-600 hover:text-indigo-900"
                                 >
                                   {/* @ts-ignore */}

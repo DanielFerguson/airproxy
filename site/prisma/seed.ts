@@ -22,34 +22,69 @@ function getRandomViewType(): string {
 }
 
 async function main() {
-  for (let i = 0; i < 10; i++) {
-    await prisma.base.create({
-      include: {
-        tables: {
-          include: {
-            views: true,
-          },
-        },
-      },
-      data: {
-        email: "thedanielfergusonkid@gmail.com",
-        name: faker.company.name(),
-        id: faker.datatype.uuid(),
-        keysEmail: "thedanielfergusonkid@gmail.com",
-        tables: {
-          create: [0, 1, 2, 3, 4, 5, 6].map(() => ({
-            id: faker.datatype.uuid(),
-            name: faker.company.name(),
-            views: {
-              create: [0, 1, 2].map((index) => ({
-                id: faker.datatype.uuid(),
-                name: faker.company.name(),
-                type: getRandomViewType(),
-              })),
-            },
-          })),
-        },
-      },
+  let requests = [];
+  const now = new Date();
+
+  for (let i = 0; i < 10000; i++) {
+    if (Math.random() > 0.5) {
+      continue;
+    }
+
+    const lat = parseFloat(faker.address.latitude(-37, -38, 3));
+    const lng = parseFloat(faker.address.longitude(144, 143, 3));
+
+    requests.push({
+      baseId: "appOXt5N1bZJEWmMs",
+      tableId: "tbl43hYB96AviCUH1",
+      asn: 123,
+      city: "Ballarat",
+      continent: "AU",
+      country: "AU",
+      createdAt: new Date(now.getTime() + 1000 * i),
+      latitude: lat,
+      longitude: lng,
+      latlng: `${lat}-${lng}`,
+      region: "VIC",
+    });
+
+    // await prisma.base.create({
+    //   include: {
+    //     tables: {
+    //       include: {
+    //         views: true,
+    //       },
+    //     },
+    //   },
+    //   data: {
+    //     email: "thedanielfergusonkid@gmail.com",
+    //     name: faker.company.name(),
+    //     id: faker.datatype.uuid(),
+    //     keysEmail: "thedanielfergusonkid@gmail.com",
+    //     tables: {
+    //       create: [0, 1, 2, 3, 4, 5, 6].map(() => ({
+    //         id: faker.datatype.uuid(),
+    //         name: faker.company.name(),
+    //         views: {
+    //           create: [0, 1, 2].map((index) => ({
+    //             id: faker.datatype.uuid(),
+    //             name: faker.company.name(),
+    //             type: getRandomViewType(),
+    //           })),
+    //         },
+    //       })),
+    //     },
+    //   },
+    // });
+  }
+
+  const chunkSize = 1000;
+
+  for (let index = 0; index < requests.length; index++) {
+    const chunk = requests.slice(index, index + chunkSize);
+
+    await prisma.request.createMany({
+      data: chunk,
+      skipDuplicates: true,
     });
   }
 }

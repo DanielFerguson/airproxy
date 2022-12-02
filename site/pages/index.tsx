@@ -14,7 +14,7 @@ export default function Page() {
 
       <main>
         <h1>Airproxy</h1>
-        <p>Airtable in production, fearlessly.</p>
+        <p>Use Airtable in production, fearlessly.</p>
         <div>
           <LoginBtn />
         </div>
