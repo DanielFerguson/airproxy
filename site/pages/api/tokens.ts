@@ -39,6 +39,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     const results = await prisma.base.findMany({
       where: {
         keysEmail: email,
+        // @ts-ignore
         apiToken: {
           not: null,
         },
