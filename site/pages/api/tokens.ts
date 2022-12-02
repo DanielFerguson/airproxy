@@ -46,6 +46,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       },
       select: {
         id: true,
+        // @ts-ignore
         apiToken: true,
         name: true,
       },
