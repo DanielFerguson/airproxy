@@ -21,7 +21,24 @@ interface CfDetails {
   country: string;
   continent: string;
   asn: number;
+  latitude: string;
+  longitude: string;
 }
+
+const getSizeInBytes = (obj: any) => {
+  let str = null;
+
+  if (typeof obj === "string") {
+    // If obj is a string, then use it
+    str = obj;
+  } else {
+    // Else, make obj into a string
+    str = JSON.stringify(obj);
+  }
+
+  // Get the length of the Uint8Array
+  return new TextEncoder().encode(str).length;
+};
 
 export default {
   async fetch(
@@ -66,7 +83,13 @@ export default {
 
     if (cachedValue) {
       // Save request
-      await addRequestToDb(conn, details, baseId, tableId);
+      await addRequestToDb(
+        conn,
+        details,
+        baseId,
+        tableId,
+        getSizeInBytes(cachedValue)
+      );
 
       // Return cached value
       return new Response(cachedValue, {
@@ -127,7 +150,7 @@ export default {
     });
 
     // Save request
-    await addRequestToDb(conn, details, baseId, tableId);
+    await addRequestToDb(conn, details, baseId, tableId, getSizeInBytes(data));
 
     //
     // Return the data
@@ -145,10 +168,11 @@ const addRequestToDb = async (
   conn: Connection,
   details: CfDetails,
   baseId: string,
-  tableId: string
+  tableId: string,
+  requestSize: number
 ) => {
   await conn.execute(
-    "INSERT INTO Request (createdAt, asn, continent, country, region, city, baseId, tableId) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+    "INSERT INTO Request (createdAt, asn, continent, country, region, city, baseId, tableId, latitude, longitude, latlng, size) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
     [
       new Date().toISOString().slice(0, 19).replace("T", " "),
       details.asn,
@@ -158,6 +182,10 @@ const addRequestToDb = async (
       details.city,
       baseId,
       tableId,
+      parseFloat(details.latitude),
+      parseFloat(details.longitude),
+      `${details.latitude}, ${details.longitude}`,
+      requestSize,
     ]
   );
 };

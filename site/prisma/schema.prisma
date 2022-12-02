@@ -75,9 +75,9 @@ model Request {
   latlng    String
   baseId    String   @db.VarChar(50)
   tableId   String   @db.VarChar(50)
+  size      Int      @db.UnsignedMediumInt
 
   @@index([baseId])
   @@index([tableId])
   @@index([baseId, tableId, createdAt])
-  @@index(latlng)
 }

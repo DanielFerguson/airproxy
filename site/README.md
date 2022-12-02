@@ -63,7 +63,10 @@
 - [ ] Custom domains for API routes (business)
 
 - [ ] Webhooks (call it Live Updates) (business)
+
   - deliver updates from api to clients via webhooks (definitely a business feature)
+
+- [ ] Cache other APIs
 
 # Pricing
 

@@ -30,7 +30,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   //
 
   if (req.method === "GET") {
-    const response = await prisma.base.findMany({
+    const results = await prisma.base.findMany({
       select: {
         id: true,
         name: true,
@@ -47,8 +47,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       },
     });
 
-    res.send({
-      bases: response,
-    });
+    res.send(results);
   }
 };

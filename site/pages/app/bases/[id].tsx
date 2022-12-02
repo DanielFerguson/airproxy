@@ -11,6 +11,7 @@ import {
   CalendarDaysIcon,
   ClockIcon,
   InboxIcon,
+  InformationCircleIcon,
   PauseIcon,
   PhotoIcon,
   PlayIcon,
@@ -27,6 +28,7 @@ import {
   ResponsiveContainer,
   Tooltip as ChartTooltip,
   XAxis,
+  YAxis,
 } from "recharts";
 import millify from "millify";
 import { ClipboardDocumentIcon, XMarkIcon } from "@heroicons/react/24/outline";
@@ -108,6 +110,26 @@ const ttlOptions = [
   { name: "12h", seconds: 43200 },
   { name: "1d", seconds: 86400 },
   { name: "1w", seconds: 604800 },
+];
+
+const dummyData = [
+  { time: "9:00am", requests: 5 },
+  { time: "9:30am", requests: 5 },
+  { time: "10:00am", requests: 5 },
+  { time: "10:30am", requests: 5 },
+  { time: "11:00am", requests: 5 },
+  { time: "11:30am", requests: 5 },
+  { time: "12:00pm", requests: 5 },
+  { time: "12:30pm", requests: 5 },
+  { time: "1:00pm", requests: 5 },
+  { time: "1:30pm", requests: 5 },
+  { time: "2:00pm", requests: 5 },
+  { time: "2:30pm", requests: 5 },
+  { time: "3:00pm", requests: 5 },
+  { time: "3:30pm", requests: 5 },
+  { time: "4:00pm", requests: 5 },
+  { time: "4:30pm", requests: 5 },
+  { time: "5:00pm", requests: 5 },
 ];
 
 const Page = () => {
@@ -268,8 +290,6 @@ const Page = () => {
     toast.success("Copied API URL.");
   };
 
-  if (!base) return <></>;
-
   return (
     <div>
       <Head>
@@ -359,7 +379,7 @@ const Page = () => {
 
             <ResponsiveContainer>
               <BarChart
-                data={requests}
+                data={requests && requests.length > 0 ? requests : dummyData}
                 margin={{
                   top: 0,
                   right: 0,
@@ -368,13 +388,42 @@ const Page = () => {
                 }}
               >
                 <Bar dataKey="requests" fill="#8884d8" />
-                <ChartTooltip
-                  formatter={(value, name, props) => [value, "Requests"]}
+                {requests && requests.length > 0 && (
+                  <ChartTooltip
+                    formatter={(value, name, props) => [value, "Requests"]}
+                  />
+                )}
+                <YAxis
+                  type="number"
+                  domain={
+                    requests && requests.length > 0 ? [0, "dataMax"] : [0, 100]
+                  }
+                  hide
                 />
                 <XAxis domain={[0, "dataMax"]} dataKey="time" />
               </BarChart>
             </ResponsiveContainer>
           </div>
+
+          {/* Notification */}
+          {requests && requests.length === 0 && (
+            <div className="rounded-md bg-blue-50 p-4">
+              <div className="flex">
+                <div className="flex-shrink-0">
+                  <InformationCircleIcon
+                    className="h-5 w-5 text-blue-400"
+                    aria-hidden="true"
+                  />
+                </div>
+                <div className="ml-3 flex-1 md:flex md:justify-between">
+                  <p className="text-sm text-blue-700">
+                    When you start receiving requests, you will be able to
+                    monitor them here.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* API Tokens */}
@@ -481,12 +530,12 @@ const Page = () => {
                         >
                           View
                         </th>
-                        <th
+                        {/* <th
                           scope="col"
                           className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                         >
                           Requests (24h)
-                        </th>
+                        </th> */}
                         <th
                           scope="col"
                           className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
@@ -541,15 +590,15 @@ const Page = () => {
                               </div>
                             </td>
                             {/* Requests */}
-                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                            {/* <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                               <div className="text-gray-900 flex items-center gap-3">
                                 24.7k{" "}
-                                {/* <span className="inline-flex gap-1 items-center rounded bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800">
+                                <span className="inline-flex gap-1 items-center rounded bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800">
                                   <ArrowTrendingUpIcon className="h-4 w-4 text-green-700" />
                                   12.5%
-                                </span> */}
+                                </span>
                               </div>
-                            </td>
+                            </td> */}
                             {/* Status */}
                             <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                               {base.active && table.active ? (

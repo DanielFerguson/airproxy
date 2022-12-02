@@ -58,7 +58,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     ORDER BY time ASC;
   `;
 
-  res.status(200).json({
-    requests: result,
-  });
+  res.status(200).json(result);
 };

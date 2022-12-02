@@ -14,6 +14,7 @@ import {
   BarChart,
   Bar,
   XAxis,
+  YAxis,
 } from "recharts";
 import { useState } from "react";
 import { Tooltip } from "react-tippy";
@@ -27,6 +28,7 @@ import {
   Geography,
   Marker,
 } from "react-simple-maps";
+import { InformationCircleIcon } from "@heroicons/react/20/solid";
 
 type Base = Prisma.BaseGetPayload<{
   include: {
@@ -37,14 +39,6 @@ type Base = Prisma.BaseGetPayload<{
     };
   };
 }>;
-
-interface BaseResponse {
-  bases: Base[];
-}
-
-interface RequestsResponse {
-  requests: Object[];
-}
 
 interface StatsResponse {
   totalRequests: number;
@@ -61,67 +55,36 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 const geoUrl = "/features.json";
 
-const markers = [
-  {
-    markerOffset: -30,
-    name: "Buenos Aires",
-    coordinates: [-58.3816, -34.6037],
-  },
-  { markerOffset: 15, name: "La Paz", coordinates: [-68.1193, -16.4897] },
-  { markerOffset: 15, name: "Brasilia", coordinates: [-47.8825, -15.7942] },
-  { markerOffset: 15, name: "Santiago", coordinates: [-70.6693, -33.4489] },
-  { markerOffset: 15, name: "Bogota", coordinates: [-74.0721, 4.711] },
-  { markerOffset: 15, name: "Quito", coordinates: [-78.4678, -0.1807] },
-  { markerOffset: -30, name: "Georgetown", coordinates: [-58.1551, 6.8013] },
-  { markerOffset: -30, name: "Asuncion", coordinates: [-57.5759, -25.2637] },
-  { markerOffset: 15, name: "Paramaribo", coordinates: [-55.2038, 5.852] },
-  { markerOffset: 15, name: "Montevideo", coordinates: [-56.1645, -34.9011] },
-  { markerOffset: 15, name: "Caracas", coordinates: [-66.9036, 10.4806] },
-  { markerOffset: 15, name: "Lima", coordinates: [-77.0428, -12.0464] },
-];
-
-// const dateTimeFormat = new Intl.DateTimeFormat("en", {
-//   timeStyle: "short",
-//   dateStyle: "medium",
-// });
-
-// const toLocalDateTime = (datetime: string): string =>
-//   dateTimeFormat.format(new Date(`${datetime}`));
-
-// const toLocalDateTime = (datetime: string) => datetime;
-
-// !DEBUG
-const data = [
-  { time: "9:00am", requests: 400 },
-  { time: "9:30am", requests: 600 },
-  { time: "10:00am", requests: 500 },
-  { time: "10:30am", requests: 700 },
-  { time: "11:00am", requests: 500 },
-  { time: "11:30am", requests: 600 },
-  { time: "12:00pm", requests: 700 },
-  { time: "12:30pm", requests: 700 },
-  { time: "1:00pm", requests: 900 },
-  { time: "1:30pm", requests: 950 },
-  { time: "2:00pm", requests: 400 },
-  { time: "2:30pm", requests: 450 },
+const dummyData = [
+  { time: "9:00am", requests: 5 },
+  { time: "9:30am", requests: 5 },
+  { time: "10:00am", requests: 5 },
+  { time: "10:30am", requests: 5 },
+  { time: "11:00am", requests: 5 },
+  { time: "11:30am", requests: 5 },
+  { time: "12:00pm", requests: 5 },
+  { time: "12:30pm", requests: 5 },
+  { time: "1:00pm", requests: 5 },
+  { time: "1:30pm", requests: 5 },
+  { time: "2:00pm", requests: 5 },
+  { time: "2:30pm", requests: 5 },
+  { time: "3:00pm", requests: 5 },
+  { time: "3:30pm", requests: 5 },
+  { time: "4:00pm", requests: 5 },
+  { time: "4:30pm", requests: 5 },
+  { time: "5:00pm", requests: 5 },
 ];
 
 export default function Page() {
-  const { data: baseResponse, mutate } = useSWR<BaseResponse>(
-    "/api/bases",
-    fetcher,
-    {
-      refreshInterval: 1000 * 60,
-    }
-  );
+  const { data: bases, mutate } = useSWR<Base[]>("/api/bases", fetcher, {
+    refreshInterval: 1000 * 60,
+  });
 
-  const { data: requests } = useSWR<RequestsResponse>(
-    "/api/requests",
-    fetcher,
-    {
-      refreshInterval: 1000 * 5,
-    }
-  );
+  const { data: requests } = useSWR<Object[]>("/api/requests", fetcher, {
+    refreshInterval: 1000 * 5,
+  });
+
+  console.log(requests);
 
   const { data: recentRequests } = useSWR<LatLng[]>(
     "/api/recent-requests",
@@ -190,7 +153,7 @@ export default function Page() {
       <NavBar />
 
       {/* Register */}
-      {baseResponse?.bases?.length === 0 && (
+      {bases?.length === 0 && (
         <main className="max-w-3xl mx-auto mt-16">
           {/* Register a Token */}
           <div className="text-center">
@@ -249,7 +212,7 @@ export default function Page() {
         </main>
       )}
 
-      {baseResponse?.bases?.length && (
+      {bases && bases.length > 0 && (
         <main className="max-w-3xl mx-auto mt-16 grid gap-y-12 pb-24">
           {/* Bases */}
           <div>
@@ -260,7 +223,7 @@ export default function Page() {
               role="list"
               className="grid grid-cols-1 mt-5 gap-6 sm:grid-cols-2 lg:grid-cols-3"
             >
-              {baseResponse.bases
+              {bases
                 ?.sort((a, b) => a.name.localeCompare(b.name))
                 .map((base) => (
                   <li
@@ -413,10 +376,12 @@ export default function Page() {
               </ComposableMap>
 
               {/* Bar Chart */}
-              <div className="relative h-48">
+              <div className="relative h-48 -mt-16">
                 <ResponsiveContainer>
                   <BarChart
-                    data={requests ? requests.requests : data}
+                    data={
+                      requests && requests.length > 0 ? requests : dummyData
+                    }
                     margin={{
                       top: 0,
                       right: 0,
@@ -425,13 +390,43 @@ export default function Page() {
                     }}
                   >
                     <Bar dataKey="requests" fill="#8884d8" />
-                    <ChartTooltip
-                      formatter={(value, name, props) => [value, "Requests"]}
+                    {requests && requests.length > 0 && (
+                      <ChartTooltip
+                        formatter={(value, name, props) => [value, "Requests"]}
+                      />
+                    )}
+                    <YAxis
+                      type="number"
+                      domain={
+                        requests && requests.length > 0
+                          ? [0, "dataMax"]
+                          : [0, 100]
+                      }
+                      hide
                     />
-                    <XAxis domain={[0, "dataMax"]} dataKey="time" hide />
+                    <XAxis dataKey="time" hide />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
+              {/* Notification */}
+              {requests && requests.length === 0 && (
+                <div className="rounded-md bg-blue-50 p-4">
+                  <div className="flex">
+                    <div className="flex-shrink-0">
+                      <InformationCircleIcon
+                        className="h-5 w-5 text-blue-400"
+                        aria-hidden="true"
+                      />
+                    </div>
+                    <div className="ml-3 flex-1 md:flex md:justify-between">
+                      <p className="text-sm text-blue-700">
+                        When you start receiving requests, you will be able to
+                        monitor them here.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </main>
