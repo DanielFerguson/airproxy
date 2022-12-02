@@ -39,6 +39,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   //
 
   if (req.method === "GET") {
+    // @ts-ignore
     const response = await prisma.base.findFirstOrThrow({
       where: {
         id,
