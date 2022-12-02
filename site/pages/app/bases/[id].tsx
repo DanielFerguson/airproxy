@@ -37,10 +37,8 @@ type Base = Prisma.BaseGetPayload<{
     name: true;
     active: true;
     apiToken: true;
-  };
-  include: {
     tables: {
-      include: {
+      select: {
         views: true;
       };
     };
