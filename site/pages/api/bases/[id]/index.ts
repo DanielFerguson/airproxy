@@ -49,7 +49,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         id: true,
         name: true,
         active: true,
-        // @ts-ignore
         apiToken: true,
         tables: {
           select: {
@@ -157,7 +156,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         email,
       },
       data: {
-        // @ts-ignore
         apiToken: null,
       },
     });
@@ -177,7 +175,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         id,
       },
       data: {
-        // @ts-ignore
         apiToken: uuidv4(),
       },
     });

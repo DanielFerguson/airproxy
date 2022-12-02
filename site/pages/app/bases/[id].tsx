@@ -32,6 +32,12 @@ import millify from "millify";
 import { ClipboardDocumentIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
 type Base = Prisma.BaseGetPayload<{
+  select: {
+    id: true;
+    name: true;
+    active: true;
+    apiToken: true;
+  };
   include: {
     tables: {
       include: {
@@ -102,41 +108,12 @@ const ttlOptions = [
   { name: "1w", seconds: 604800 },
 ];
 
-const data = [
-  { requests: 210, time: "2022-12-02 00:11:00" },
-  { requests: 370, time: "2022-12-02 00:12:00" },
-  { requests: 340, time: "2022-12-02 00:13:00" },
-  { requests: 270, time: "2022-12-02 00:14:00" },
-  { requests: 280, time: "2022-12-02 00:15:00" },
-  { requests: 310, time: "2022-12-02 00:16:00" },
-  { requests: 330, time: "2022-12-02 00:17:00" },
-  { requests: 300, time: "2022-12-02 00:18:00" },
-  { requests: 290, time: "2022-12-02 00:19:00" },
-  { requests: 260, time: "2022-12-02 00:20:00" },
-  { requests: 340, time: "2022-12-02 00:21:00" },
-  { requests: 260, time: "2022-12-02 00:22:00" },
-  { requests: 340, time: "2022-12-02 00:23:00" },
-  { requests: 340, time: "2022-12-02 00:24:00" },
-  { requests: 350, time: "2022-12-02 00:25:00" },
-  { requests: 280, time: "2022-12-02 00:26:00" },
-  { requests: 350, time: "2022-12-02 00:27:00" },
-  { requests: 330, time: "2022-12-02 00:28:00" },
-  { requests: 310, time: "2022-12-02 00:29:00" },
-  { requests: 250, time: "2022-12-02 00:30:00" },
-];
-
-const fetchTableRequestsCount = async (tableId: string) => {
-  const result = await fetch(`/api/tables/${tableId}/requests`);
-  return result.json();
-};
-
 const Page = () => {
   const router = useRouter();
   const { id } = router.query;
 
   const { data: base, mutate } = useSWR<Base>(`/api/bases/${id}`, fetcher, {
     refreshInterval: 1000 * 60,
-    isPaused: () => !id,
   });
 
   const { data: requests } = useSWR<Request[]>(
