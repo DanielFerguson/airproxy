@@ -9,7 +9,7 @@ function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   const router = useRouter();
 
   useEffect(() => {
-    Fathom.load("GPXAGFHD", {
+    Fathom.load("UZEOXTCH", {
       includedDomains: ["www.airproxy.app", "airproxy.app"],
     });
 

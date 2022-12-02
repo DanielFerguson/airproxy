@@ -41,6 +41,8 @@
 - [ ] Chart egress p/h
 - [ ] Chart egress p/base and p/table
 
+- [ ] Set allowed origins globally and per base
+
 - [ ] Add ability to delete account, wipe data from database
 
 - [ ] Create home page
