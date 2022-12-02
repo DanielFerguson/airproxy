@@ -49,6 +49,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         id: true,
         name: true,
         active: true,
+        // @ts-ignore
         apiToken: true,
         tables: {
           select: {
