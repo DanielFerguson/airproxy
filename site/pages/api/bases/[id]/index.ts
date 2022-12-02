@@ -157,6 +157,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         email,
       },
       data: {
+        // @ts-ignore
         apiToken: null,
       },
     });
@@ -176,6 +177,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         id,
       },
       data: {
+        // @ts-ignore
         apiToken: uuidv4(),
       },
     });
