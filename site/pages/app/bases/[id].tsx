@@ -41,6 +41,7 @@ type Base = Prisma.BaseGetPayload<{
       select: {
         name: true;
         id: true;
+        ttl: true;
         active: true;
         views: true;
       };
