@@ -11,6 +11,7 @@ function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   useEffect(() => {
     Fathom.load("UZEOXTCH", {
       includedDomains: ["www.airproxy.app", "airproxy.app"],
+      url: "fabulous-reliable.airproxy.app",
     });
 
     function onRouteChangeComplete() {

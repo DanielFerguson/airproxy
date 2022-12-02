@@ -227,6 +227,7 @@ export default function Page() {
                         ? millify(stats.totalRequests, { precision: 2 })
                         : "0"
                     }
+                    limit={millify(100000, { precision: 2 })}
                   />
                   <StatCard
                     name="Customers"
@@ -236,7 +237,7 @@ export default function Page() {
                         : "0"
                     }
                   />
-                  <StatCard name="Egress" stat={"Coming"} />
+                  <StatCard name="Egress" stat={"Coming soon"} />
                 </dl>
 
                 {/* Chart */}
@@ -287,7 +288,7 @@ export default function Page() {
                         <div className="flex flex-col w-full justify-between gap-y-6 p-6">
                           <div className="flex items-center justify-between">
                             <Link href={`/app/bases/${base.id}`}>
-                              <h3 className="text-lg font-medium text-gray-900">
+                              <h3 className="text-lg font-semibold text-indigo-600">
                                 {base.name}
                               </h3>
                             </Link>
