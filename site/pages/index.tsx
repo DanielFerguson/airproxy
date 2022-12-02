@@ -13,6 +13,7 @@ import {
   UsersIcon,
   BeakerIcon,
 } from "@heroicons/react/24/outline";
+import Link from "next/link";
 
 const navigation = [
   { name: "Features", href: "/#features" },
@@ -144,10 +145,10 @@ export default function Page() {
                 aria-label="Global"
               >
                 <div className="flex lg:min-w-0 lg:flex-1" aria-label="Global">
-                  <a href="#" className="-m-1.5 p-1.5">
+                  <Link href="#" className="-m-1.5 p-1.5">
                     <span className="sr-only">Airproxy</span>
                     <span className="text-5xl">☁️</span>
-                  </a>
+                  </Link>
                 </div>
                 <div className="flex lg:hidden">
                   <button
@@ -161,22 +162,22 @@ export default function Page() {
                 </div>
                 <div className="hidden lg:flex lg:min-w-0 lg:flex-1 lg:justify-center lg:gap-x-12">
                   {navigation.map((item) => (
-                    <a
+                    <Link
                       key={item.name}
                       href={item.href}
                       className="font-semibold text-gray-900 hover:text-gray-900"
                     >
                       {item.name}
-                    </a>
+                    </Link>
                   ))}
                 </div>
                 <div className="hidden lg:flex lg:min-w-0 lg:flex-1 lg:justify-end">
-                  <a
+                  <Link
                     href="/api/auth/signin"
                     className="inline-block rounded-lg px-3 py-1.5 text-sm font-semibold leading-6 text-gray-900 shadow-sm ring-1 ring-gray-900/10 hover:ring-gray-900/20"
                   >
                     Log in
-                  </a>
+                  </Link>
                 </div>
               </nav>
               <Dialog
@@ -184,16 +185,13 @@ export default function Page() {
                 open={mobileMenuOpen}
                 onClose={setMobileMenuOpen}
               >
-                <Dialog.Panel
-                  focus="true"
-                  className="fixed inset-0 z-10 overflow-y-auto bg-white px-6 py-6 lg:hidden"
-                >
+                <Dialog.Panel className="fixed inset-0 z-10 overflow-y-auto bg-white px-6 py-6 lg:hidden">
                   <div className="flex h-9 items-center justify-between">
                     <div className="flex">
-                      <a href="#" className="-m-1.5 p-1.5">
+                      <Link href="#" className="-m-1.5 p-1.5">
                         <span className="sr-only">Airproxy</span>
                         <span className="text-5xl">☁️</span>
-                      </a>
+                      </Link>
                     </div>
                     <div className="flex">
                       <button
@@ -210,22 +208,22 @@ export default function Page() {
                     <div className="-my-6 divide-y divide-gray-500/10">
                       <div className="space-y-2 py-6">
                         {navigation.map((item) => (
-                          <a
+                          <Link
                             key={item.name}
                             href={item.href}
                             className="-mx-3 block rounded-lg py-2 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-400/10"
                           >
                             {item.name}
-                          </a>
+                          </Link>
                         ))}
                       </div>
                       <div className="py-6">
-                        <a
+                        <Link
                           href="/api/auth/signin"
                           className="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-6 text-gray-900 hover:bg-gray-400/10"
                         >
                           Log in
-                        </a>
+                        </Link>
                       </div>
                     </div>
                   </div>
@@ -244,13 +242,16 @@ export default function Page() {
                     <div className="relative overflow-hidden rounded-full py-1.5 px-4 text-sm leading-6 ring-1 ring-gray-900/10 hover:ring-gray-900/20">
                       <span className="text-gray-600">
                         Announcing the public launch of Airproxy.{" "}
-                        <a href="#" className="font-semibold text-indigo-600">
+                        <Link
+                          href="#"
+                          className="font-semibold text-indigo-600"
+                        >
                           <span
                             className="absolute inset-0"
                             aria-hidden="true"
                           />
                           Read more <span aria-hidden="true">&rarr;</span>
-                        </a>
+                        </Link>
                       </span>
                     </div>
                   </div>
@@ -266,18 +267,18 @@ export default function Page() {
                       rate limits. Get busy building!
                     </p>
                     <div className="mt-8 flex gap-x-4 sm:justify-center">
-                      <a
+                      <Link
                         href="/api/auth/signin"
                         className="inline-block rounded-lg bg-indigo-600 px-4 py-1.5 text-base font-semibold leading-7 text-white shadow-sm ring-1 ring-indigo-600 hover:bg-indigo-700 hover:ring-indigo-700"
                       >
                         Get started
-                      </a>
-                      <a
+                      </Link>
+                      <Link
                         href="#"
                         className="inline-block rounded-lg px-4 py-1.5 text-base font-semibold leading-7 text-gray-900 ring-1 ring-gray-900/10 hover:ring-gray-900/20"
                       >
                         Live demo
-                      </a>
+                      </Link>
                     </div>
                     {/* Map */}
                     <div className="pt-16">
@@ -505,13 +506,13 @@ export default function Page() {
                           ))}
                         </ul>
                         <div className="mt-8">
-                          <a
+                          <Link
                             href={tier.href}
                             className="inline-block w-full rounded-lg bg-indigo-600 px-4 py-2.5 text-center text-sm font-semibold leading-5 text-white shadow-md hover:bg-indigo-700"
                             aria-describedby={tier.id}
                           >
                             Get started today
-                          </a>
+                          </Link>
                         </div>
                       </div>
                     </div>
@@ -534,12 +535,12 @@ export default function Page() {
                   </div>
                 </div>
                 <div>
-                  <a
+                  <Link
                     href="/api/auth/signin"
                     className="inline-block rounded-lg bg-indigo-50 px-4 py-2.5 text-center text-sm font-semibold leading-5 text-indigo-700 hover:bg-indigo-100"
                   >
                     Get started today <span aria-hidden="true">&rarr;</span>
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -555,12 +556,12 @@ export default function Page() {
             >
               {navigation.map((item) => (
                 <div key={item.name} className="px-5 py-2">
-                  <a
+                  <Link
                     href={item.href}
                     className="text-base text-gray-500 hover:text-gray-900"
                   >
                     {item.name}
-                  </a>
+                  </Link>
                 </div>
               ))}
             </nav>
