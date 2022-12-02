@@ -59,6 +59,7 @@ interface Request {
 interface StatsResponse {
   totalRequests: number;
   customerCount: number;
+  totalRequestsSize?: number;
 }
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
@@ -366,7 +367,18 @@ const Page = () => {
                 stats ? millify(stats.customerCount, { precision: 2 }) : "0"
               }
             />
-            <StatCard name="Egress" stat={"Coming soon"} />
+            <StatCard
+              name="Egress"
+              stat={
+                stats && stats.totalRequestsSize !== null
+                  ? millify(stats.totalRequestsSize, {
+                      precision: 2,
+                      units: ["B", "KB", "MB", "GB", "TB"],
+                      space: true,
+                    })
+                  : "0"
+              }
+            />
           </dl>
 
           {/* Chart */}

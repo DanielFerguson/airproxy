@@ -18,7 +18,7 @@ import Link from "next/link";
 const navigation = [
   { name: "Features", href: "/#features" },
   { name: "Pricing", href: "/#pricing" },
-  { name: "Articles", href: "#" },
+  { name: "Blog", href: "#" },
 ];
 
 const features = [
@@ -271,14 +271,14 @@ export default function Page() {
                         href="/api/auth/signin"
                         className="inline-block rounded-lg bg-indigo-600 px-4 py-1.5 text-base font-semibold leading-7 text-white shadow-sm ring-1 ring-indigo-600 hover:bg-indigo-700 hover:ring-indigo-700"
                       >
-                        Get started
+                        Get started today
                       </Link>
-                      <Link
+                      {/* <Link
                         href="#"
                         className="inline-block rounded-lg px-4 py-1.5 text-base font-semibold leading-7 text-gray-900 ring-1 ring-gray-900/10 hover:ring-gray-900/20"
                       >
                         Live demo
-                      </Link>
+                      </Link> */}
                     </div>
                     {/* Map */}
                     <div className="pt-16">

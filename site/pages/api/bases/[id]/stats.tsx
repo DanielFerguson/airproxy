@@ -46,7 +46,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const results = await prisma.$queryRaw`
     SELECT
       count(id) as totalRequests,
-      COUNT(DISTINCT(latlng)) as customerCount
+      COUNT(DISTINCT(latlng)) as customerCount,
+	    SUM(size) as totalRequestsSize
     FROM
       Request
     WHERE

@@ -43,6 +43,7 @@ type Base = Prisma.BaseGetPayload<{
 interface StatsResponse {
   totalRequests: number;
   customerCount: number;
+  totalRequestsSize?: number;
 }
 
 interface LatLng {
@@ -83,8 +84,6 @@ export default function Page() {
   const { data: requests } = useSWR<Object[]>("/api/requests", fetcher, {
     refreshInterval: 1000 * 5,
   });
-
-  console.log(requests);
 
   const { data: recentRequests } = useSWR<LatLng[]>(
     "/api/recent-requests",
@@ -330,7 +329,18 @@ export default function Page() {
                   stats ? millify(stats.customerCount, { precision: 2 }) : "0"
                 }
               />
-              <StatCard name="Egress" stat={"Coming soon"} />
+              <StatCard
+                name="Egress"
+                stat={
+                  stats && stats.totalRequestsSize
+                    ? millify(stats.totalRequestsSize, {
+                        precision: 2,
+                        units: ["B", "KB", "MB", "GB", "TB"],
+                        space: true,
+                      })
+                    : "0"
+                }
+              />
             </dl>
 
             {/* Chart */}

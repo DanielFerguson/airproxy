@@ -43,6 +43,7 @@ async function main() {
         longitude: lng,
         latlng: `${lat}-${lng}`,
         region: "VIC",
+        size: Math.floor(15000 * Math.random()),
       },
     });
   }, 1000);
