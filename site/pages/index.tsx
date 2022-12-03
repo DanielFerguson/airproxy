@@ -344,7 +344,7 @@ export default function Page() {
         </div>
 
         {/* Logos */}
-        <div className="mx-auto max-w-7xl py-12 px-4 sm:px-6 lg:px-8">
+        {/* <div className="mx-auto max-w-7xl py-12 px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 gap-8 md:grid-cols-3">
             <div className="col-span-1 flex justify-center md:col-span-2 lg:col-span-1">
               <img
@@ -366,6 +366,56 @@ export default function Page() {
                 src="/icons/the-cash-kings.svg"
                 alt="The Cash Kings"
               />
+            </div>
+          </div>
+        </div> */}
+
+        {/* Stats */}
+        <div className="pt-12 sm:pt-16">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="mx-auto max-w-4xl text-center">
+              <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+                Trusted by businesses with a bias for action
+              </h2>
+              <p className="mt-3 text-xl text-gray-500 sm:mt-4">
+                We're already enabling businesses to scale into international
+                markets, <br /> so they can deliver products to market faster.
+              </p>
+            </div>
+          </div>
+          <div className="pb-12 sm:pb-16">
+            <div className="relative">
+              <div className="absolute inset-0 h-1/2" />
+              <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div className="mx-auto max-w-4xl">
+                  <dl className="rounded-lg shadow-lg sm:grid sm:grid-cols-3">
+                    <div className="flex flex-col border-b border-gray-100 p-6 text-center sm:border-0 sm:border-r">
+                      <dt className="order-2 mt-2 text-lg font-medium leading-6 text-gray-500">
+                        Requests Delivered
+                      </dt>
+                      <dd className="order-1 text-5xl font-bold tracking-tight text-indigo-600">
+                        100 M
+                      </dd>
+                    </div>
+                    <div className="flex flex-col border-t border-b border-gray-100 p-6 text-center sm:border-0 sm:border-l sm:border-r">
+                      <dt className="order-2 mt-2 text-lg font-medium leading-6 text-gray-500">
+                        Uptime
+                      </dt>
+                      <dd className="order-1 text-5xl font-bold tracking-tight text-indigo-600">
+                        100%
+                      </dd>
+                    </div>
+                    <div className="flex flex-col border-t border-gray-100 p-6 text-center sm:border-0 sm:border-l">
+                      <dt className="order-2 mt-2 text-lg font-medium leading-6 text-gray-500">
+                        Avg Response Time
+                      </dt>
+                      <dd className="order-1 text-5xl font-bold tracking-tight text-indigo-600">
+                        89.7 ms
+                      </dd>
+                    </div>
+                  </dl>
+                </div>
+              </div>
             </div>
           </div>
         </div>
