@@ -1,4 +1,5 @@
 import PageLayout from "../../components/layouts/PageLayout";
+import { NextSeo, ArticleJsonLd } from "next-seo";
 
 const posts = [
   {
@@ -59,51 +60,80 @@ const posts = [
 
 const Page = () => {
   return (
-    <div className="relative">
-      <div className="relative">
-        <div className="text-center">
-          <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-            Upskill your Airtable skills
-          </h2>
-          <p className="mx-auto mt-3 max-w-2xl text-xl text-gray-500 sm:mt-4">
-            We&apos;re here to help you take your Airtable game to the next
-            level so you can deliver your value faster, futher, and more
-            quickly.
-          </p>
-        </div>
-        <div className="mx-auto mt-12 grid max-w-lg gap-5 lg:max-w-none lg:grid-cols-3">
-          {posts.map((post) => (
-            <div
-              key={post.title}
-              className="flex flex-col overflow-hidden rounded-lg shadow-lg"
-            >
-              <div className="flex-shrink-0">
-                <img
-                  className="h-48 w-full object-cover"
-                  src={post.imageUrl}
-                  alt=""
-                />
-              </div>
-              <div className="flex flex-1 flex-col justify-between bg-white p-6">
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-indigo-600">
-                    <a href={post.category.href} className="hover:underline">
-                      {post.category.name}
-                    </a>
-                  </p>
-                  <a href={post.href} className="mt-2 block">
-                    <p className="text-xl font-semibold text-gray-900">
-                      {post.title}
-                    </p>
-                    <p className="mt-3 text-base text-gray-500">
-                      {post.description}
-                    </p>
+    <div>
+      <NextSeo
+        title="Blog | Airproxy"
+        description="We're here to help you take your Airtable game to the next level so you can deliver your value faster, futher, and more quickly."
+        canonical="https://www.airproxy.app/blog"
+        openGraph={{
+          url: "https://www.airproxy.app/blog",
+          title: "Blog | Airproxy",
+          description:
+            "We're here to help you take your Airtable game to the next level so you can deliver your value faster, futher, and more quickly.",
+          siteName: "Airproxy",
+        }}
+        twitter={{
+          handle: "@thedannyferg",
+          site: "@airproxyapp",
+          cardType: "summary_large_image",
+        }}
+      />
+
+      {posts.map((post) => (
+        <ArticleJsonLd
+          key={`${post.title}-article-id`}
+          type="BlogPosting"
+          url={post.href}
+          title={post.title}
+          images={[post.imageUrl]}
+          datePublished={post.datetime}
+          dateModified={post.datetime}
+          authorName="Dan Ferguson"
+          description={post.description}
+        />
+      ))}
+
+      <div className="text-center">
+        <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          Upskill your Airtable skills
+        </h2>
+        <p className="mx-auto mt-3 max-w-2xl text-xl text-gray-500 sm:mt-4">
+          We&apos;re here to help you take your Airtable game to the next level
+          so you can deliver your value faster, futher, and more quickly.
+        </p>
+      </div>
+      <div className="mx-auto mt-12 grid max-w-lg gap-5 lg:max-w-none lg:grid-cols-3">
+        {posts.map((post) => (
+          <div
+            key={post.title}
+            className="flex flex-col overflow-hidden rounded-lg shadow-lg"
+          >
+            <div className="flex-shrink-0">
+              <img
+                className="h-48 w-full object-cover"
+                src={post.imageUrl}
+                alt=""
+              />
+            </div>
+            <div className="flex flex-1 flex-col justify-between bg-white p-6">
+              <div className="flex-1">
+                <p className="text-sm font-medium text-indigo-600">
+                  <a href={post.category.href} className="hover:underline">
+                    {post.category.name}
                   </a>
-                </div>
+                </p>
+                <a href={post.href} className="mt-2 block">
+                  <p className="text-xl font-semibold text-gray-900">
+                    {post.title}
+                  </p>
+                  <p className="mt-3 text-base text-gray-500">
+                    {post.description}
+                  </p>
+                </a>
               </div>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
     </div>
   );

@@ -15,6 +15,8 @@ import {
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import { NextSeo } from "next-seo";
+import { OrganizationJsonLd, LogoJsonLd, SoftwareAppJsonLd } from "next-seo";
 
 const navigation = [
   { name: "Features", href: "/#features" },
@@ -106,6 +108,67 @@ export default function Page() {
           href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>☁️</text></svg>"
         ></link>
       </Head>
+
+      <NextSeo
+        title="Using More of Config"
+        description="This example uses more of the available config options."
+        canonical="https://www.canonical.ie/"
+        openGraph={{
+          url: "https://www.airproxy.app",
+          title: "Airproxy | Airtable in production, fearlessly.",
+          description:
+            "Gain the full power of the Airtable platform, and build businesses fearlessly without worrying about scaling, or rate limits. Get busy building!",
+          siteName: "Airproxy",
+        }}
+        twitter={{
+          handle: "@thedannyferg",
+          site: "@airproxyapp",
+          cardType: "summary_large_image",
+        }}
+      />
+
+      <SoftwareAppJsonLd
+        name="Airproxy"
+        price="27.00"
+        priceCurrency="AUD"
+        operatingSystem="WEB"
+        applicationCategory="Productivity"
+      />
+
+      <LogoJsonLd
+        key="aaiga-logo-ld"
+        logo="http://www.airproxy.app/a.png"
+        url="http://www.aaiga.com.au"
+      />
+
+      <LogoJsonLd
+        key="airproxy-logo-ld"
+        logo="http://www.airproxy.app/cloud.png"
+        url="http://www.airproxy.app"
+      />
+
+      <OrganizationJsonLd
+        type="OnlineBusiness"
+        id="https://www.aaiga.com.au"
+        logo="https://www.airproxy.app/a.png"
+        legalName="Aaiga Inc."
+        name="Aaiga"
+        address={{
+          addressLocality: "Ballarat",
+          addressRegion: "VIC",
+          postalCode: "3350",
+          addressCountry: "AU",
+        }}
+        contactPoint={[
+          {
+            contactType: "customer service",
+            email: "contact@aaiga.com.au",
+            areaServed: "AU",
+            availableLanguage: ["English"],
+          },
+        ]}
+        url="https://www.aaiga.com.au/"
+      />
 
       <div>
         {/* Hero */}

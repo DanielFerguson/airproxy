@@ -2,13 +2,14 @@
 
 ## Now
 
-- [ ] Setup sitemap generator
+- [ ] Setup dynamic routes for mdx pages in sitemap generator
+- [ ] Setup dynamic pages on blog index page
+- [ ] Add FAQ to homepage
+
 - [ ] Create callback function for stripe
 - [ ] Create subscriptions table
 - [ ] Add the ability to reimport Airtable bases and tables
 - [ ] Setup requests visualiser on the home page (random generate api on api for now)
-- [ ] Setup blog index page (w/ seo metatags, via Airtable)
-- [ ] Setup blog detail page (w/ seo metatags, via Airtable)
 
 <!-- API -->
 
@@ -54,6 +55,10 @@
 - is airtable down
 - airtable webhook
 - airtable sync
+- airtable vs wordpress
+- airtable vs statamic
+- airtable vs joomala
+- airtable vs ...
 
 ## Later
 
