@@ -369,8 +369,9 @@ export default function Page() {
                 Trusted by businesses with a bias for action
               </h2>
               <p className="mt-3 text-xl text-gray-500 sm:mt-4">
-                We're already enabling businesses to scale into international
-                markets, <br /> so they can deliver products to market faster.
+                We&apos;re already enabling businesses to scale into
+                international markets, <br /> so they can deliver products to
+                market faster.
               </p>
             </div>
           </div>

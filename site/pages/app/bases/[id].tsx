@@ -370,7 +370,7 @@ const Page = () => {
             <StatCard
               name="Egress"
               stat={
-                stats && stats.totalRequestsSize !== null
+                stats && stats.totalRequestsSize
                   ? millify(stats.totalRequestsSize, {
                       precision: 2,
                       units: ["B", "KB", "MB", "GB", "TB"],

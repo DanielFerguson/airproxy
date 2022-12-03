@@ -66,8 +66,9 @@ const Page = () => {
             Upskill your Airtable skills
           </h2>
           <p className="mx-auto mt-3 max-w-2xl text-xl text-gray-500 sm:mt-4">
-            We're here to help you take your Airtable game to the next level so
-            you can deliver your value faster, futher, and more quickly.
+            We&apos;re here to help you take your Airtable game to the next
+            level so you can deliver your value faster, futher, and more
+            quickly.
           </p>
         </div>
         <div className="mx-auto mt-12 grid max-w-lg gap-5 lg:max-w-none lg:grid-cols-3">
@@ -110,6 +111,6 @@ const Page = () => {
 
 export default Page;
 
-Page.getLayout = function getLayout(page) {
+Page.getLayout = function getLayout(page: React.ReactElement) {
   return <PageLayout>{page}</PageLayout>;
 };

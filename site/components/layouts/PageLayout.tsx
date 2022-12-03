@@ -9,7 +9,11 @@ const navigation = [
   { name: "Blog", href: "/blog" },
 ];
 
-export default function Page({ children }) {
+interface IPageProps {
+  children: React.ReactNode;
+}
+
+export default function Page({ children }: IPageProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
