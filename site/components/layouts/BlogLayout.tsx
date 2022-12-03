@@ -69,6 +69,7 @@ export default function Page({ children, meta }: IPageProps) {
         datePublished={meta.published}
         dateModified={meta.published}
         authorName="Dan Ferguson"
+        isAccessibleForFree={true}
         description={meta.description}
       />
       <BreadcrumbJsonLd
@@ -215,7 +216,7 @@ export default function Page({ children, meta }: IPageProps) {
         </div>
 
         {/* Content */}
-        <main className="prose lg:prose-xl mx-auto py-32">
+        <main className="prose lg:prose-xl mx-auto py-12 lg:py-32 px-6">
           <h1>
             <span className="block text-center text-lg font-semibold text-indigo-600">
               Airproxy
