@@ -14,11 +14,12 @@ import {
   BeakerIcon,
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 const navigation = [
   { name: "Features", href: "/#features" },
   { name: "Pricing", href: "/#pricing" },
-  { name: "Blog", href: "#" },
+  { name: "Blog", href: "/blog" },
 ];
 
 const features = [
@@ -64,8 +65,8 @@ const tiers = [
   {
     id: "tier-hobby",
     name: "Hobby",
-    href: "#",
-    priceMonthly: 49,
+    priceMonthly: 27,
+    priceId: "price_1MAtTuG5EtvPzQrOIXe7b9xs",
     description:
       "Lorem ipsum dolor sit amet consect etur adipisicing elit. Itaque amet indis perferendis.",
     features: [
@@ -78,8 +79,8 @@ const tiers = [
   {
     id: "tier-team",
     name: "Team",
-    href: "#",
-    priceMonthly: 79,
+    priceMonthly: 89,
+    priceId: "price_1MAtUjG5EtvPzQrOhUYN4N52",
     description:
       "Lorem ipsum dolor sit amet consect etur adipisicing elit. Itaque amet indis perferendis.",
     features: [
@@ -93,6 +94,7 @@ const tiers = [
 ];
 
 export default function Page() {
+  const session = useSession();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -173,10 +175,16 @@ export default function Page() {
                 </div>
                 <div className="hidden lg:flex lg:min-w-0 lg:flex-1 lg:justify-end">
                   <Link
-                    href="/api/auth/signin"
+                    href={
+                      session.status === "authenticated"
+                        ? "/app"
+                        : "/api/auth/signin"
+                    }
                     className="inline-block rounded-lg px-3 py-1.5 text-sm font-semibold leading-6 text-gray-900 shadow-sm ring-1 ring-gray-900/10 hover:ring-gray-900/20"
                   >
-                    Log in
+                    {session.status === "authenticated"
+                      ? "Dashboard"
+                      : "Log in"}
                   </Link>
                 </div>
               </nav>
@@ -219,10 +227,16 @@ export default function Page() {
                       </div>
                       <div className="py-6">
                         <Link
-                          href="/api/auth/signin"
+                          href={
+                            session.status === "authenticated"
+                              ? "/app"
+                              : "/api/auth/signin"
+                          }
                           className="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-6 text-gray-900 hover:bg-gray-400/10"
                         >
-                          Log in
+                          {session.status === "authenticated"
+                            ? "Dashboard"
+                            : "Log in"}
                         </Link>
                       </div>
                     </div>
@@ -268,7 +282,11 @@ export default function Page() {
                     </p>
                     <div className="mt-8 flex gap-x-4 sm:justify-center">
                       <Link
-                        href="/api/auth/signin"
+                        href={
+                          session.status === "authenticated"
+                            ? "/app"
+                            : "/api/auth/signin"
+                        }
                         className="inline-block rounded-lg bg-indigo-600 px-4 py-1.5 text-base font-semibold leading-7 text-white shadow-sm ring-1 ring-indigo-600 hover:bg-indigo-700 hover:ring-indigo-700"
                       >
                         Get started today
@@ -342,33 +360,6 @@ export default function Page() {
             </div>
           </main>
         </div>
-
-        {/* Logos */}
-        {/* <div className="mx-auto max-w-7xl py-12 px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 gap-8 md:grid-cols-3">
-            <div className="col-span-1 flex justify-center md:col-span-2 lg:col-span-1">
-              <img
-                className="h-12"
-                src="/icons/bettorbase.svg"
-                alt="Bettorbase"
-              />
-            </div>
-            <div className="col-span-1 flex justify-center md:col-span-2 lg:col-span-1">
-              <img
-                className="h-12"
-                src="/icons/imperialwealth.svg"
-                alt="Imperial Wealth"
-              />
-            </div>
-            <div className="col-span-1 flex justify-center md:col-span-2 lg:col-span-1">
-              <img
-                className="h-12"
-                src="/icons/the-cash-kings.svg"
-                alt="The Cash Kings"
-              />
-            </div>
-          </div>
-        </div> */}
 
         {/* Stats */}
         <div className="pt-12 sm:pt-16">
@@ -555,15 +546,23 @@ export default function Page() {
                             </li>
                           ))}
                         </ul>
-                        <div className="mt-8">
-                          <Link
-                            href={tier.href}
+                        <form
+                          className="mt-8"
+                          action="/api/create-checkout-session"
+                          method="POST"
+                        >
+                          <input
+                            type="hidden"
+                            name="priceId"
+                            value={tier.priceId}
+                          />
+                          <button
+                            type="submit"
                             className="inline-block w-full rounded-lg bg-indigo-600 px-4 py-2.5 text-center text-sm font-semibold leading-5 text-white shadow-md hover:bg-indigo-700"
-                            aria-describedby={tier.id}
                           >
                             Get started today
-                          </Link>
-                        </div>
+                          </button>
+                        </form>
                       </div>
                     </div>
                   </div>
@@ -586,7 +585,11 @@ export default function Page() {
                 </div>
                 <div>
                   <Link
-                    href="/api/auth/signin"
+                    href={
+                      session.status === "authenticated"
+                        ? "/app"
+                        : "/api/auth/signin"
+                    }
                     className="inline-block rounded-lg bg-indigo-50 px-4 py-2.5 text-center text-sm font-semibold leading-5 text-indigo-700 hover:bg-indigo-100"
                   >
                     Get started today <span aria-hidden="true">&rarr;</span>

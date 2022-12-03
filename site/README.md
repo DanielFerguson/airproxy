@@ -2,6 +2,14 @@
 
 ## Now
 
+- [ ] Setup sitemap generator
+- [ ] Create callback function for stripe
+- [ ] Create subscriptions table
+- [ ] Add the ability to reimport Airtable bases and tables
+- [ ] Setup requests visualiser on the home page (random generate api on api for now)
+- [ ] Setup blog index page (w/ seo metatags, via Airtable)
+- [ ] Setup blog detail page (w/ seo metatags, via Airtable)
+
 <!-- API -->
 
 - [ ] Protect API routes if Base has API key
@@ -13,19 +21,39 @@
 
 <!-- App -->
 
-- [ ] Create callback function for stripe
-- [ ] Create subscriptions table
-- [ ] Add the ability to reimport Airtable bases and tables
-- [ ] Setup requests visualiser on the home page (random generate api on api for now)
 - [ ] Fix how last chart value changes (gets lower over time) on the bar chart
 - [ ] Add ability to delete account, wipe data from database
-- [ ] Setup blog index page (w/ seo metatags)
-- [ ] Setup blog detail page (w/ seo metatags)
 
 <!-- Final things -->
 
 - [ ] Mobile responsiveness
 - [ ] Review the onboarding process
+
+<!-- Blog topics -->
+
+- how to get airtable api key
+- how to use airtable api
+- where to find airtable api key
+- how to find airtable api key
+- how to get all records airtable api
+- how to use api to import into airtable
+- how fast is airtable api for app backend
+- how to use api airtable curl on wordpres
+- how to use airtable url api with express scripts
+- how to upload file to airtable from api
+- how to create multiple records airtable api
+- how to use airtable as a project management tool
+
+<!-- Keyword-based articles -->
+
+- what is airtable
+- airtable pricing (compare pricing/flexibility to other CMS strategies)
+- airtable formulas, airtable formula (examples, list gist list from logsnag)
+- airtable template, airtable templates (examples for CRMs, CMSs, team workflows, etc)
+- airtable automations
+- is airtable down
+- airtable webhook
+- airtable sync
 
 ## Later
 

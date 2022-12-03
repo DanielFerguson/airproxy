@@ -4,8 +4,21 @@ import { SessionProvider } from "next-auth/react";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import * as Fathom from "fathom-client";
+import type { ReactElement, ReactNode } from "react";
+import type { NextPage } from "next";
 
-function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
+export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
+  getLayout?: (page: ReactElement) => ReactNode;
+};
+
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout;
+};
+
+export default function App({
+  Component,
+  pageProps: { session, ...pageProps },
+}: AppPropsWithLayout) {
   const router = useRouter();
 
   useEffect(() => {
@@ -27,11 +40,11 @@ function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
     };
   }, []);
 
-  return (
+  const getLayout = Component.getLayout ?? ((page) => page);
+
+  return getLayout(
     <SessionProvider session={session}>
       <Component {...pageProps} />
     </SessionProvider>
   );
 }
-
-export default App;
