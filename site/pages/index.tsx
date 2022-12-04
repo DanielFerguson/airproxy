@@ -481,8 +481,8 @@ export default function Page() {
             </p>
             <p className="mx-auto mt-5 max-w-prose text-xl text-gray-500">
               Are you tired of slow response times and limited scaling
-              capabilities when using Airtable's API? Try Airproxy, the world's
-              leading edge caching service for Airtable's API.
+              capabilities when using Airtable&apos;s API? Try Airproxy, the
+              world&apos;s leading edge caching service for Airtable&apos;s API.
             </p>
             <div className="mt-20">
               <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-3">
@@ -529,7 +529,7 @@ export default function Page() {
                   focus on other important tasks instead of optimizing our
                   Airtable integration. Airproxy has been a game-changer for our
                   business and I highly recommend it to anyone looking to unlock
-                  the full potential of Airtable's API.&rdquo;
+                  the full potential of Airtable&apos;s API.&rdquo;
                 </p>
               </div>
               <footer className="mt-8">

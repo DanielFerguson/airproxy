@@ -250,14 +250,14 @@ export default function Page({ children, meta }: IPageProps) {
                 <p className="mt-4 text-lg leading-6 text-indigo-200">
                   Focus on building great experiences for your users, not API
                   limitation. Sign up now and see how Airproxy can help you
-                  unlock the full potential of Airtable's API.
+                  unlock the full potential of Airtable&apos;s API.
                 </p>
-                <a
+                <Link
                   href="/api/auth/signin"
                   className="mt-8 inline-flex items-center rounded-md border border-transparent bg-white px-5 py-3 text-base font-medium text-indigo-600 shadow hover:bg-indigo-50"
                 >
                   Sign up for free
-                </a>
+                </Link>
               </div>
             </div>
             <div className="aspect-w-5 aspect-h-3 -mt-6 md:aspect-w-2 md:aspect-h-1">
