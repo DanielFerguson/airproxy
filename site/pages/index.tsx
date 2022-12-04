@@ -107,7 +107,7 @@ export default function Page() {
       <NextSeo
         title="Airproxy | Airtable in production, fearlessly."
         description="Gain the full power of the Airtable platform, and build businesses fearlessly without worrying about scaling, or rate limits. Get busy building!"
-        canonical="https://www.canonical.ie/"
+        canonical="https://www.airproxy.app/"
         openGraph={{
           url: "https://www.airproxy.app",
           title: "Airproxy | Airtable in production, fearlessly.",

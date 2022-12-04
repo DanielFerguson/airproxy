@@ -1,11 +1,13 @@
 # To do...
 
-## Now
+## Today
 
 - [ ] Create callback function for stripe
 - [ ] Create subscriptions table
 - [ ] Add the ability to reimport Airtable bases and tables
 - [ ] Setup requests visualiser on the home page (random generate api on api for now)
+
+## Tomorrow
 
 <!-- API -->
 
@@ -18,6 +20,12 @@
 
 - [ ] Test mobile responsiveness
 - [ ] Review the onboarding process
+- [ ] Connect Sentry to Next JS deployment
+
+## Sometime
+
+- [ ] Launch to ProductHunt
+- [ ] Advertise on TikTok
 
 ## Later
 
@@ -49,18 +57,3 @@
 - [ ] Webhooks (call it Live Updates) (business)
 
   - deliver updates from api to clients via webhooks (definitely a business feature)
-
-# Pricing
-
-- Free
-  - 1 active base at a time
-  - 1 active table at a time
-  - 50k req p/m
-- Hobby ($29 p/m)
-  - API to bust cache manually (custom cache busting)
-- Business ($99 p/m)
-  - Data pre-fetching and pre-caching
-  - 1m req p/m
-  - Ability to set cron timeout for data
-  - Strongly consistent reads (needs to use R2 over KV)
-  - Protect bases with API keys
