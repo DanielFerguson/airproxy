@@ -4,12 +4,11 @@
 
 - [ ] Setup dynamic routes for mdx pages in sitemap generator
 - [ ] Setup dynamic pages on blog index page
-- [ ] Add FAQ to homepage
-
 - [ ] Create callback function for stripe
 - [ ] Create subscriptions table
 - [ ] Add the ability to reimport Airtable bases and tables
 - [ ] Setup requests visualiser on the home page (random generate api on api for now)
+- [ ] Add FAQ to homepage
 
 <!-- API -->
 
@@ -17,51 +16,20 @@
 - [ ] Will need to set some sort of `fetching` flag somewhere on the API so multiple simultaneous request wont timeout Airtable's API
 - [ ] Add rate limiter
 - [ ] Add ability to pass optional viewId to API
+- [ ] Add ability to handle page? queries (how we can get around loading every page, just cache baseId:tableId:page1)
 - [ ] Add the ability for the API to fetch multiple pages (w/ Airtable offset) (hobbyist)
 - [ ] Automate the process to reimport Airtable bases and tables on a cron job
 
-<!-- App -->
-
-- [ ] Fix how last chart value changes (gets lower over time) on the bar chart
-- [ ] Add ability to delete account, wipe data from database
-
 <!-- Final things -->
 
-- [ ] Mobile responsiveness
+- [ ] Test mobile responsiveness
 - [ ] Review the onboarding process
-
-<!-- Blog topics -->
-
-- how to get airtable api key
-- how to use airtable api
-- where to find airtable api key
-- how to find airtable api key
-- how to get all records airtable api
-- how to use api to import into airtable
-- how fast is airtable api for app backend
-- how to use api airtable curl on wordpres
-- how to use airtable url api with express scripts
-- how to upload file to airtable from api
-- how to create multiple records airtable api
-- how to use airtable as a project management tool
-
-<!-- Keyword-based articles -->
-
-- what is airtable
-- airtable pricing (compare pricing/flexibility to other CMS strategies)
-- airtable formulas, airtable formula (examples, list gist list from logsnag)
-- airtable template, airtable templates (examples for CRMs, CMSs, team workflows, etc)
-- airtable automations
-- is airtable down
-- airtable webhook
-- airtable sync
-- airtable vs wordpress
-- airtable vs statamic
-- airtable vs joomala
-- airtable vs ...
+- [ ] Add at least 5 more articles
 
 ## Later
 
+- [ ] Fix how last chart value changes (gets lower over time) on the bar chart
+- [ ] Add ability to delete account, wipe data from database
 - [ ] Setup live demo page
 - [ ] Chart request time
 - [ ] Chart egress p/h

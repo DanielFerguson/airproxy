@@ -23,6 +23,7 @@
     "eslint": "8.28.0",
     "eslint-config-next": "13.0.5",
     "fathom-client": "^3.5.0",
+    "gray-matter": "^4.0.3",
     "micro": "^10.0.1",
     "millify": "^5.0.1",
     "next": "13.0.5",

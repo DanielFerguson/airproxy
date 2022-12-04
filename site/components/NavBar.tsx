@@ -17,18 +17,17 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json());
 const NavBar = () => {
   const { data: session } = useSession();
 
-  // TODO
   const userHasSubscription = false;
 
-  const { data: preferenceResponse, mutate } = useSWR<PreferenceResponse>(
+  const { data: preferences, mutate } = useSWR<UserPreferences>(
     "/api/preferences",
     fetcher
   );
 
   const toggleDarkModePreference = async () => {
-    if (!preferenceResponse) return;
+    if (!preferences) return;
 
-    let updatedPreferences = preferenceResponse.preferences;
+    let updatedPreferences = preferences;
     updatedPreferences.prefersDarkMode = !updatedPreferences.prefersDarkMode;
 
     await toast.promise(
@@ -60,8 +59,7 @@ const NavBar = () => {
       <div className="flex items-center gap-3">
         {/* Dark Mode Toggle */}
         <button onClick={() => toggleDarkModePreference()}>
-          {preferenceResponse &&
-          preferenceResponse.preferences.prefersDarkMode ? (
+          {preferences && preferences.prefersDarkMode ? (
             <SunIcon className="h-5 w-5 text-gray-800" />
           ) : (
             <MoonIcon className="h-5 w-5 text-gray-800" />

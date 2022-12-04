@@ -17,6 +17,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await unstable_getServerSession(req, res, authOptions);
   const email = session?.user?.email;
 
+  console.log(session);
+
   if (!email) {
     res.status(500).send({
       message: "Whoops! Something went wrong on our end.",
@@ -41,9 +43,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       },
     });
 
-    res.status(200).json({
-      preferences,
-    });
+    res.status(200).json(preferences);
   }
 
   //

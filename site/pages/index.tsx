@@ -70,13 +70,8 @@ const tiers = [
     priceMonthly: 27,
     priceId: "price_1MAtTuG5EtvPzQrOIXe7b9xs",
     description:
-      "Lorem ipsum dolor sit amet consect etur adipisicing elit. Itaque amet indis perferendis.",
-    features: [
-      "Pariatur quod similique",
-      "Sapiente libero doloribus modi nostrum",
-      "Vel ipsa esse repudiandae excepturi",
-      "Itaque cupiditate adipisci quibusdam",
-    ],
+      "Perfect for startups and small businesses looking to create fast, backed with the power of Airtable.",
+    features: ["2 Active Bases", "5 Active Tables", "50k Requests Per Month"],
   },
   {
     id: "tier-team",
@@ -84,13 +79,13 @@ const tiers = [
     priceMonthly: 89,
     priceId: "price_1MAtUjG5EtvPzQrOhUYN4N52",
     description:
-      "Lorem ipsum dolor sit amet consect etur adipisicing elit. Itaque amet indis perferendis.",
+      "Designed for established businesses with a global presence, offering advanced features and support for global success.",
     features: [
-      "Pariatur quod similique",
-      "Sapiente libero doloribus modi nostrum",
-      "Vel ipsa esse repudiandae excepturi",
-      "Itaque cupiditate adipisci quibusdam",
-      "Sapiente libero doloribus modi nostrum",
+      "5 Active Bases",
+      "15 Active Tables",
+      "200k Requests Per Month",
+      "Protect Your APIs",
+      "Full Control Over TTLs",
     ],
   },
 ];
@@ -110,8 +105,8 @@ export default function Page() {
       </Head>
 
       <NextSeo
-        title="Using More of Config"
-        description="This example uses more of the available config options."
+        title="Airproxy | Airtable in production, fearlessly."
+        description="Gain the full power of the Airtable platform, and build businesses fearlessly without worrying about scaling, or rate limits. Get busy building!"
         canonical="https://www.canonical.ie/"
         openGraph={{
           url: "https://www.airproxy.app",
@@ -320,7 +315,7 @@ export default function Page() {
                       <span className="text-gray-600">
                         Announcing the public launch of Airproxy.{" "}
                         <Link
-                          href="#"
+                          href="/blog/announcing-airproxy"
                           className="font-semibold text-indigo-600"
                         >
                           <span
@@ -485,9 +480,9 @@ export default function Page() {
               Everything you need to scale your app.
             </p>
             <p className="mx-auto mt-5 max-w-prose text-xl text-gray-500">
-              Phasellus lorem quam molestie id quisque diam aenean nulla in.
-              Accumsan in quis quis nunc, ullamcorper malesuada. Eleifend
-              condimentum id viverra nulla.
+              Are you tired of slow response times and limited scaling
+              capabilities when using Airtable's API? Try Airproxy, the world's
+              leading edge caching service for Airtable's API.
             </p>
             <div className="mt-20">
               <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-3">
@@ -529,9 +524,12 @@ export default function Page() {
             <blockquote className="mt-10">
               <div className="mx-auto max-w-3xl text-center text-2xl font-medium leading-9 text-gray-900">
                 <p>
-                  &ldquo;Lorem ipsum dolor sit amet consectetur adipisicing
-                  elit. Nemo expedita voluptas culpa sapiente alias molestiae.
-                  Numquam corrupti in laborum sed rerum et corporis.&rdquo;
+                  &ldquo;Our teams can now easily use the data they need to
+                  create great content for our users, and our developers can
+                  focus on other important tasks instead of optimizing our
+                  Airtable integration. Airproxy has been a game-changer for our
+                  business and I highly recommend it to anyone looking to unlock
+                  the full potential of Airtable's API.&rdquo;
                 </p>
               </div>
               <footer className="mt-8">
@@ -557,7 +555,7 @@ export default function Page() {
                     </svg>
 
                     <div className="text-base font-medium text-gray-500">
-                      CDO, Imperial Wealth
+                      Chief Data Officer, Imperial Wealth
                     </div>
                   </div>
                 </div>
@@ -642,9 +640,8 @@ export default function Page() {
                     Free!
                   </h3>
                   <div className="mt-2 text-base leading-7 text-gray-600">
-                    You read that right: ✨ free ✨. Get access to the platform
-                    so you can try it out for yourself and feel the magic of
-                    Airtable in production.
+                    Try Airproxy for free and see how it can help your business
+                    grow and thrive.
                   </div>
                 </div>
                 <div>
