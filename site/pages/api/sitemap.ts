@@ -35,12 +35,14 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     <loc>https://www.airproxy.app/blog/getting-a-personal-access-token</loc>
     <lastmod>2022-12-04</lastmod>
   </url>
-  ${articles.map(
-    (article) => `<url>
+  ${articles
+    .map(
+      (article) => `<url>
     <loc>https://www.airproxy.app/blog/${article}</loc>
     <lastmod>2022-12-04</lastmod>
   </url>`
-  )}
+    )
+    .join("")}
 </urlset>`;
 
   res.end(xml);
