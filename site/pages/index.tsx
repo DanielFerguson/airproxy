@@ -114,6 +114,15 @@ export default function Page() {
           description:
             "Gain the full power of the Airtable platform, and build businesses fearlessly without worrying about scaling, or rate limits. Get busy building!",
           siteName: "Airproxy",
+          images: [
+            {
+              url: "https://www.airproxy.app/airproxy.jpg",
+              type: "image/jpeg",
+              width: 1200,
+              height: 680,
+              alt: "Airproxy helps you scale, fast.",
+            },
+          ],
         }}
         twitter={{
           handle: "@thedannyferg",

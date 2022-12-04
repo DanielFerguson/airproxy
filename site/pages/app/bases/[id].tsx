@@ -359,7 +359,7 @@ const Page = () => {
               stat={
                 stats ? millify(stats.totalRequests, { precision: 2 }) : "0"
               }
-              limit={millify(100000, { precision: 2 })}
+              limit={millify(200000, { precision: 2 })}
             />
             <StatCard
               name="Customers"

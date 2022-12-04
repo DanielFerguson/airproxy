@@ -182,6 +182,15 @@ const Page = () => {
           description:
             "We're here to help you take your Airtable game to the next level so you can deliver your value faster, futher, and more quickly.",
           siteName: "Airproxy",
+          images: [
+            {
+              url: "https://www.airproxy.app/airproxy.jpg",
+              type: "image/jpeg",
+              width: 1200,
+              height: 680,
+              alt: "Airproxy helps you scale, fast.",
+            },
+          ],
         }}
         twitter={{
           handle: "@thedannyferg",

@@ -46,35 +46,41 @@ async function main() {
   //     },
   //   });
   // }, 1000);
-  // let requests = [];
-  // const now = new Date();
-  // for (let i = 0; i < 10000; i++) {
-  //   if (Math.random() > 0.5) {
-  //     continue;
-  //   }
-  //   const lat = parseFloat(faker.address.latitude(-37, -38, 3));
-  //   const lng = parseFloat(faker.address.longitude(144, 143, 3));
-  //   requests.push({
-  //     baseId: "appOXt5N1bZJEWmMs",
-  //     tableId: "tbl43hYB96AviCUH1",
-  //     asn: 123,
-  //     city: "Ballarat",
-  //     continent: "AU",
-  //     country: "AU",
-  //     createdAt: new Date(now.getTime() + 1000 * i),
-  //     latitude: lat,
-  //     longitude: lng,
-  //     latlng: `${lat}-${lng}`,
-  //     region: "VIC",
-  //   });
-  // const chunkSize = 1000;
-  // for (let index = 0; index < requests.length; index++) {
-  //   const chunk = requests.slice(index, index + chunkSize);
-  //   await prisma.request.createMany({
-  //     data: chunk,
-  //     skipDuplicates: true,
-  //   });
-  // }
+  let requests = [];
+  const now = new Date();
+
+  for (let i = 0; i < 10000; i++) {
+    if (Math.random() > 0.5) {
+      continue;
+    }
+    const lat = parseFloat(faker.address.latitude(-37, -38, 3));
+    const lng = parseFloat(faker.address.longitude(144, 143, 3));
+
+    requests.push({
+      baseId: "appOXt5N1bZJEWmMs",
+      tableId: "tbl43hYB96AviCUH1",
+      asn: 123,
+      city: "Ballarat",
+      continent: "AU",
+      country: "AU",
+      createdAt: new Date(now.getTime() + 1000 * i),
+      latitude: lat,
+      longitude: lng,
+      latlng: `${lat}-${lng}`,
+      region: "VIC",
+      size: Math.floor(15000 * Math.random()),
+    });
+  }
+
+  const chunkSize = 1000;
+
+  for (let index = 0; index < requests.length; index++) {
+    const chunk = requests.slice(index, index + chunkSize);
+    await prisma.request.createMany({
+      data: chunk,
+      skipDuplicates: true,
+    });
+  }
   //   // await prisma.base.create({
   //   //   include: {
   //   //     tables: {
