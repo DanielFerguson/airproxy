@@ -22,40 +22,38 @@ function getRandomViewType(): string {
 }
 
 async function main() {
-  setInterval(async function () {
-    const lat = parseFloat(
-      faker.address.latitude(-10.6681857235, -43.6345972634)
-    );
-    const lng = parseFloat(
-      faker.address.longitude(153.569469029, 113.338953078)
-    );
-    await prisma.request.create({
-      data: {
-        baseId: "appOXt5N1bZJEWmMs",
-        tableId: "tbl43hYB96AviCUH1",
-        asn: 123,
-        city: "Ballarat",
-        continent: "AU",
-        country: "AU",
-        createdAt: new Date(),
-        latitude: lat,
-        longitude: lng,
-        latlng: `${lat}-${lng}`,
-        region: "VIC",
-        size: Math.floor(15000 * Math.random()),
-      },
-    });
-  }, 200);
+  // setInterval(async function () {
+  //   const lat = parseFloat(
+  //     faker.address.latitude(-10.6681857235, -43.6345972634)
+  //   );
+  //   const lng = parseFloat(
+  //     faker.address.longitude(153.569469029, 113.338953078)
+  //   );
+  //   await prisma.request.create({
+  //     data: {
+  //       baseId: "appOXt5N1bZJEWmMs",
+  //       tableId: "tbl43hYB96AviCUH1",
+  //       asn: 123,
+  //       city: "Ballarat",
+  //       continent: "AU",
+  //       country: "AU",
+  //       createdAt: new Date(),
+  //       latitude: lat,
+  //       longitude: lng,
+  //       latlng: `${lat}-${lng}`,
+  //       region: "VIC",
+  //       size: Math.floor(15000 * Math.random()),
+  //     },
+  //   });
+  // }, 200);
   // let requests = [];
   // const now = new Date();
-
   // for (let i = 0; i < 10000; i++) {
   //   if (Math.random() > 0.5) {
   //     continue;
   //   }
   //   const lat = parseFloat(faker.address.latitude(-37, -38, 3));
   //   const lng = parseFloat(faker.address.longitude(144, 143, 3));
-
   //   requests.push({
   //     baseId: "appOXt5N1bZJEWmMs",
   //     tableId: "tbl43hYB96AviCUH1",
@@ -71,9 +69,7 @@ async function main() {
   //     size: Math.floor(15000 * Math.random()),
   //   });
   // }
-
   // const chunkSize = 1000;
-
   // for (let index = 0; index < requests.length; index++) {
   //   const chunk = requests.slice(index, index + chunkSize);
   //   await prisma.request.createMany({
