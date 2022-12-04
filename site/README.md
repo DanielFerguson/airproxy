@@ -2,32 +2,26 @@
 
 ## Now
 
-- [ ] Setup dynamic routes for mdx pages in sitemap generator
-- [ ] Setup dynamic pages on blog index page
 - [ ] Create callback function for stripe
 - [ ] Create subscriptions table
 - [ ] Add the ability to reimport Airtable bases and tables
 - [ ] Setup requests visualiser on the home page (random generate api on api for now)
-- [ ] Add FAQ to homepage
 
 <!-- API -->
 
 - [ ] Protect API routes if Base has API key
-- [ ] Will need to set some sort of `fetching` flag somewhere on the API so multiple simultaneous request wont timeout Airtable's API
 - [ ] Add rate limiter
 - [ ] Add ability to pass optional viewId to API
 - [ ] Add ability to handle page? queries (how we can get around loading every page, just cache baseId:tableId:page1)
-- [ ] Add the ability for the API to fetch multiple pages (w/ Airtable offset) (hobbyist)
-- [ ] Automate the process to reimport Airtable bases and tables on a cron job
 
 <!-- Final things -->
 
 - [ ] Test mobile responsiveness
 - [ ] Review the onboarding process
-- [ ] Add at least 5 more articles
 
 ## Later
 
+- [ ] Automate the process to reimport Airtable bases and tables on a cron job
 - [ ] Fix how last chart value changes (gets lower over time) on the bar chart
 - [ ] Add ability to delete account, wipe data from database
 - [ ] Setup live demo page
@@ -63,9 +57,6 @@
   - 1 active table at a time
   - 50k req p/m
 - Hobby ($29 p/m)
-  - 3 active bases at a time
-  - 10 active tables at a time
-  - 200k req p/m
   - API to bust cache manually (custom cache busting)
 - Business ($99 p/m)
   - Data pre-fetching and pre-caching

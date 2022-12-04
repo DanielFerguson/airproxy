@@ -23,8 +23,7 @@ export default function App({
 
   useEffect(() => {
     Fathom.load("UZEOXTCH", {
-      includedDomains: ["www.airproxy.app", "airproxy.app"],
-      url: "https://fabulous-reliable.airproxy.app",
+      includedDomains: ["www.airproxy.app"],
     });
 
     function onRouteChangeComplete() {
