@@ -1,3 +1,5 @@
+const { withSentryConfig } = require("@sentry/nextjs");
+
 const withMDX = require("@next/mdx")({
   extension: /\.mdx?$/,
   options: {
@@ -13,6 +15,9 @@ const nextConfig = withMDX({
     locales: ["en"],
     defaultLocale: "en",
   },
+  sentry: {
+    hideSourceMaps: true,
+  },
   async rewrites() {
     return [
       {
@@ -24,4 +29,8 @@ const nextConfig = withMDX({
   pageExtensions: ["ts", "tsx", "mdx"],
 });
 
-module.exports = nextConfig;
+const sentryWebpackPluginOptions = {
+  silent: true, // Suppresses all logs
+};
+
+module.exports = withSentryConfig(nextConfig, sentryWebpackPluginOptions);
