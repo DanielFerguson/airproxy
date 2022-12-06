@@ -190,11 +190,11 @@ const Page = () => {
         description="We're here to help you take your Airtable game to the next level so you can deliver your value faster, futher, and more quickly."
         canonical="https://www.airproxy.app/blog"
         openGraph={{
+          type: "website",
           url: "https://www.airproxy.app/blog",
           title: "Blog | Airproxy",
           description:
             "We're here to help you take your Airtable game to the next level so you can deliver your value faster, futher, and more quickly.",
-          siteName: "Airproxy",
           images: [
             {
               url: "https://www.airproxy.app/airproxy.jpg",

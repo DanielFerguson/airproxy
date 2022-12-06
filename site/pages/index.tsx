@@ -109,11 +109,11 @@ export default function Page() {
         description="Gain the full power of the Airtable platform, and build businesses fearlessly without worrying about scaling, or rate limits. Get busy building!"
         canonical="https://www.airproxy.app/"
         openGraph={{
+          type: "website",
           url: "https://www.airproxy.app",
           title: "Airproxy | Airtable in production, fearlessly.",
           description:
             "Gain the full power of the Airtable platform, and build businesses fearlessly without worrying about scaling, or rate limits. Get busy building!",
-          siteName: "Airproxy",
           images: [
             {
               url: "https://www.airproxy.app/airproxy.jpg",
@@ -141,14 +141,14 @@ export default function Page() {
 
       <LogoJsonLd
         key="aaiga-logo-ld"
-        logo="http://www.airproxy.app/a.png"
-        url="http://www.aaiga.com.au"
+        logo="https://www.airproxy.app/a.png"
+        url="https://www.aaiga.com.au"
       />
 
       <LogoJsonLd
         key="airproxy-logo-ld"
-        logo="http://www.airproxy.app/cloud.png"
-        url="http://www.airproxy.app"
+        logo="https://www.airproxy.app/cloud.png"
+        url="https://www.airproxy.app"
       />
 
       <OrganizationJsonLd
@@ -547,7 +547,7 @@ export default function Page() {
                     <img
                       className="mx-auto h-10 w-10 rounded-full"
                       src="/pugh.jpeg"
-                      alt=""
+                      alt="Daniel Pugh, COO of Imperial Wealth"
                     />
                   </div>
                   <div className="mt-3 text-center md:mt-0 md:ml-4 md:flex md:items-center">
