@@ -71,7 +71,7 @@ const tiers = [
     priceId: "price_1MAtTuG5EtvPzQrOIXe7b9xs",
     description:
       "Perfect for startups and small businesses looking to create fast, backed with the power of Airtable.",
-    features: ["2 Active Bases", "5 Active Tables", "50k Requests Per Month"],
+    features: ["Unlimited Bases", "Unlimited Tables", "50k Requests Per Month"],
   },
   {
     id: "tier-team",
@@ -81,8 +81,8 @@ const tiers = [
     description:
       "Designed for established businesses with a global presence, offering advanced features and support for global success.",
     features: [
-      "5 Active Bases",
-      "15 Active Tables",
+      "Unlimited Bases",
+      "Unlimited Tables",
       "200k Requests Per Month",
       "Protect Your APIs",
       "Full Control Over TTLs",
@@ -344,7 +344,7 @@ export default function Page() {
                     </h1>
                     <p className="mt-6 text-lg leading-8 text-gray-600 sm:text-center">
                       Gain the full power of the Airtable platform, and build
-                      businesses fearlessly without worrying about scaling, or
+                      businesses without worrying about scaling, limitations or
                       rate limits. Get busy building!
                     </p>
                     <div className="mt-8 flex gap-x-4 sm:justify-center">
@@ -442,7 +442,7 @@ export default function Page() {
               </p>
             </div>
           </div>
-          <div className="pb-12 sm:pb-16">
+          <div className="pb-12 sm:pb-16 pt-12">
             <div className="relative">
               <div className="absolute inset-0 h-1/2" />
               <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -453,7 +453,7 @@ export default function Page() {
                         Requests Delivered
                       </dt>
                       <dd className="order-1 text-5xl font-bold tracking-tight text-indigo-600">
-                        100 M
+                        9M +
                       </dd>
                     </div>
                     <div className="flex flex-col border-t border-b border-gray-100 p-6 text-center sm:border-0 sm:border-l sm:border-r">
@@ -461,7 +461,7 @@ export default function Page() {
                         Uptime
                       </dt>
                       <dd className="order-1 text-5xl font-bold tracking-tight text-indigo-600">
-                        100%
+                        99.99%
                       </dd>
                     </div>
                     <div className="flex flex-col border-t border-gray-100 p-6 text-center sm:border-0 sm:border-l">
@@ -469,7 +469,7 @@ export default function Page() {
                         Avg Response Time
                       </dt>
                       <dd className="order-1 text-5xl font-bold tracking-tight text-indigo-600">
-                        89.7 ms
+                        &lt; 99 ms
                       </dd>
                     </div>
                   </dl>
@@ -483,15 +483,15 @@ export default function Page() {
         <div id="features" className="relative py-24 sm:py-32 lg:py-40">
           <div className="mx-auto max-w-md px-6 text-center sm:max-w-3xl lg:max-w-7xl lg:px-8">
             <h2 className="text-lg font-semibold text-indigo-600">
-              Deploy faster
+              Innovate faster
             </h2>
             <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-              Everything you need to scale your app.
+              Everything you need to build, and scale.
             </p>
             <p className="mx-auto mt-5 max-w-prose text-xl text-gray-500">
-              Are you tired of slow response times and limited scaling
-              capabilities when using Airtable&apos;s API? Try Airproxy, the
-              world&apos;s leading edge caching service for Airtable&apos;s API.
+              Forget about the hassle of building and maintaining your own
+              caching layer. Airproxy is a fully managed service that scales
+              with your business.
             </p>
             <div className="mt-20">
               <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-3">
@@ -689,7 +689,7 @@ export default function Page() {
               ))}
             </nav>
             <p className="mt-8 text-center text-base text-gray-400">
-              &copy; 2020 Aaiga, Inc. All rights reserved.
+              &copy; 2022 Aaiga, Inc. All rights reserved.
             </p>
           </div>
         </footer>

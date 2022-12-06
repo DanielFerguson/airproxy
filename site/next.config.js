@@ -9,6 +9,10 @@ const withMDX = require("@next/mdx")({
 const nextConfig = withMDX({
   reactStrictMode: true,
   swcMinify: true,
+  i18n: {
+    locales: ["en"],
+    defaultLocale: "en",
+  },
   async rewrites() {
     return [
       {

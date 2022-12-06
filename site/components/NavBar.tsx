@@ -74,7 +74,7 @@ const NavBar = () => {
               <img
                 className="h-8 w-8 rounded-full"
                 src={session?.user?.image ?? ""}
-                alt=""
+                alt="User icon"
               />
             </Menu.Button>
           </div>

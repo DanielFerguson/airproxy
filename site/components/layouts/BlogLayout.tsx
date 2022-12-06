@@ -3,7 +3,6 @@ import { Dialog } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { NextSeo, ArticleJsonLd, BreadcrumbJsonLd } from "next-seo";
-import Head from "next/head";
 
 const navigation = [
   { name: "Features", href: "/#features" },
@@ -30,13 +29,6 @@ export default function Page({ children, meta }: IPageProps) {
 
   return (
     <div>
-      <Head>
-        <link
-          rel="stylesheet"
-          href="https://unpkg.com/dracula-prism/dist/css/dracula-prism.css"
-        ></link>
-      </Head>
-
       <NextSeo
         title={meta.title}
         description={meta.description}
