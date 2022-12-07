@@ -120,7 +120,7 @@ export default function Page() {
               type: "image/jpeg",
               width: 1200,
               height: 680,
-              alt: "Airproxy helps you scale, fast.",
+              alt: "Airproxy helps you scale, fast!",
             },
           ],
         }}
