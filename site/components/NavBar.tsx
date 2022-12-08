@@ -49,9 +49,9 @@ const NavBar = () => {
     <header className="flex items-center justify-between max-w-3xl mx-auto pt-6 w-full">
       <div>
         <Link href="/app">
-          <h1 className="font-[Chewy] text-2xl text-gray-800">
-            <span className="mr-2.5">☁️</span>
-            <span>airproxy</span>
+          <h1 className="font-[Chewy] flex items-center gap-2 text-2xl text-gray-800">
+            <img src="/cloud.png" alt="Airproxy" className="h-16 w-16" />
+            <span>Airproxy</span>
           </h1>
         </Link>
       </div>

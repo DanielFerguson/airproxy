@@ -123,7 +123,11 @@ export default function Page({ children, meta }: IPageProps) {
                 <div className="flex lg:min-w-0 lg:flex-1" aria-label="Global">
                   <Link href="/" className="-m-1.5 p-1.5">
                     <span className="sr-only">Airproxy</span>
-                    <span className="text-5xl">☁️</span>
+                    <img
+                      src="/cloud.png"
+                      alt="Airproxy"
+                      className="h-16 w-16"
+                    />
                   </Link>
                 </div>
                 <div className="flex lg:hidden">
@@ -166,7 +170,11 @@ export default function Page({ children, meta }: IPageProps) {
                     <div className="flex">
                       <Link href="#" className="-m-1.5 p-1.5">
                         <span className="sr-only">Airproxy</span>
-                        <span className="text-5xl">☁️</span>
+                        <img
+                          src="/cloud.png"
+                          alt="Airproxy"
+                          className="h-16 w-16"
+                        />
                       </Link>
                     </div>
                     <div className="flex">

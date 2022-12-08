@@ -216,7 +216,11 @@ export default function Page() {
                 <div className="flex lg:min-w-0 lg:flex-1" aria-label="Global">
                   <Link href="#" className="-m-1.5 p-1.5">
                     <span className="sr-only">Airproxy</span>
-                    <span className="text-5xl">☁️</span>
+                    <img
+                      src="/cloud.png"
+                      alt="Airproxy"
+                      className="h-16 w-16"
+                    />
                   </Link>
                 </div>
                 <div className="flex lg:hidden">
@@ -265,7 +269,11 @@ export default function Page() {
                     <div className="flex">
                       <Link href="#" className="-m-1.5 p-1.5">
                         <span className="sr-only">Airproxy</span>
-                        <span className="text-5xl">☁️</span>
+                        <img
+                          src="/cloud.png"
+                          alt="Airproxy"
+                          className="h-16 w-16"
+                        />
                       </Link>
                     </div>
                     <div className="flex">
@@ -461,7 +469,7 @@ export default function Page() {
                         Uptime
                       </dt>
                       <dd className="order-1 text-5xl font-bold tracking-tight text-indigo-600">
-                        99.99%
+                        100%
                       </dd>
                     </div>
                     <div className="flex flex-col border-t border-gray-100 p-6 text-center sm:border-0 sm:border-l">

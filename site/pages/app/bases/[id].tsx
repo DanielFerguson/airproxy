@@ -32,6 +32,7 @@ import {
 } from "recharts";
 import millify from "millify";
 import { ClipboardDocumentIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import Script from "next/script";
 
 type Base = Prisma.BaseGetPayload<{
   select: {
@@ -303,6 +304,12 @@ const Page = () => {
 
       <Toaster />
       <NavBar />
+      <Script
+        id="hs-script-loader"
+        src="https://js-na1.hs-scripts.com/23528331.js"
+        async
+        defer
+      />
 
       <main className="max-w-3xl mx-auto mt-16 grid gap-y-12 pb-24">
         {/* Header */}
