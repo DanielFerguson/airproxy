@@ -272,8 +272,7 @@ export default function Page() {
                         <li>
                           <b>{base.tables.length}</b> tables
                         </li>
-                        <li>
-                          Updated {/* @ts-ignore */}
+                        {/* <li>
                           <Tooltip
                             title="Updated by TTL"
                             position="top"
@@ -282,7 +281,7 @@ export default function Page() {
                             <b>14 mins</b>
                           </Tooltip>{" "}
                           ago
-                        </li>
+                        </li> */}
                       </ul>
                       <div className="flex justify-end gap-x-3 mt-5">
                         <button onClick={() => toggleBaseStatus(base)}>

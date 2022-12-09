@@ -16,6 +16,23 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   const session = await unstable_getServerSession(req, res, authOptions);
 
+  // Get requests for all bases (public)
+  if (!session) {
+    const result = await prisma.$queryRaw`
+      SELECT
+        id,
+        latitude,
+        longitude
+      FROM
+        Request
+      WHERE
+        createdAt > NOW() - INTERVAL 1 MINUTE
+    `;
+
+    res.status(200).json(result);
+    return;
+  }
+
   if (!session) {
     res.status(401).json({
       message: "You must be signed in.",

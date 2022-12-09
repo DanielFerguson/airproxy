@@ -1,7 +1,12 @@
 import Head from "next/head";
 import { useState } from "react";
 import { Dialog } from "@headlessui/react";
-import { ComposableMap, Geographies, Geography } from "react-simple-maps";
+import {
+  ComposableMap,
+  Geographies,
+  Geography,
+  Marker,
+} from "react-simple-maps";
 import {
   Bars3Icon,
   XMarkIcon,
@@ -17,6 +22,13 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { NextSeo } from "next-seo";
 import { OrganizationJsonLd, LogoJsonLd, SoftwareAppJsonLd } from "next-seo";
+import useSWR from "swr";
+
+interface Request {
+  id: number;
+  latitude: number;
+  longitude: number;
+}
 
 const navigation = [
   { name: "Features", href: "/#features" },
@@ -93,6 +105,8 @@ const tiers = [
 export default function Page() {
   const session = useSession();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const { data: requests } = useSWR<Request[]>("/api/requests");
 
   return (
     <div>
@@ -398,6 +412,18 @@ export default function Page() {
                             ))
                           }
                         </Geographies>
+                        {requests &&
+                          requests.map(({ id, latitude, longitude }) => (
+                            <Marker
+                              key={id}
+                              coordinates={[longitude, latitude]}
+                            >
+                              <circle
+                                r="12"
+                                className="animate-ping-once fill-indigo-600"
+                              />
+                            </Marker>
+                          ))}
                       </ComposableMap>
                     </div>
                   </div>

@@ -130,6 +130,18 @@ const NavBar = () => {
               </Menu.Item>
               <Menu.Item>
                 {({ active }) => (
+                  <Link
+                    href="/app/settings"
+                    className={`block px-4 py-2 text-sm text-gray-700 ${
+                      active ? "bg-gray-100" : ""
+                    }`}
+                  >
+                    Settings
+                  </Link>
+                )}
+              </Menu.Item>
+              <Menu.Item>
+                {({ active }) => (
                   <button
                     onClick={() => signOut()}
                     className={`w-full text-left block px-4 py-2 text-sm text-gray-700 ${
