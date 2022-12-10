@@ -69,9 +69,9 @@ const features = [
     icon: UsersIcon,
   },
   {
-    name: "An Awesome Roadmap",
+    name: "CDNs For All",
     description:
-      "We've got a lot more on the way, and want to know how we can help you accelerate your business.",
+      "Did Airtable removing its file serving capabilities really suck for you, too? We've got you covered.",
     icon: BeakerIcon,
   },
 ];
