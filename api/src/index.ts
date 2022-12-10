@@ -5,7 +5,6 @@ export interface Env {
   DB_HOST: string;
   DB_USER: string;
   DB_PASS: string;
-  REQUEST_QUEUE: Queue;
 }
 
 interface TableRowResult {
@@ -39,11 +38,7 @@ const getSizeInBytes = (obj: any) => {
 };
 
 export default {
-  async fetch(
-    request: Request,
-    env: Env,
-    ctx: ExecutionContext
-  ): Promise<Response> {
+  async fetch(request: Request, env: Env): Promise<Response> {
     const { method, url } = request;
 
     const details = request.cf as CfDetails;
@@ -58,6 +53,10 @@ export default {
       });
     }
 
+    // TODO: Check rate limiter
+    // TODO: Check if IP is in blacklist
+    // TODO: Check if the base has an API token, and if so, check if it's valid
+
     //
     // Parse request path
     //
@@ -67,6 +66,10 @@ export default {
       username: env.DB_USER,
       password: env.DB_PASS,
     });
+
+    // TODO: Fetch the baseId, tableId, and viewId from the path
+    // TODO: Check whether the viewId is active
+    // TODO: Handle ?page and ?pageSize queries with the request and cache
 
     // /[tableId]/[baseId]/[?viewId]
     const path = new URL(url).pathname;
