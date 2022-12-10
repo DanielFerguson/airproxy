@@ -12,6 +12,7 @@ interface TableRowResult {
   baseIsActive: boolean;
   ttl: number;
   baseToken: string;
+  apiToken?: string;
 }
 
 interface CfDetails {
@@ -39,26 +40,83 @@ const getSizeInBytes = (obj: any) => {
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
-    const { method, url } = request;
+    const { url } = request;
 
     const details = request.cf as CfDetails;
 
     //
-    // Validate request method
+    // Parse request path
     //
 
-    if (method !== "GET") {
-      return new Response(`Method '${method} is not allowed.'`, {
-        status: 405,
+    // Extract the baseId, tableId, and viewId from the path
+    const path = new URL(url).pathname;
+    const [_, baseId, tableId, viewId] = path.split("/");
+
+    // Check that the baseId, tableId are valid
+    if (!baseId || !tableId) {
+      return new Response(
+        "Request must contain the base id and table id, with an optional view id.",
+        {
+          status: 400,
+        }
+      );
+    }
+
+    // Check whether there is a page and pageSize query
+    const page = new URL(url).searchParams.get("page") ?? "1";
+    const pageSize = new URL(url).searchParams.get("pageSize") ?? "100";
+
+    // If the pageSize is greater than 100, return a 400
+    if (parseInt(pageSize) > 100) {
+      return new Response("Page size cannot be greater than 100.", {
+        status: 400,
       });
     }
 
-    // TODO: Check rate limiter
-    // TODO: Check if IP is in blacklist
-    // TODO: Check if the base has an API token, and if so, check if it's valid
+    //
+    // Validate the request, if the base has an API token
+    //
+
+    // Get the base and table details
+    const detailsResult = await fetchAccessDetails(baseId, tableId, env);
+
+    // If the result is a Response, return it
+    if (detailsResult instanceof Response) {
+      return detailsResult;
+    }
+
+    const { tableIsActive, baseIsActive, ttl, baseToken, apiToken } =
+      detailsResult as TableRowResult;
+
+    // Check that both the table and base are active
+    if (!tableIsActive || !baseIsActive) {
+      return new Response("Table or base is inactive.", {
+        status: 404,
+      });
+    }
+
+    // Check if the base has an API token, and if so, check if it's valid
+    if (apiToken) {
+      // Check that the request has the Authorization header
+      const authHeader = request.headers.get("Authorization");
+      if (!authHeader) {
+        return new Response("Authorization header is required.", {
+          status: 401,
+        });
+      }
+
+      // Check that the Authorization header is valid
+      if (authHeader !== `Bearer ${apiToken}`) {
+        return new Response("Authorization header is invalid.", {
+          status: 401,
+        });
+      }
+    }
+
+    // TODO: Check whether the viewId is active
 
     //
-    // Parse request path
+    // Check whether data is in KV (key: data:baseId:tableId)
     //
 
     const conn = connect({
@@ -67,18 +125,8 @@ export default {
       password: env.DB_PASS,
     });
 
-    // TODO: Fetch the baseId, tableId, and viewId from the path
-    // TODO: Check whether the viewId is active
-    // TODO: Handle ?page and ?pageSize queries with the request and cache
-
-    // /[tableId]/[baseId]/[?viewId]
-    const path = new URL(url).pathname;
-    const [_, baseId, tableId] = path.split("/");
-
-    //
-    // Check whether data is in KV (key: data:baseId:tableId)
-    //
-
+    // TODO: Add page and pageSize to the cache key
+    // TODO: Add the viewId to the cache key
     const cacheKey = `data:${baseId}:${tableId}`;
     let cachedValue = await env.KV_STORE.get(cacheKey);
 
@@ -101,39 +149,11 @@ export default {
     }
 
     //
-    // Check whether the table and base are active, and get the ttl
-    //
-
-    const results = await conn.execute(
-      "SELECT t.active as tableIsActive,b.active as baseIsActive,k.token as baseToken,t.ttl FROM `Table` as t LEFT JOIN Base as b ON t.baseId=b.id LEFT JOIN Keys as k on b.keysEmail = k.email WHERE b.id=? AND t.id=?",
-      [baseId, tableId]
-    );
-
-    // Check that the table and base exist
-    if (results.rows.length === 0) {
-      return new Response("Unable to find that table.", {
-        status: 404,
-      });
-    }
-
-    const { tableIsActive, baseIsActive, ttl, baseToken } = results
-      .rows[0] as TableRowResult;
-
-    // Check that they are both active
-    if (!tableIsActive || !baseIsActive) {
-      return new Response("Table or base is inactive.", {
-        status: 404,
-      });
-    }
-
-    //
     // Fetch the data from Airtable
     //
 
-    // TODO: Time queue vs. insert (q: do we need the queue? does it help?)
-
-    console.log(baseToken);
-
+    // TODO: Add page and pageSize to the request
+    // TODO: Add the viewId to the request
     // Fetch the data
     const response = await fetch(
       `https://api.airtable.com/v0/${baseId}/${tableId}`,
@@ -163,6 +183,55 @@ export default {
       },
     });
   },
+};
+
+const fetchAccessDetails = async (
+  baseId: string,
+  tableId: string,
+  env: Env
+): Promise<TableRowResult | Response> => {
+  // Check whether the details are in the cache
+  const cachedRequestDetails = await env.KV_STORE.get(
+    `request-details:${baseId}:${tableId}`
+  );
+
+  // If they are, return them
+  if (cachedRequestDetails) {
+    return JSON.parse(cachedRequestDetails);
+  }
+
+  const conn = connect({
+    host: env.DB_HOST,
+    username: env.DB_USER,
+    password: env.DB_PASS,
+  });
+
+  // If they aren't, fetch them from the database
+  const requestDetails = await conn.execute(
+    "SELECT t.active AS tableIsActive,b.active AS baseIsActive,k.token AS baseToken,b.apiToken,t.ttl FROM`Table` AS t LEFT JOIN Base AS b ON t.baseId=b.id LEFT JOIN Keys AS k ON b.keysEmail=k.email WHERE b.id=? AND t.id=?",
+    [baseId, tableId]
+  );
+
+  // Check that the table and base exist
+  if (requestDetails.rows.length === 0) {
+    return new Response("Unable to find that table.", {
+      status: 404,
+    });
+  }
+
+  // Typecase the result to TableRowResult
+  const results = requestDetails.rows[0] as TableRowResult;
+
+  // Store them in the KV
+  await env.KV_STORE.put(
+    `request-details:${baseId}:${tableId}`,
+    JSON.stringify(results),
+    {
+      expirationTtl: 60,
+    }
+  );
+
+  return results;
 };
 
 const addRequestToDb = async (
