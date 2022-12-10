@@ -1,6 +1,31 @@
+import { toast, Toaster } from "react-hot-toast";
+
 const Newsletter = () => {
+  const submitNewsletter = async (e: any) => {
+    e.preventDefault();
+    const email = e.target.email.value;
+
+    toast.promise(
+      fetch("/api/newsletter", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      }),
+      {
+        loading: "Submitting...",
+        success: "Thanks for subscribing!",
+        error: "Something went wrong.",
+      }
+    );
+
+    e.target.reset();
+  };
+
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:py-16 lg:px-8">
+      <Toaster />
       <div className="rounded-3xl bg-indigo-700 py-10 px-6 sm:py-16 sm:px-12 lg:flex lg:items-center lg:p-20">
         <div className="lg:w-0 lg:flex-1">
           <h2 className="text-3xl font-bold tracking-tight text-white">
@@ -14,8 +39,8 @@ const Newsletter = () => {
         <div className="mt-12 sm:w-full sm:max-w-md lg:mt-0 lg:ml-8 lg:flex-1">
           <form
             className="sm:flex"
-            action="https://app.loops.so/api/newsletter-form/clbebaql1006ekx08xvsrrn43"
-            method="POST"
+            action="#"
+            onSubmit={(e) => submitNewsletter(e)}
           >
             <label htmlFor="email-address" className="sr-only">
               Email address
