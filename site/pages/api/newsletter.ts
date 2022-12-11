@@ -17,6 +17,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     body: JSON.stringify({
       email: email,
       userGroup: "airproxy",
+      source: "Airproxy Newsletter",
+      airproxy: true,
     }),
   });
 
