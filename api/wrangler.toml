@@ -9,3 +9,7 @@ kv_namespaces = [
 routes = [	
   { pattern = "api.airproxy.app", custom_domain = true, zone_name = "airproxy.app" }
 ]
+
+[vars]
+UPSTASH_REDIS_REST_URL="https://global-precious-gopher-30625.upstash.io"
+UPSTASH_REDIS_REST_TOKEN="AXehASQgMzc1MDk4YTktZmIxMC00NGY0LWFiZDUtM2I5YmJjYWNmY2RhZTFlZWFiNmM1MTkzNGQyYmIzZWQxMjAwNGZjYTFlYzQ="

@@ -43,7 +43,6 @@ type Base = Prisma.BaseGetPayload<{
 interface StatsResponse {
   totalRequests: number;
   customerCount: number;
-  totalRequestsSize?: number;
 }
 
 interface LatLng {
@@ -329,18 +328,7 @@ export default function Page() {
                   stats ? millify(stats.customerCount, { precision: 2 }) : "0"
                 }
               />
-              <StatCard
-                name="Egress"
-                stat={
-                  stats && stats.totalRequestsSize
-                    ? millify(stats.totalRequestsSize, {
-                        precision: 2,
-                        units: ["B", "KB", "MB", "GB", "TB"],
-                        space: true,
-                      })
-                    : "0"
-                }
-              />
+              <StatCard name="Somthing" stat="Add" />
             </dl>
 
             {/* Chart */}

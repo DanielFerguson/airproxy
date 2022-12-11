@@ -47,7 +47,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     SELECT
       count(id) as totalRequests,
       COUNT(DISTINCT(latlng)) as customerCount,
-	    SUM(size) as totalRequestsSize
     FROM
       Request
     WHERE

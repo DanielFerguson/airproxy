@@ -15,6 +15,7 @@
   "dependencies": {
     "@planetscale/database": "^1.4.1",
     "@prisma/client": "^4.7.0",
+    "@upstash/redis": "^1.18.1",
     "axios": "^1.2.0"
   }
 }

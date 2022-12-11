@@ -32,7 +32,7 @@ const Newsletter = () => {
             Get notified when we&apos;re launching.
           </h2>
           <p className="mt-4 max-w-3xl text-lg text-indigo-100">
-            We're moments away from revolutionizing the way you manage your
+            We&apos;re moments away from revolutionizing the way you manage your
             data. You&apos;re not going to want to miss it.
           </p>
         </div>
@@ -62,7 +62,7 @@ const Newsletter = () => {
             </button>
           </form>
           <p className="mt-3 text-sm text-indigo-100">
-            We'll never share your email address with anyone else.
+            We&apos;ll never share your email address with anyone else.
           </p>
         </div>
       </div>
