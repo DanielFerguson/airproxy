@@ -7,7 +7,6 @@ import { Prisma } from "@prisma/client";
 import StatCard from "../../../components/StatCard";
 import {
   ArrowPathIcon,
-  ArrowTrendingUpIcon,
   CalendarDaysIcon,
   ClockIcon,
   InboxIcon,
@@ -63,10 +62,6 @@ interface StatsResponse {
 }
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
-
-const copyToClipboard = (value: string) => {
-  navigator.clipboard.writeText(value);
-};
 
 const viewTypeIcon = (type: string): JSX.Element => {
   switch (type) {
@@ -247,8 +242,24 @@ const Page = () => {
     await mutate();
   };
 
+  const bustTableCache = async (tableId: string, tableName: string) => {
+    await toast.promise(
+      fetch(`/api/tables/${tableId}`, {
+        method: "POST",
+        body: JSON.stringify({ action: "BUST_TABLE_CACHE" }),
+      }),
+      {
+        loading: `Busting ${tableName} cache...`,
+        error: "Whoops! Something went wrong.",
+        success: `Busted cache for ${tableName}!`,
+      }
+    );
+
+    await mutate();
+  };
+
   const copyToken = async (apiToken: string) => {
-    copyToClipboard(apiToken);
+    navigator.clipboard.writeText(apiToken);
     toast.success("Copied token");
   };
 
@@ -287,7 +298,7 @@ const Page = () => {
   };
 
   const copyApiUrl = (url: string) => {
-    copyToClipboard(url);
+    navigator.clipboard.writeText(url);
     toast.success("Copied API URL.");
   };
 
@@ -373,7 +384,10 @@ const Page = () => {
                 stats ? millify(stats.customerCount, { precision: 2 }) : "0"
               }
             />
-            <StatCard name="TODO" stat="Coming" />
+            <StatCard
+              name="Protection Status"
+              stat={base?.apiToken ? "Protected" : "Unprotected"}
+            />
           </dl>
 
           {/* Chart */}
@@ -646,7 +660,9 @@ const Page = () => {
                               <div className="flex justify-end items-center gap-x-3">
                                 {/* Bust Cache */}
                                 <button
-                                  onClick={() => console.log("TODO")}
+                                  onClick={() =>
+                                    bustTableCache(table.id, table.name)
+                                  }
                                   className="text-indigo-600 hover:text-indigo-900"
                                 >
                                   {/* @ts-ignore */}

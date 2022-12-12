@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
 import { v4 as uuidv4 } from "uuid";
-
+import { Redis } from "@upstash/redis";
 import { unstable_getServerSession } from "next-auth/next";
 import { authOptions } from "../../auth/[...nextauth]";
 
@@ -13,25 +13,22 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { id } = req.query;
 
   if (!session || !email) {
-    res.status(401).json({
+    return res.status(401).json({
       message:
         "You must be signed in to view the protected content on this page.",
     });
-    return;
   }
 
   if (typeof id !== "string") {
-    res.status(400).json({
+    return res.status(400).json({
       message: "The id is malformed.",
     });
-    return;
   }
 
   if (req.method !== "GET" && req.method !== "POST") {
-    res.status(406).json({
+    return res.status(406).json({
       message: "Method not acceptable.",
     });
-    return;
   }
 
   //
@@ -62,8 +59,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       },
     });
 
-    res.status(200).json(response);
-    return;
+    return res.status(200).json(response);
   }
 
   //
@@ -80,11 +76,12 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       action !== "REMOVE_TOKEN_FROM_BASE" &&
       action !== "CREATE_AND_ADD_TOKEN_TO_BASE")
   ) {
-    res.status(400).json({
+    return res.status(400).json({
       message: "`action` is missing from the request.",
     });
-    return;
   }
+
+  const redis = Redis.fromEnv();
 
   //
   // Update a singular base
@@ -93,16 +90,21 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (action === "UPDATE_ACTIVE_STATUS" && req.method === "POST") {
     const { active } = JSON.parse(req.body);
 
-    await prisma.base.update({
-      where: {
-        id,
-      },
-      data: {
-        active,
-      },
-    });
+    const keys = await redis.keys(`*:${id}:*`);
 
-    res.status(200).json({
+    await Promise.all([
+      prisma.base.update({
+        where: {
+          id,
+        },
+        data: {
+          active,
+        },
+      }),
+      redis.unlink(...keys),
+    ]);
+
+    return res.status(200).json({
       message: "Status is now active.",
     });
   }
@@ -112,16 +114,21 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   //
 
   if (action === "DISABLE_ALL_TABLES" && req.method === "POST") {
-    await prisma.table.updateMany({
-      where: {
-        baseId: id,
-      },
-      data: {
-        active: false,
-      },
-    });
+    const keys = await redis.keys(`*:${id}:*`);
 
-    res.status(200).json({
+    await Promise.all([
+      prisma.table.updateMany({
+        where: {
+          baseId: id,
+        },
+        data: {
+          active: false,
+        },
+      }),
+      redis.unlink(...keys),
+    ]);
+
+    return res.status(200).json({
       message: "All tables have been disabled.",
     });
   }
@@ -131,16 +138,21 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   //
 
   if (action === "ENABLE_ALL_TABLES" && req.method === "POST") {
-    await prisma.table.updateMany({
-      where: {
-        baseId: id,
-      },
-      data: {
-        active: true,
-      },
-    });
+    const keys = await redis.keys(`*:${id}:*`);
 
-    res.status(200).json({
+    await Promise.all([
+      prisma.table.updateMany({
+        where: {
+          baseId: id,
+        },
+        data: {
+          active: true,
+        },
+      }),
+      redis.unlink(...keys),
+    ]);
+
+    return res.status(200).json({
       message: "All tables have been enabled.",
     });
   }
@@ -150,17 +162,22 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   //
 
   if (action === "REMOVE_TOKEN_FROM_BASE" && req.method === "POST") {
-    await prisma.base.updateMany({
-      where: {
-        id,
-        email,
-      },
-      data: {
-        apiToken: null,
-      },
-    });
+    const keys = await redis.keys(`*:${id}:*`);
 
-    res.status(200).json({
+    await Promise.all([
+      prisma.base.updateMany({
+        where: {
+          id,
+          email,
+        },
+        data: {
+          apiToken: null,
+        },
+      }),
+      redis.unlink(...keys),
+    ]);
+
+    return res.status(200).json({
       message: "Successfully removed token from base.",
     });
   }
@@ -170,16 +187,21 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   //
 
   if (action === "CREATE_AND_ADD_TOKEN_TO_BASE" && req.method === "POST") {
-    await prisma.base.update({
-      where: {
-        id,
-      },
-      data: {
-        apiToken: uuidv4(),
-      },
-    });
+    const keys = await redis.keys(`*:${id}:*`);
 
-    res.status(200).json({
+    await Promise.all([
+      prisma.base.update({
+        where: {
+          id,
+        },
+        data: {
+          apiToken: uuidv4(),
+        },
+      }),
+      redis.unlink(...keys),
+    ]);
+
+    return res.status(200).json({
       message: "Successfully created and attached API token to base.",
     });
   }

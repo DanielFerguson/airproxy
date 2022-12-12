@@ -3,6 +3,7 @@ import { PrismaClient } from "@prisma/client";
 
 import { unstable_getServerSession } from "next-auth/next";
 import { authOptions } from "../../auth/[...nextauth]";
+import { Redis } from "@upstash/redis";
 
 const prisma = new PrismaClient();
 
@@ -12,25 +13,22 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { id } = req.query;
 
   if (!session || !email) {
-    res.status(401).json({
+    return res.status(401).json({
       message:
         "You must be signed in to view the protected content on this page.",
     });
-    return;
   }
 
   if (typeof id !== "string") {
-    res.status(400).json({
+    return res.status(400).json({
       message: "The id is malformed.",
     });
-    return;
   }
 
   if (req.method !== "GET" && req.method !== "POST") {
-    res.status(406).json({
+    return res.status(406).json({
       message: "Method not acceptable.",
     });
-    return;
   }
 
   //
@@ -50,10 +48,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       },
     });
 
-    res.status(200).json({
+    return res.status(200).json({
       table: response,
     });
-    return;
   }
 
   //
@@ -64,13 +61,16 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (
     !action ||
-    (action !== "TOGGLE_STATUS" && action !== "UPDATE_TABLE_TTL")
+    (action !== "TOGGLE_STATUS" &&
+      action !== "UPDATE_TABLE_TTL" &&
+      action !== "BUST_TABLE_CACHE")
   ) {
-    res.status(400).json({
+    return res.status(400).json({
       message: "`action` is missing from the request.",
     });
-    return;
   }
+
+  const redis = Redis.fromEnv();
 
   //
   // Update a singular base
@@ -79,17 +79,36 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (action === "TOGGLE_STATUS" && req.method === "POST") {
     const { enabled } = JSON.parse(req.body);
 
-    await prisma.table.update({
-      where: {
-        id,
-      },
-      data: {
-        active: enabled,
-      },
-    });
+    const keys = await redis.keys(`*:${id}:*`);
 
-    res.status(200).json({
+    await Promise.all([
+      prisma.table.update({
+        where: {
+          id,
+        },
+        data: {
+          active: enabled,
+        },
+      }),
+      redis.unlink(...keys),
+    ]);
+
+    return res.status(200).json({
       message: "Status is now active.",
+    });
+  }
+
+  //
+  // Bust a table's cache
+  //
+
+  if (action === "BUST_TABLE_CACHE" && req.method === "POST") {
+    const keys = await redis.keys(`*:${id}:*`);
+
+    await redis.unlink(...keys);
+
+    return res.status(200).json({
+      message: "Cache has been busted.",
     });
   }
 
@@ -100,16 +119,21 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (action === "UPDATE_TABLE_TTL" && req.method === "POST") {
     const { ttl } = JSON.parse(req.body);
 
-    await prisma.table.update({
-      where: {
-        id,
-      },
-      data: {
-        ttl: parseInt(ttl),
-      },
-    });
+    const keys = await redis.keys(`*:${id}:*`);
 
-    res.status(200).json({
+    await Promise.all([
+      prisma.table.update({
+        where: {
+          id,
+        },
+        data: {
+          ttl: parseInt(ttl),
+        },
+      }),
+      redis.unlink(...keys),
+    ]);
+
+    return res.status(200).json({
       message: "Status is now active.",
     });
   }

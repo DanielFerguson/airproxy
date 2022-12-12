@@ -55,6 +55,8 @@ export default {
     const page = new URL(request.url).searchParams.get("page") ?? "1";
     const pageSize = new URL(request.url).searchParams.get("pageSize") ?? "100";
 
+    console.log(env.DB_USER);
+
     if (parseInt(pageSize) > 100) {
       return new Response("Page size cannot be greater than 100.", {
         status: 400,
@@ -175,7 +177,7 @@ const getAccessDetails = async (
   redis: Redis,
   dbConn: Connection
 ): Promise<TableRowResult | Response> => {
-  let cacheKey = `request-details:${baseId}:${tableId}`;
+  let cacheKey = `access:${baseId}:${tableId}`;
 
   if (viewId) {
     cacheKey += `:${viewId}`;

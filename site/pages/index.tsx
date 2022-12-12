@@ -13,11 +13,11 @@ import {
   CogIcon,
   ShieldCheckIcon,
   ArrowTrendingUpIcon,
-  CheckIcon,
   ChartBarIcon,
   UsersIcon,
-  BeakerIcon,
+  GlobeAsiaAustraliaIcon,
 } from "@heroicons/react/24/outline";
+import { CheckIcon } from "@heroicons/react/20/solid";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { NextSeo } from "next-seo";
@@ -29,6 +29,10 @@ interface Request {
   id: number;
   latitude: number;
   longitude: number;
+}
+
+function classNames(...classes: string[]) {
+  return classes.filter(Boolean).join(" ");
 }
 
 const navigation = [
@@ -69,39 +73,60 @@ const features = [
     icon: UsersIcon,
   },
   {
-    name: "CDNs For All",
+    name: "CDNs For Days",
     description:
       "Did Airtable removing its file serving capabilities really suck for you, too? We've got you covered.",
-    icon: BeakerIcon,
+    icon: GlobeAsiaAustraliaIcon,
   },
 ];
 
-const tiers = [
-  {
-    id: "tier-hobby",
-    name: "Hobby",
-    priceMonthly: 27,
-    priceId: "price_1MAtTuG5EtvPzQrOIXe7b9xs",
-    description:
-      "Perfect for startups and small businesses looking to create fast, backed with the power of Airtable.",
-    features: ["Unlimited Bases", "Unlimited Tables", "50k Requests Per Month"],
-  },
-  {
-    id: "tier-team",
-    name: "Team",
-    priceMonthly: 89,
-    priceId: "price_1MAtUjG5EtvPzQrOhUYN4N52",
-    description:
-      "Designed for established businesses with a global presence, offering advanced features and support for global success.",
-    features: [
-      "Unlimited Bases",
-      "Unlimited Tables",
-      "200k Requests Per Month",
-      "Protect Your APIs",
-      "Full Control Over TTLs",
-    ],
-  },
-];
+const pricing = {
+  tiers: [
+    {
+      title: "Hobby",
+      price: 27,
+      frequency: "/month",
+      description: "The essentials to provide your best work for clients.",
+      features: ["Unlimited Bases", "Unlimited Tables", "10k Requests / month"],
+      cta: "Get Started",
+      mostPopular: false,
+    },
+    {
+      title: "Team",
+      price: 69,
+      frequency: "/month",
+      description: "A plan that scales with your rapidly growing business.",
+      features: [
+        "Unlimited Bases",
+        "Unlimited Tables",
+        "50k Requests / month",
+        "Custom TTLs",
+        "TypeScript Definition Generation",
+        "API Protection",
+      ],
+      cta: "Get Started",
+      mostPopular: false,
+    },
+    {
+      title: "Business",
+      price: 279,
+      frequency: "/month",
+      description: "Dedicated support and infrastructure for your company.",
+      features: [
+        "Unlimited Bases",
+        "Unlimited Tables",
+        "300k Requests / month",
+        "Custom TTLs",
+        "TypeScript Definition Generation",
+        "API Protection",
+        "Image CDN",
+        "Toggle View Access",
+      ],
+      cta: "Get Started",
+      mostPopular: true,
+    },
+  ],
+};
 
 export default function Page() {
   const session = useSession();
@@ -491,7 +516,7 @@ export default function Page() {
                       Avg Response Time
                     </dt>
                     <dd className="order-1 text-5xl font-bold tracking-tight text-indigo-600">
-                      &lt; 99 ms
+                      &lt; 299 ms
                     </dd>
                   </div>
                 </dl>
@@ -545,7 +570,7 @@ export default function Page() {
       </div>
 
       {/* Testimony */}
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-48">
         <div className="relative">
           <img
             className="mx-auto h-8"
@@ -596,99 +621,71 @@ export default function Page() {
       </div>
 
       {/* Pricing */}
-      <div id="pricing" className="py-40">
-        <div className="relative">
-          <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8">
-            <div className="mx-auto grid max-w-md grid-cols-1 gap-8 lg:max-w-4xl lg:grid-cols-2 lg:gap-8">
-              {tiers.map((tier) => (
-                <div
-                  key={tier.name}
-                  className="flex flex-col rounded-3xl bg-white shadow-xl ring-1 ring-black/10"
-                >
-                  <div className="p-8 sm:p-10">
-                    <h3
-                      className="text-lg font-semibold leading-8 tracking-tight text-indigo-600"
-                      id={tier.id}
-                    >
-                      {tier.name}
-                    </h3>
-                    <div className="mt-4 flex items-baseline text-5xl font-bold tracking-tight text-gray-900">
-                      ${tier.priceMonthly}
-                      <span className="text-lg font-semibold leading-8 tracking-normal text-gray-500">
-                        /mo
-                      </span>
-                    </div>
-                    <p className="mt-6 text-base leading-7 text-gray-600">
-                      {tier.description}
-                    </p>
-                  </div>
-                  <div className="flex flex-1 flex-col p-2">
-                    <div className="flex flex-1 flex-col justify-between rounded-2xl bg-gray-50 p-6 sm:p-8">
-                      <ul role="list" className="space-y-6">
-                        {tier.features.map((feature) => (
-                          <li key={feature} className="flex items-start">
-                            <div className="flex-shrink-0">
-                              <CheckIcon
-                                className="h-6 w-6 text-indigo-600"
-                                aria-hidden="true"
-                              />
-                            </div>
-                            <p className="ml-3 text-sm leading-6 text-gray-600">
-                              {feature}
-                            </p>
-                          </li>
-                        ))}
-                      </ul>
-                      <form
-                        className="mt-8"
-                        action="/api/create-checkout-session"
-                        method="POST"
-                      >
-                        <input
-                          type="hidden"
-                          name="priceId"
-                          value={tier.priceId}
-                        />
-                        <button
-                          type="submit"
-                          className="inline-block w-full rounded-lg bg-indigo-600 px-4 py-2.5 text-center text-sm font-semibold leading-5 text-white shadow-md hover:bg-indigo-700"
-                        >
-                          Get started today
-                        </button>
-                      </form>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-        <div className="relative mx-auto mt-8 max-w-7xl px-6 lg:px-8">
-          <div className="mx-auto max-w-md lg:max-w-4xl">
-            <div className="flex flex-col gap-6 rounded-3xl p-8 ring-1 ring-gray-900/10 sm:p-10 lg:flex-row lg:items-center lg:gap-8">
-              <div className="lg:min-w-0 lg:flex-1">
-                <h3 className="text-lg font-semibold leading-8 tracking-tight text-indigo-600">
-                  Free!
+      <div
+        id="pricing"
+        className="mx-auto max-w-7xl bg-white pb-32 pt-16 px-4 sm:px-6 lg:px-8"
+      >
+        <h2 className="mt-2 text-3xl text-center font-bold tracking-tight text-gray-900 sm:text-4xl">
+          Pricing plans for teams of all sizes
+        </h2>
+        <p className="mt-6 max-w-2xl text-center mx-auto text-xl text-gray-500">
+          Choose an affordable plan that's packed with the best features for
+          engaging your audience, creating customer loyalty, and driving sales.
+        </p>
+
+        {/* Tiers */}
+        <div className="mt-24 space-y-12 lg:grid lg:grid-cols-3 lg:gap-x-8 lg:space-y-0">
+          {pricing.tiers.map((tier) => (
+            <div
+              key={tier.title}
+              className="relative flex flex-col rounded-2xl border border-gray-200 bg-white p-8 shadow-sm"
+            >
+              <div className="flex-1">
+                <h3 className="text-xl font-semibold text-gray-900">
+                  {tier.title}
                 </h3>
-                <div className="mt-2 text-base leading-7 text-gray-600">
-                  Try Airproxy for free and see how it can help your business
-                  grow and thrive.
-                </div>
+                {tier.mostPopular ? (
+                  <p className="absolute top-0 -translate-y-1/2 transform rounded-full bg-indigo-500 py-1.5 px-4 text-sm font-semibold text-white">
+                    Most popular
+                  </p>
+                ) : null}
+                <p className="mt-4 flex items-baseline text-gray-900">
+                  <span className="text-5xl font-bold tracking-tight">
+                    ${tier.price}
+                  </span>
+                  <span className="ml-1 text-xl font-semibold">
+                    {tier.frequency}
+                  </span>
+                </p>
+                <p className="mt-6 text-gray-500">{tier.description}</p>
+
+                {/* Feature list */}
+                <ul role="list" className="mt-6 space-y-6">
+                  {tier.features.map((feature) => (
+                    <li key={feature} className="flex">
+                      <CheckIcon
+                        className="h-6 w-6 flex-shrink-0 text-indigo-500"
+                        aria-hidden="true"
+                      />
+                      <span className="ml-3 text-gray-500">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
-              <div>
-                <Link
-                  href={
-                    session.status === "authenticated"
-                      ? "/app"
-                      : "/api/auth/signin"
-                  }
-                  className="inline-block rounded-lg bg-indigo-50 px-4 py-2.5 text-center text-sm font-semibold leading-5 text-indigo-700 hover:bg-indigo-100"
-                >
-                  Get started today <span aria-hidden="true">&rarr;</span>
-                </Link>
-              </div>
+
+              <a
+                href="#"
+                className={classNames(
+                  tier.mostPopular
+                    ? "bg-indigo-500 text-white hover:bg-indigo-600"
+                    : "bg-indigo-50 text-indigo-700 hover:bg-indigo-100",
+                  "mt-8 block w-full py-3 px-6 border border-transparent rounded-md text-center font-medium"
+                )}
+              >
+                {tier.cta}
+              </a>
             </div>
-          </div>
+          ))}
         </div>
       </div>
 

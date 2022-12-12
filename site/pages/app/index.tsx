@@ -269,18 +269,9 @@ export default function Page() {
                       </div>
                       <ul className="space-y-3">
                         <li>
-                          <b>{base.tables.length}</b> tables
+                          <b>{base.tables.length}</b> table
+                          {base.tables.length > 1 && "s"}
                         </li>
-                        {/* <li>
-                          <Tooltip
-                            title="Updated by TTL"
-                            position="top"
-                            trigger="mouseenter"
-                          >
-                            <b>14 mins</b>
-                          </Tooltip>{" "}
-                          ago
-                        </li> */}
                       </ul>
                       <div className="flex justify-end gap-x-3 mt-5">
                         <button onClick={() => toggleBaseStatus(base)}>
@@ -328,7 +319,7 @@ export default function Page() {
                   stats ? millify(stats.customerCount, { precision: 2 }) : "0"
                 }
               />
-              <StatCard name="Somthing" stat="Add" />
+              {/* <StatCard name="Something" stat="Add" /> */}
             </dl>
 
             {/* Chart */}
