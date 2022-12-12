@@ -18,6 +18,10 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     "templates",
     "uploading-files-to-airtable",
     "what-is-airtable",
+    "bringing-excel-into-the-21st-century",
+    "social-media-collaboration",
+    "agile-project-management",
+    "security-and-airtable",
   ];
 
   // Generate sitemap
@@ -25,21 +29,14 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"> 
   <url>
     <loc>https://www.airproxy.app</loc>
-    <lastmod>2022-12-04</lastmod>
   </url>
   <url>
     <loc>https://www.airproxy.app/blog</loc>
-    <lastmod>2022-12-04</lastmod>
-  </url>
-  <url>
-    <loc>https://www.airproxy.app/blog/getting-a-personal-access-token</loc>
-    <lastmod>2022-12-04</lastmod>
   </url>
   ${articles
     .map(
       (article) => `<url>
     <loc>https://www.airproxy.app/blog/${article}</loc>
-    <lastmod>2022-12-04</lastmod>
   </url>`
     )
     .join("")}
