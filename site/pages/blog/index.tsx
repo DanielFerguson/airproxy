@@ -13,12 +13,51 @@ const navigation = [
 
 const posts = [
   {
+    slug: "security-and-airtable",
+    title: "Security and Airtable",
+    description:
+      "Airtable offers a secure platform for managing and collaborating on data. Airproxy adds an additional layer of security for serving data directly to clients.",
+    published: "2022-12-12T09:00:00+11:00",
+    images: [
+      "https://images.unsplash.com/photo-1480843669328-3f7e37d196ae?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=720&q=80",
+    ],
+  },
+  {
+    slug: "agile-project-management",
+    title: "Agile Project Management",
+    description:
+      "Airtable allows teams to collaborate and manage their agile projects in one central location. See how it can help your team streamline its agile workflow.",
+    published: "2022-12-12T09:00:00+11:00",
+    images: [
+      "https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80",
+    ],
+  },
+  {
+    slug: "bringing-excel-into-the-21st-century",
+    title: "Bringing Excel Into The 21st Century",
+    description:
+      "Airtable is a versatile online platform that allows users to import Excel or Google Sheets data and manage it in a more flexible and visually appealing way.",
+    published: "2022-12-12T09:00:00+11:00",
+    images: [
+      "https://images.unsplash.com/photo-1545830571-53a9a0967c88?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80",
+    ],
+  },
+  {
+    slug: "social-media-collaboration",
+    title: "Social Media Collaboration",
+    description:
+      "Enabling teams to collaborate and execute social media strategies with integrations, automations, and a user-friendly interface to streamline efforts.",
+    published: "2022-12-12T09:00:00+11:00",
+    images: [
+      "https://plus.unsplash.com/premium_photo-1661767473365-726c22407adf?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2426&q=80",
+    ],
+  },
+  {
     slug: "airtable-api-and-express-js",
     title: "Using Express JS with the Airtable API",
     description:
       "To use the Airtable API with Express scripts, you will need to follow these steps...",
     published: "2022-12-04T09:00:00+11:00",
-    tags: ["api", "airtable", "creating", "multiple", "records", "generate"],
     images: [
       "https://images.unsplash.com/photo-1505739818593-e7506ebf74c0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
     ],
@@ -29,18 +68,6 @@ const posts = [
     description:
       "Whether Airtable is a suitable backend for your website depends on a number of factors, including the specific needs and requirements of your website, your budget, and your technical capabilities.",
     published: "2022-12-04T09:00:00+11:00",
-    tags: [
-      "api",
-      "airtable",
-      "backend",
-      "saas",
-      "database",
-      "data",
-      "pros",
-      "cons",
-      "downfalls",
-      "shortcomings",
-    ],
     images: [
       "https://images.unsplash.com/photo-1589994965851-a8f479c573a9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8c2NhbGVzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=700&q=60",
     ],
@@ -51,7 +78,6 @@ const posts = [
     description:
       "To use the Airtable API with Express scripts, you will need to follow these steps...",
     published: "2022-12-04T09:00:00+11:00",
-    tags: ["api", "airtable", "creating", "multiple", "records", "generate"],
     images: [
       "https://images.unsplash.com/photo-1560472355-109703aa3edc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
     ],
@@ -62,15 +88,6 @@ const posts = [
     description:
       "We are excited to announce the public release of Airproxy, the world's leading edge caching service for Airtable's API.",
     published: "2022-12-04T09:00:00+11:00",
-    tags: [
-      "announcing",
-      "airproxy",
-      "scaling",
-      "global",
-      "availability",
-      "ease of use",
-      "api",
-    ],
     images: ["/global-map.png"],
   },
   {
@@ -79,7 +96,6 @@ const posts = [
     description:
       "If you want to create multiple records in your Airtable base in a single API request, you can use the Airtable API's 'create' endpoint with an array of record objects in the request body.",
     published: "2022-12-04T09:00:00+11:00",
-    tags: ["api", "airtable", "creating", "multiple", "records", "generate"],
     images: [
       "https://images.unsplash.com/photo-1501526029524-a8ea952b15be?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
     ],
@@ -90,17 +106,6 @@ const posts = [
     description:
       "Airtable is a cloud-based database and collaboration platform that is popular for its user-friendly interface and flexible data management features. However, it is not without its drawbacks.",
     published: "2022-12-04T09:00:00+11:00",
-    tags: [
-      "downfalls",
-      "shortcoming",
-      "cons",
-      "airtable",
-      "cloud service",
-      "airtable pricing",
-      "airtable cost",
-      "expensive",
-      "request limit",
-    ],
     images: [
       "https://images.unsplash.com/photo-1501862169286-518c291e3eed?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
     ],
@@ -111,7 +116,6 @@ const posts = [
     description:
       "Are you looking to integrate your Airtable account with other applications or services? One of the first steps in doing so is to generate a personal access token.",
     published: "2022-12-04T09:00:00+11:00",
-    tags: ["api", "airtable", "access", "token", "personal", "generate"],
     images: [
       "https://images.unsplash.com/photo-1623282033815-40b05d96c903?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
     ],
@@ -122,7 +126,6 @@ const posts = [
     description:
       "Airtable can be critical in agile project management rituals. Here are a few examples of how you can use Airtable in your agile workflow...",
     published: "2022-12-04T09:00:00+11:00",
-    tags: ["api", "airtable", "creating", "multiple", "records", "generate"],
     images: [
       "https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
     ],
@@ -133,14 +136,6 @@ const posts = [
     description:
       "Airtable templates are pre-built bases that you can use as a starting point for your own data.",
     published: "2022-12-04T09:00:00+11:00",
-    tags: [
-      "api",
-      "airtable",
-      "templates",
-      "project management",
-      "event planning",
-      "recipe collection",
-    ],
     images: [
       "https://images.unsplash.com/photo-1530435460869-d13625c69bbf?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8dGVtcGxhdGVzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=700&q=60",
     ],
@@ -151,7 +146,6 @@ const posts = [
     description:
       "If you want to upload files to your Airtable account using the API, there are a few steps you need to follow...",
     published: "2022-12-04T09:00:00+11:00",
-    tags: ["uploading", "files", "airtable", "api", "base", "table"],
     images: [
       "https://images.unsplash.com/photo-1483478550801-ceba5fe50e8e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNiJTIwdG8lMjBjbG91ZHxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=700&q=60",
     ],
@@ -162,17 +156,6 @@ const posts = [
     description:
       "Airtable is a cloud-based platform that combines the features of a database, a spreadsheet, and a project management tool.",
     published: "2022-12-04T09:00:00+11:00",
-    tags: [
-      "what",
-      "airtable",
-      "is",
-      "project",
-      "management",
-      "database",
-      "spreadsheet",
-      "views",
-      "api",
-    ],
     images: [
       "https://images.unsplash.com/photo-1504253163759-c23fccaebb55?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8Y2xvdWR8ZW58MHx8MHx8&auto=format&fit=crop&w=700&q=60",
     ],
