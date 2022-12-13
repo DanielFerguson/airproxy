@@ -1,4 +1,4 @@
 User-agent: *
-Disallow: /api/
-Disallow: /app/
+Disallow: /api
+Disallow: /app
 Sitemap: https://www.airproxy.app/sitemap.xml
