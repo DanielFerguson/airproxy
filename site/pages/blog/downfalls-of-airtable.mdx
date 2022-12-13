@@ -22,8 +22,28 @@ export const meta = {
   ],
 };
 
+export const nextArticle = {
+  slug: "announcing-airproxy",
+  title: "Announcing Airproxy",
+  description:
+    "We are excited to announce the public release of Airproxy, the world's leading edge caching service for Airtable's API.",
+  published: "2022-12-04T09:00:00+11:00",
+  tags: [
+    "announcing",
+    "airproxy",
+    "scaling",
+    "global",
+    "availability",
+    "ease of use",
+    "api",
+  ],
+  images: ["/global-map.png"],
+};
+
 export default ({ children }) => (
-  <BlogLayout meta={meta}>{children}</BlogLayout>
+  <BlogLayout meta={meta} nextArticle={nextArticle}>
+    {children}
+  </BlogLayout>
 );
 
 Airtable is a cloud-based database and collaboration platform that is popular for its user-friendly interface and flexible data management features. However, it is not without its drawbacks. Some potential drawbacks of using Airtable include its cost, the API request limit of 5 requests per second, limited customizability, and dependence on a third-party service. While Airtable offers many benefits, it is important to carefully consider these limitations before using it for your data management needs.

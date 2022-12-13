@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { Dialog } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import Footer from "../../components/Footer";
 
 const navigation = [
   { name: "Features", href: "/#features" },
@@ -413,7 +414,7 @@ const Page = () => {
       </div>
 
       {/* Posts */}
-      <div className="mx-auto mt-24 grid gap-5 sm:grid-cols-2 lg:max-w-none lg:grid-cols-3 mx-auto max-w-md px-6 sm:max-w-3xl lg:max-w-5xl lg:px-8">
+      <div className="mx-auto my-24 grid gap-5 sm:grid-cols-2 lg:max-w-none lg:grid-cols-3 mx-auto max-w-md px-6 sm:max-w-3xl lg:max-w-5xl lg:px-8">
         {posts
           .sort(
             (a, b) =>
@@ -456,6 +457,8 @@ const Page = () => {
             </div>
           ))}
       </div>
+
+      <Footer />
     </div>
   );
 };

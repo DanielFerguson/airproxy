@@ -24,6 +24,7 @@ import { NextSeo } from "next-seo";
 import { OrganizationJsonLd, LogoJsonLd, SoftwareAppJsonLd } from "next-seo";
 import useSWR from "swr";
 import Newsletter from "../components/Newsletter";
+import Footer from "../components/Footer";
 
 interface Request {
   id: number;
@@ -281,14 +282,16 @@ export default function Page() {
               </div>
               <div className="hidden lg:flex lg:min-w-0 lg:flex-1 lg:justify-end">
                 <Link
-                  href={
-                    session.status === "authenticated"
-                      ? "/app"
-                      : "/api/auth/signin"
-                  }
+                  // href={
+                  //   session.status === "authenticated"
+                  //     ? "/app"
+                  //     : "/api/auth/signin"
+                  // }
+                  href="#"
                   className="inline-block rounded-lg px-3 py-1.5 text-sm font-semibold leading-6 text-gray-900 shadow-sm ring-1 ring-gray-900/10 hover:ring-gray-900/20"
                 >
-                  {session.status === "authenticated" ? "Dashboard" : "Log in"}
+                  {/* {session.status === "authenticated" ? "Dashboard" : "Log in"} */}
+                  Coming Soon
                 </Link>
               </div>
             </nav>
@@ -331,16 +334,18 @@ export default function Page() {
                     </div>
                     <div className="py-6">
                       <Link
-                        href={
-                          session.status === "authenticated"
-                            ? "/app"
-                            : "/api/auth/signin"
-                        }
+                        // href={
+                        //   session.status === "authenticated"
+                        //     ? "/app"
+                        //     : "/api/auth/signin"
+                        // }
+                        href="#"
                         className="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-6 text-gray-900 hover:bg-gray-400/10"
                       >
-                        {session.status === "authenticated"
+                        {/* {session.status === "authenticated"
                           ? "Dashboard"
-                          : "Log in"}
+                          : "Log in"} */}
+                        Coming Soon
                       </Link>
                     </div>
                   </div>
@@ -703,28 +708,7 @@ export default function Page() {
       </div>
 
       {/* Footer */}
-      <footer className="bg-white">
-        <div className="mx-auto max-w-7xl overflow-hidden py-12 px-4 sm:px-6 lg:px-8">
-          <nav
-            className="-mx-5 -my-2 flex flex-wrap justify-center"
-            aria-label="Footer"
-          >
-            {navigation.map((item) => (
-              <div key={item.name} className="px-5 py-2">
-                <Link
-                  href={item.href}
-                  className="text-base text-gray-500 hover:text-gray-900"
-                >
-                  {item.name}
-                </Link>
-              </div>
-            ))}
-          </nav>
-          <p className="mt-8 text-center text-base text-gray-400">
-            &copy; 2022 Aaiga, Inc. All rights reserved.
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

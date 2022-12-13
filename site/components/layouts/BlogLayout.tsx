@@ -3,6 +3,7 @@ import { Dialog } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { NextSeo, ArticleJsonLd, BreadcrumbJsonLd } from "next-seo";
+import Footer from "../Footer";
 
 const navigation = [
   { name: "Features", href: "/#features" },
@@ -22,9 +23,67 @@ interface Meta {
 interface IPageProps {
   children: React.ReactNode;
   meta: Meta;
+  nextArticle?: Meta;
 }
 
-export default function Page({ children, meta }: IPageProps) {
+const posts = [
+  {
+    title: "Boost your conversion rate",
+    href: "#",
+    category: { name: "Article", href: "#" },
+    description:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto accusantium praesentium eius, ut atque fuga culpa, similique sequi cum eos quis dolorum.",
+    date: "Mar 16, 2020",
+    datetime: "2020-03-16",
+    imageUrl:
+      "https://images.unsplash.com/photo-1496128858413-b36217c2ce36?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1679&q=80",
+    readingTime: "6 min",
+    author: {
+      name: "Roel Aufderehar",
+      href: "#",
+      imageUrl:
+        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+    },
+  },
+  {
+    title: "How to use search engine optimization to drive sales",
+    href: "#",
+    category: { name: "Video", href: "#" },
+    description:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit facilis asperiores porro quaerat doloribus, eveniet dolore. Adipisci tempora aut inventore optio animi., tempore temporibus quo laudantium.",
+    date: "Mar 10, 2020",
+    datetime: "2020-03-10",
+    imageUrl:
+      "https://images.unsplash.com/photo-1547586696-ea22b4d4235d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1679&q=80",
+    readingTime: "4 min",
+    author: {
+      name: "Brenna Goyette",
+      href: "#",
+      imageUrl:
+        "https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+    },
+  },
+  {
+    title: "Improve your customer experience",
+    href: "#",
+    category: { name: "Case Study", href: "#" },
+    description:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint harum rerum voluptatem quo recusandae magni placeat saepe molestiae, sed excepturi cumque corporis perferendis hic.",
+    date: "Feb 12, 2020",
+    datetime: "2020-02-12",
+    imageUrl:
+      "https://images.unsplash.com/photo-1492724441997-5dc865305da7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1679&q=80",
+    readingTime: "11 min",
+    author: {
+      name: "Daniela Metz",
+      href: "#",
+      imageUrl:
+        "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+    },
+  },
+];
+
+export default function Page({ children, meta, nextArticle }: IPageProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -237,6 +296,57 @@ export default function Page({ children, meta }: IPageProps) {
           <article className="">{children}</article>
         </main>
 
+        {/* Up Next */}
+        {nextArticle && (
+          <div className="max-w-7xl mx-auto px-12 mb-24">
+            <div
+              key={nextArticle.title}
+              className="grid grid-cols-5 overflow-hidden rounded-lg shadow-lg"
+            >
+              <div className="col-span-2">
+                <img
+                  className="h-full w-full object-cover"
+                  src={nextArticle.images[0]}
+                  alt=""
+                />
+              </div>
+              <div className="col-span-3 flex flex-1 flex-col justify-between bg-white p-6">
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-indigo-600">Next Up</p>
+                  <Link href={nextArticle.slug} className="mt-2 block">
+                    <p className="text-xl font-semibold text-gray-900">
+                      {nextArticle.title}
+                    </p>
+                    <p className="mt-3 text-base text-gray-500">
+                      {nextArticle.description}
+                    </p>
+                  </Link>
+                </div>
+                <div className="mt-6 flex items-center">
+                  <div className="flex-shrink-0">
+                    <span className="sr-only">Dan Ferguson</span>
+                    <div className="w-10 h-10 rounded-full bg-indigo-500">
+                      <img
+                        className="h-10 w-10 rounded-full"
+                        src="/danferg.webp"
+                        alt="Dan Ferguson"
+                      />
+                    </div>
+                  </div>
+                  <div className="ml-3">
+                    <p className="text-sm font-medium text-gray-900">
+                      Dan Ferguson
+                    </p>
+                    <div className="flex space-x-1 text-sm text-gray-500">
+                      <span>Co-Founder; Airproxy</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* CTA */}
         <div className="mx-auto max-w-7xl py-16 px-4 sm:px-6 lg:px-8">
           <div className="overflow-hidden rounded-lg bg-indigo-700 shadow-xl lg:grid lg:grid-cols-2 lg:gap-4">
@@ -271,28 +381,7 @@ export default function Page({ children, meta }: IPageProps) {
         </div>
 
         {/* Footer */}
-        <footer className="bg-white">
-          <div className="mx-auto max-w-7xl overflow-hidden py-12 px-4 sm:px-6 lg:px-8">
-            <nav
-              className="-mx-5 -my-2 flex flex-wrap justify-center"
-              aria-label="Footer"
-            >
-              {navigation.map((item) => (
-                <div key={item.name} className="px-5 py-2">
-                  <Link
-                    href={item.href}
-                    className="text-base text-gray-500 hover:text-gray-900"
-                  >
-                    {item.name}
-                  </Link>
-                </div>
-              ))}
-            </nav>
-            <p className="mt-8 text-center text-base text-gray-400">
-              &copy; 2020 Aaiga, Inc. All rights reserved.
-            </p>
-          </div>
-        </footer>
+        <Footer />
       </div>
     </div>
   );
