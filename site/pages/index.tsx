@@ -367,7 +367,7 @@ export default function Page() {
                       Announcing the public launch of Airproxy.{" "}
                       <Link
                         href="/blog/announcing-airproxy"
-                        className="font-semibold text-indigo-600"
+                        className="font-semibold text-[#544CE6]"
                       >
                         <span className="absolute inset-0" aria-hidden="true" />
                         Read more <span aria-hidden="true">&rarr;</span>
@@ -378,7 +378,7 @@ export default function Page() {
                       stay in the loop.{" "}
                       <Link
                         href="#newsletter"
-                        className="font-semibold text-indigo-600"
+                        className="font-semibold text-[#544CE6]"
                       >
                         <span className="absolute inset-0" aria-hidden="true" />
                       </Link>
@@ -404,7 +404,7 @@ export default function Page() {
                       //     : "/api/auth/signin"
                       // }
                       href="#newsletter"
-                      className="inline-block rounded-lg bg-indigo-600 px-4 py-1.5 text-base font-semibold leading-7 text-white shadow-sm ring-1 ring-indigo-600 hover:bg-indigo-700 hover:ring-indigo-700"
+                      className="inline-block rounded-lg bg-[#544CE6] px-4 py-1.5 text-base font-semibold leading-7 text-white shadow-sm ring-1 ring-[#544CE6] hover:bg-indigo-700 hover:ring-indigo-700"
                     >
                       Get started <span className="line-through">today</span>{" "}
                       soon!
@@ -446,7 +446,7 @@ export default function Page() {
                           <Marker key={id} coordinates={[longitude, latitude]}>
                             <circle
                               r="12"
-                              className="animate-ping-once fill-indigo-600"
+                              className="animate-ping-once fill-[#544CE6]"
                             />
                           </Marker>
                         ))}
@@ -516,7 +516,7 @@ export default function Page() {
                     <dt className="order-2 mt-2 text-lg font-medium leading-6 text-gray-500">
                       Requests Delivered
                     </dt>
-                    <dd className="order-1 text-5xl font-bold tracking-tight text-indigo-600">
+                    <dd className="order-1 text-5xl font-bold tracking-tight text-[#544CE6]">
                       9M +
                     </dd>
                   </div>
@@ -524,7 +524,7 @@ export default function Page() {
                     <dt className="order-2 mt-2 text-lg font-medium leading-6 text-gray-500">
                       Uptime
                     </dt>
-                    <dd className="order-1 text-5xl font-bold tracking-tight text-indigo-600">
+                    <dd className="order-1 text-5xl font-bold tracking-tight text-[#544CE6]">
                       100%
                     </dd>
                   </div>
@@ -532,7 +532,7 @@ export default function Page() {
                     <dt className="order-2 mt-2 text-lg font-medium leading-6 text-gray-500">
                       Avg Response Time
                     </dt>
-                    <dd className="order-1 text-5xl font-bold tracking-tight text-indigo-600">
+                    <dd className="order-1 text-5xl font-bold tracking-tight text-[#544CE6]">
                       &lt; 299 ms
                     </dd>
                   </div>
@@ -546,7 +546,7 @@ export default function Page() {
       {/* Features */}
       <div id="features" className="relative py-24 sm:py-32 lg:py-40">
         <div className="mx-auto max-w-md px-6 text-center sm:max-w-3xl lg:max-w-7xl lg:px-8">
-          <h2 className="text-lg font-semibold text-indigo-600">
+          <h2 className="text-lg font-semibold text-[#544CE6]">
             Innovate faster
           </h2>
           <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
@@ -564,7 +564,7 @@ export default function Page() {
                   <div className="flow-root rounded-lg bg-gray-50 px-6 pb-8 h-full">
                     <div className="-mt-6">
                       <div>
-                        <span className="inline-flex items-center justify-center rounded-xl bg-indigo-500 p-3 shadow-lg">
+                        <span className="inline-flex items-center justify-center rounded-xl bg-[#544CE6] p-3 shadow-lg">
                           <feature.icon
                             className="h-8 w-8 text-white"
                             aria-hidden="true"
@@ -620,7 +620,7 @@ export default function Page() {
                   </div>
 
                   <svg
-                    className="mx-1 hidden h-5 w-5 text-indigo-600 md:block"
+                    className="mx-1 hidden h-5 w-5 text-[#544CE6] md:block"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -663,7 +663,7 @@ export default function Page() {
                   {tier.title}
                 </h3>
                 {tier.mostPopular ? (
-                  <p className="absolute top-0 -translate-y-1/2 transform rounded-full bg-indigo-500 py-1.5 px-4 text-sm font-semibold text-white">
+                  <p className="absolute top-0 -translate-y-1/2 transform rounded-full bg-[#544CE6] py-1.5 px-4 text-sm font-semibold text-white">
                     Most popular
                   </p>
                 ) : null}
@@ -682,7 +682,7 @@ export default function Page() {
                   {tier.features.map((feature) => (
                     <li key={feature} className="flex">
                       <CheckIcon
-                        className="h-6 w-6 flex-shrink-0 text-indigo-500"
+                        className="h-6 w-6 flex-shrink-0 text-[#544CE6]"
                         aria-hidden="true"
                       />
                       <span className="ml-3 text-gray-500">{feature}</span>
@@ -695,7 +695,7 @@ export default function Page() {
                 href="#"
                 className={classNames(
                   tier.mostPopular
-                    ? "bg-indigo-500 text-white hover:bg-indigo-600"
+                    ? "bg-[#544CE6] text-white hover:bg-[#544CE6]"
                     : "bg-indigo-50 text-indigo-700 hover:bg-indigo-100",
                   "mt-8 block w-full py-3 px-6 border border-transparent rounded-md text-center font-medium"
                 )}
