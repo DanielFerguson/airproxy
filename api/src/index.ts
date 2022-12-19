@@ -1,13 +1,10 @@
-import { connect, Connection } from "@planetscale/database";
-import { Redis } from "@upstash/redis/cloudflare";
+import { connect, type Connection } from "@planetscale/database";
 
 export interface Env {
   KV_STORE: KVNamespace;
   DB_HOST: string;
   DB_USER: string;
   DB_PASS: string;
-  UPSTASH_REDIS_REST_URL: string;
-  UPSTASH_REDIS_REST_TOKEN: string;
 }
 
 interface TableRowResult {
@@ -39,7 +36,7 @@ export default {
     // Parse request path
     //
 
-    const details = request.cf as CfDetails;
+    // const details = request.cf as CfDetails;
     const path = new URL(request.url).pathname;
     const [_, baseId, tableId, viewId] = path.split("/");
 
@@ -55,8 +52,6 @@ export default {
     const page = new URL(request.url).searchParams.get("page") ?? "1";
     const pageSize = new URL(request.url).searchParams.get("pageSize") ?? "100";
 
-    console.log(env.DB_USER);
-
     if (parseInt(pageSize) > 100) {
       return new Response("Page size cannot be greater than 100.", {
         status: 400,
@@ -67,18 +62,18 @@ export default {
     // Validate the request, if the base has an API token
     //
 
-    const redis = Redis.fromEnv(env);
+    // const dbConn = connect({
+    //   host: env.DB_HOST,
+    //   username: env.DB_USER,
+    //   password: env.DB_PASS,
+    // });
 
-    const dbConn = connect({
-      host: env.DB_HOST,
-      username: env.DB_USER,
-      password: env.DB_PASS,
-    });
+    // const [, accessDetails] = await Promise.all([
+    //   saveRequest(dbConn, details, baseId, tableId),
+    //   getAccessDetails(baseId, tableId, viewId, env.KV_STORE, dbConn),
+    // ]);
 
-    const [, accessDetails] = await Promise.all([
-      saveRequest(dbConn, details, baseId, tableId),
-      getAccessDetails(baseId, tableId, viewId, redis, dbConn),
-    ]);
+    const accessDetails = await getAccessDetails(baseId, tableId, viewId, env);
 
     if (accessDetails instanceof Response) {
       return accessDetails;
@@ -125,10 +120,10 @@ export default {
     if (page) cacheKey += `:page-${page}`;
     if (pageSize) cacheKey += `:pageSize-${pageSize}`;
 
-    let cachedValue = await redis.get(cacheKey);
+    let cachedValue = await env.KV_STORE.get(cacheKey);
 
     if (cachedValue) {
-      return new Response(JSON.stringify(cachedValue), {
+      return new Response(cachedValue, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -151,18 +146,22 @@ export default {
       },
     });
 
-    const data = await response.json();
+    const data: string = await response.json();
 
-    await Promise.all([
-      redis.set(cacheKey, data, { ex: ttl }),
-      saveRequest(dbConn, details, baseId, tableId),
-    ]);
+    await env.KV_STORE.put(cacheKey, JSON.stringify(data), {
+      expirationTtl: ttl,
+    });
+
+    // await Promise.all([
+    //   ,
+    //   saveRequest(dbConn, details, baseId, tableId),
+    // ]);
 
     //
     // Return the data
     //
 
-    return new Response(JSON.stringify(data), {
+    return new Response(data, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -174,8 +173,7 @@ const getAccessDetails = async (
   baseId: string,
   tableId: string,
   viewId: string | null,
-  redis: Redis,
-  dbConn: Connection
+  env: Env
 ): Promise<TableRowResult | Response> => {
   let cacheKey = `access:${baseId}:${tableId}`;
 
@@ -183,19 +181,25 @@ const getAccessDetails = async (
     cacheKey += `:${viewId}`;
   }
 
-  const response = await redis.get<CacheResponse>(cacheKey);
+  const response = await env.KV_STORE.get<CacheResponse>(cacheKey);
 
   if (response?.result) {
     return JSON.parse(response.result);
   }
 
+  const dbConn = connect({
+    host: env.DB_HOST,
+    username: env.DB_USER,
+    password: env.DB_PASS,
+  });
+
   let result = viewId
     ? await dbConn.execute(
-        "SELECT t.active AS tableIsActive,b.active AS baseIsActive,b.active AS viewIsActive,k.token AS baseToken,b.apiToken,t.ttl FROM`Table` AS t LEFT JOIN Base AS b ON t.baseId=b.id LEFT JOIN Keys AS k ON b.keysEmail=k.email LEFT JOIN View AS v ON v.tableId=t.id WHERE b.id=? AND t.id=? AND v.id=?",
+        "SELECT t.active AS tableIsActive,b.active AS baseIsActive,b.active AS viewIsActive,k.token AS baseToken,b.apiToken,t.ttl FROM`Table` AS t LEFT JOIN Base AS b ON t.baseId=b.id LEFT JOIN PersonalAccessToken AS k ON b.userId=k.userId LEFT JOIN `View` AS v ON v.tableId=t.id WHERE b.id=? AND t.id=? AND v.id=?",
         [baseId, tableId, viewId]
       )
     : await dbConn.execute(
-        "SELECT t.active AS tableIsActive,b.active AS baseIsActive,k.token AS baseToken,b.apiToken,t.ttl FROM`Table` AS t LEFT JOIN Base AS b ON t.baseId=b.id LEFT JOIN Keys AS k ON b.keysEmail=k.email WHERE b.id=? AND t.id=?",
+        "SELECT t.active AS tableIsActive,b.active AS baseIsActive,k.token AS baseToken,b.apiToken,t.ttl FROM`Table` AS t LEFT JOIN Base AS b ON t.baseId=b.id LEFT JOIN PersonalAccessToken AS k ON b.userId=k.userId WHERE b.id=? AND t.id=?",
         [baseId, tableId]
       );
 
@@ -207,31 +211,31 @@ const getAccessDetails = async (
 
   const results = result.rows[0] as TableRowResult;
 
-  await redis.set(cacheKey, JSON.stringify(results));
+  await env.KV_STORE.put(cacheKey, JSON.stringify(results));
 
   return results;
 };
 
-const saveRequest = (
-  dbConn: Connection,
-  details: CfDetails,
-  baseId: string,
-  tableId: string
-) => {
-  return dbConn.execute(
-    "INSERT INTO Request (createdAt, asn, continent, country, region, city, baseId, tableId, latitude, longitude, latlng) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-    [
-      new Date().toISOString().slice(0, 19).replace("T", " "),
-      details.asn,
-      details.continent,
-      details.country,
-      details.regionCode,
-      details.city,
-      baseId,
-      tableId,
-      parseFloat(details.latitude),
-      parseFloat(details.longitude),
-      `${details.latitude}, ${details.longitude}`,
-    ]
-  );
-};
+// const saveRequest = (
+//   dbConn: Connection,
+//   details: CfDetails,
+//   baseId: string,
+//   tableId: string
+// ) => {
+//   return dbConn.execute(
+//     "INSERT INTO Request (createdAt, asn, continent, country, region, city, baseId, tableId, latitude, longitude, latlng) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+//     [
+//       new Date().toISOString().slice(0, 19).replace("T", " "),
+//       details.asn,
+//       details.continent,
+//       details.country,
+//       details.regionCode,
+//       details.city,
+//       baseId,
+//       tableId,
+//       parseFloat(details.latitude),
+//       parseFloat(details.longitude),
+//       `${details.latitude}, ${details.longitude}`,
+//     ]
+//   );
+// };

@@ -11,8 +11,6 @@ routes = [
 ]
 
 [vars]
-UPSTASH_REDIS_REST_URL="https://global-precious-gopher-30625.upstash.io"
-UPSTASH_REDIS_REST_TOKEN="AXehASQgMzc1MDk4YTktZmIxMC00NGY0LWFiZDUtM2I5YmJjYWNmY2RhZTFlZWFiNmM1MTkzNGQyYmIzZWQxMjAwNGZjYTFlYzQ="
-DB_HOST="aws-ap-southeast-2.connect.psdb.cloud/airproxy?sslaccept=strict"
-DB_USER="pbggz5cqg88gbk47sszn"
-DB_PASS="pscale_pw_g5yjFCG9k5avCMIpN0QzcfSm1dNZ7SmnfsIF9NWmuZu"
+DB_HOST="aws.connect.psdb.cloud"
+DB_USER="5ng9u4mdhpsg1ue68r4h"
+DB_PASS="pscale_pw_dD4fBbK73QWFrSrT0gqvSWAEQtJ6fiobWqU4CDSPTb8"

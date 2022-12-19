@@ -1,0 +1,17 @@
+@import url(https://fonts.bunny.net/css?family=chewy:400);
+@import url(https://unpkg.com/dracula-prism/dist/css/dracula-prism.css);
+
+@import "react-tippy/dist/tippy.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  @apply scroll-smooth;
+}
+
+.rsm-geography {
+  outline: none;
+}
