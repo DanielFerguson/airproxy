@@ -9,7 +9,7 @@ tags:
   - comparing excel and airtable
   - comparing google sheets and airtable
 images:
-  - https://images.unsplash.com/photo-1545830571-53a9a0967c88?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80
+  - https://images.unsplash.com/photo-1545830571-53a9a0967c88?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=60
 next:
   slug: what-is-airtable
   title: What is Airtable?

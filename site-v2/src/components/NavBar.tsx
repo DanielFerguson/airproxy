@@ -60,6 +60,18 @@ const NavBar = () => {
                       active ? "bg-gray-100" : ""
                     }`}
                   >
+                    Dashboard
+                  </Link>
+                )}
+              </Menu.Item>
+              <Menu.Item>
+                {({ active }) => (
+                  <Link
+                    href="/"
+                    className={`block px-4 py-2 text-sm text-gray-700 ${
+                      active ? "bg-gray-100" : ""
+                    }`}
+                  >
                     Home
                   </Link>
                 )}

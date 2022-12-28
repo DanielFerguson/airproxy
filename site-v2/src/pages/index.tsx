@@ -1,7 +1,7 @@
 import { type NextPage } from "next";
 import Link from "next/link";
 import { signIn, useSession } from "next-auth/react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Dialog } from "@headlessui/react";
 import { ComposableMap, Geographies, Geography } from "react-simple-maps";
 import { Bars3Icon, XMarkIcon, CheckIcon } from "@heroicons/react/24/outline";
@@ -15,23 +15,27 @@ import { classNames } from "../utils/helpers";
 import { navigation, features, pricing } from "../utils/globals";
 import Newsletter from "../components/Newsletter";
 import Footer from "../components/Footer";
-import Script from "next/script";
+import dynamic from "next/dynamic";
+
+const LemonSqueezy = dynamic(() => import("../components/LemonSqueezy"), {
+  ssr: false,
+});
 
 const Home: NextPage = () => {
   const session = useSession();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  useEffect(() => {
-    // Check that this is the client
-    if (typeof window !== "undefined") return;
+  const isDiscountPeriod = () => {
+    const today = new Date();
+    const discountStart = new Date("2022-01-01");
+    const discountEnd = new Date("2023-01-15");
 
-    // @ts-ignore
-    window.createLemonSqueezy();
-  }, []);
+    return today >= discountStart && today <= discountEnd;
+  };
 
   return (
     <>
-      <Script src="https://app.lemonsqueezy.com/js/lemon.js" defer />
+      <LemonSqueezy />
 
       {/* SEO */}
       <>
@@ -187,16 +191,21 @@ const Home: NextPage = () => {
                 ))}
               </div>
               <div className="hidden lg:flex lg:min-w-0 lg:flex-1 lg:justify-end">
-                <Link
-                  href={
-                    session.status === "authenticated"
-                      ? "/app"
-                      : "/api/auth/signin"
-                  }
-                  className="inline-block rounded-lg px-3 py-1.5 text-sm font-semibold leading-6 text-gray-900 shadow-sm ring-1 ring-gray-900/10 hover:ring-gray-900/20"
-                >
-                  {session.status === "authenticated" ? "Dashboard" : "Log in"}
-                </Link>
+                {session.status === "authenticated" ? (
+                  <Link
+                    href="/app"
+                    className="inline-block rounded-lg px-3 py-1.5 text-sm font-semibold leading-6 text-gray-900 shadow-sm ring-1 ring-gray-900/10 hover:ring-gray-900/20"
+                  >
+                    Dashboard
+                  </Link>
+                ) : (
+                  <button
+                    onClick={() => signIn()}
+                    className="inline-block rounded-lg px-3 py-1.5 text-sm font-semibold leading-6 text-gray-900 shadow-sm ring-1 ring-gray-900/10 hover:ring-gray-900/20"
+                  >
+                    Log in
+                  </button>
+                )}
               </div>
             </nav>
             <Dialog as="div" open={mobileMenuOpen} onClose={setMobileMenuOpen}>
@@ -237,18 +246,21 @@ const Home: NextPage = () => {
                       ))}
                     </div>
                     <div className="py-6">
-                      <Link
-                        href={
-                          session.status === "authenticated"
-                            ? "/app"
-                            : "/api/auth/signin"
-                        }
-                        className="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-6 text-gray-900 hover:bg-gray-400/10"
-                      >
-                        {session.status === "authenticated"
-                          ? "Dashboard"
-                          : "Log in"}
-                      </Link>
+                      {session.status === "authenticated" ? (
+                        <Link
+                          href="/app"
+                          className="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-6 text-gray-900 hover:bg-gray-400/10"
+                        >
+                          Dashboard
+                        </Link>
+                      ) : (
+                        <button
+                          onClick={() => signIn()}
+                          className="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-6 text-gray-900 hover:bg-gray-400/10"
+                        >
+                          Log in
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -289,16 +301,21 @@ const Home: NextPage = () => {
                     rate limits. Get busy building!
                   </p>
                   <div className="mt-8 flex gap-x-4 sm:justify-center">
-                    <Link
-                      href={
-                        session.status === "authenticated"
-                          ? "/app"
-                          : "/api/auth/signin"
-                      }
-                      className="inline-block rounded-lg bg-[#544CE6] px-4 py-1.5 text-base font-semibold leading-7 text-white shadow-sm ring-1 ring-[#544CE6] hover:bg-indigo-700 hover:ring-indigo-700"
-                    >
-                      Get started today!
-                    </Link>
+                    {session.status === "authenticated" ? (
+                      <Link
+                        href="/app"
+                        className="inline-block rounded-lg bg-[#544CE6] px-4 py-1.5 text-base font-semibold leading-7 text-white shadow-sm ring-1 ring-[#544CE6] hover:bg-indigo-700 hover:ring-indigo-700"
+                      >
+                        Go to Dashboard
+                      </Link>
+                    ) : (
+                      <button
+                        onClick={() => signIn()}
+                        className="inline-block rounded-lg bg-[#544CE6] px-4 py-1.5 text-base font-semibold leading-7 text-white shadow-sm ring-1 ring-[#544CE6] hover:bg-indigo-700 hover:ring-indigo-700"
+                      >
+                        Get started today!
+                      </button>
+                    )}
                     {/* <Link
                         href="#"
                         className="inline-block rounded-lg px-4 py-1.5 text-base font-semibold leading-7 text-gray-900 ring-1 ring-gray-900/10 hover:ring-gray-900/20"
@@ -386,7 +403,7 @@ const Home: NextPage = () => {
       </div>
 
       {/* Stats */}
-      <div className="pt-12 sm:pt-16">
+      {/* <div className="pt-12 sm:pt-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-4xl text-center">
             <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
@@ -433,7 +450,7 @@ const Home: NextPage = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Features */}
       <div id="features" className="relative py-24 sm:py-32 lg:py-40">
@@ -567,8 +584,16 @@ const Home: NextPage = () => {
                   </p>
                 ) : null}
                 <p className="mt-4 flex items-baseline text-gray-900">
+                  {isDiscountPeriod() && (
+                    <span className="pr-3 text-5xl font-bold italic tracking-tight line-through">
+                      ${tier.price}
+                    </span>
+                  )}
                   <span className="text-5xl font-bold tracking-tight">
-                    ${tier.price}
+                    $
+                    {isDiscountPeriod()
+                      ? Math.ceil(tier.price * 0.8)
+                      : tier.price}
                   </span>
                   <span className="ml-1 text-xl font-semibold">
                     {tier.frequency}
@@ -592,7 +617,7 @@ const Home: NextPage = () => {
 
               {session.status === "authenticated" ? (
                 <a
-                  href={`${tier.link}&checkout[custom][user_id]=${session.data.user?.id}`}
+                  href={`${tier.link}&checkout[custom][user_id]=${session.data.user?.id}&checkout[email]=${session.data.user?.email}&checkout[name]=${session.data.user?.name}&checkout[discount_code]=EARLYBIRD`}
                   className={classNames(
                     tier.mostPopular
                       ? "bg-[#544CE6] text-white hover:bg-[#544CE6]"
@@ -600,15 +625,11 @@ const Home: NextPage = () => {
                     "lemonsqueezy-button mt-8 block w-full rounded-md border border-transparent py-3 px-6 text-center font-medium"
                   )}
                 >
-                  {tier.cta}
+                  Get Started
                 </a>
               ) : (
                 <button
-                  onClick={() =>
-                    signIn(undefined, {
-                      callbackUrl: "http://localhost:3000/#pricing",
-                    })
-                  }
+                  onClick={() => signIn()}
                   className={classNames(
                     tier.mostPopular
                       ? "bg-[#544CE6] text-white hover:bg-[#544CE6]"
@@ -616,7 +637,7 @@ const Home: NextPage = () => {
                     "mt-8 block w-full rounded-md border border-transparent py-3 px-6 text-center font-medium"
                   )}
                 >
-                  {tier.cta}
+                  Get Started
                 </button>
               )}
             </div>

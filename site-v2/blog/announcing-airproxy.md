@@ -14,10 +14,6 @@ images:
   - /global-map.png
 ---
 
-export default ({ children }) => (
-<BlogLayout meta={meta}>{children}</BlogLayout>
-);
-
 We are excited to announce the public release of Airproxy, the world's leading edge caching service for Airtable's API. Airproxy allows you to access your Airtable data with millisecond response times and unlimited scaling capabilities, so you can focus on building great experiences for your users.
 
 At Aaiga, we have been serving thousands of clients around the globe for multiple businesses, and we are thrilled to be able to offer this powerful tool to the public. With Airproxy, you can unlock the full potential of Airtable's API and take your business to the next level.

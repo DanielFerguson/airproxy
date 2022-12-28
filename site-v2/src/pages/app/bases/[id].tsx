@@ -220,26 +220,47 @@ const Page = () => {
               </div>
             ) : (
               <div className="flex gap-3">
-                <button
-                  type="button"
-                  onClick={async () => {
-                    if (!base.data?.id) return;
-
-                    await toast.promise(
-                      createToken.mutateAsync({ baseId: base.data.id }),
-                      {
-                        loading: "Creating token...",
-                        success: "Token created!",
-                        error: "Failed to create token",
-                      }
-                    );
-
-                    base.refetch();
-                  }}
-                  className="inline-flex items-center rounded-md border border-transparent bg-indigo-100 px-4 py-2 text-sm font-medium text-indigo-700 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                {/* @ts-ignore */}
+                <Tooltip
+                  title="You need to upgrade your plan to use this feature."
+                  position="top"
+                  trigger="mouseenter"
+                  disabled={
+                    subscription.data?.level === "Team" ||
+                    subscription.data?.level === "Business"
+                  }
                 >
-                  Create token
-                </button>
+                  <button
+                    type="button"
+                    disabled={
+                      subscription.data?.level !== "Team" &&
+                      subscription.data?.level !== "Business"
+                    }
+                    onClick={async () => {
+                      if (!base.data?.id) return;
+
+                      await toast.promise(
+                        createToken.mutateAsync({ baseId: base.data.id }),
+                        {
+                          loading: "Creating token...",
+                          success: "Token created!",
+                          error: "Failed to create token",
+                        }
+                      );
+
+                      base.refetch();
+                    }}
+                    className={
+                      "inline-flex items-center rounded-md border border-white bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" +
+                      (subscription.data?.level !== "Team" &&
+                      subscription.data?.level !== "Business"
+                        ? " cursor-not-allowed opacity-50"
+                        : "")
+                    }
+                  >
+                    Create token
+                  </button>
+                </Tooltip>
               </div>
             )}
           </div>
@@ -301,21 +322,21 @@ const Page = () => {
                         >
                           Name
                         </th>
-                        {/* <th
-                          scope="col"
-                          className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                        >
-                          Views
-                        </th> */}
                         <th
                           scope="col"
                           className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                         >
-                          Requests (24h)
+                          Status
                         </th>
                         <th
                           scope="col"
                           className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                        >
+                          Requests
+                        </th>
+                        <th
+                          scope="col"
+                          className="px-3 py-3.5 pl-6 text-left text-sm font-semibold text-gray-900"
                         >
                           TTL
                         </th>
@@ -327,96 +348,79 @@ const Page = () => {
                         </th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-200 bg-white">
+                    <tbody className="bg-white">
                       {base.data?.tables
                         .sort((a, b) => a.name.localeCompare(b.name))
-                        .map((table) => (
-                          <tr key={table.id}>
-                            {/* Name */}
-                            <td className="whitespace-nowrap py-6 pl-4 pr-3 text-sm sm:pl-6">
-                              <div className="flex items-center gap-2 font-medium text-gray-900">
-                                <span>{table.name}</span>
-                                {base.data?.active && table.active ? (
-                                  <span className="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">
-                                    Active
-                                  </span>
-                                ) : (
-                                  <span className="inline-flex rounded-full bg-gray-100 px-2 text-xs font-semibold leading-5 text-gray-800">
-                                    Disabled
-                                  </span>
-                                )}
-                              </div>
+                        .map((table, index) => (
+                          <tr
+                            key={table.id}
+                            className={
+                              index % 2 === 0 ? undefined : "bg-gray-50"
+                            }
+                          >
+                            <td className="whitespace-nowrap py-1.5 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                              <span>{table.name}</span>
                             </td>
-                            {/* Views */}
-                            {/* <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                              <div className="flex gap-2">
-                                {table.views.length > 1 &&
-                                  table.views.slice(0, 1).map((view) => (
-                                    <span
-                                      key={view.id}
-                                      className="inline-flex items-center rounded bg-indigo-100 px-2 py-0.5 text-xs font-medium text-indigo-800"
-                                    >
-                                      <Tooltip
-                                        title={`${toTitleCase(view.type)} type`}
-                                        position="top"
-                                        trigger="mouseenter"
-                                      >
-                                        {viewTypeIcon(view.type)}
-                                      </Tooltip>{" "}
-                                      {view.name}
-                                    </span>
-                                  ))}
-                                {table.views.length > 1 && (
-                                  <span className="inline-flex items-center rounded bg-indigo-100 px-2 py-0.5 text-xs font-medium text-indigo-800">
-                                    +{table.views.length - 1}
-                                    ...
-                                  </span>
-                                )}
-                              </div>
-                            </td> */}
-                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                              <div className="flex items-center gap-3 text-gray-900">
-                                {/* 24.7k{" "}
-                                <span className="inline-flex items-center gap-1 rounded bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800">
-                                  <ArrowTrendingUpIcon className="h-4 w-4 text-green-700" />
-                                  12.5%
-                                </span> */}
-                                Coming Soon
-                              </div>
+                            <td className="whitespace-nowrap px-3 py-1.5 text-sm text-gray-500">
+                              {table.active ? (
+                                <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
+                                  Active
+                                </span>
+                              ) : (
+                                <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-800">
+                                  Disabled
+                                </span>
+                              )}
                             </td>
-                            {/* TTL */}
-                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                              <select
-                                className="mt-1 block w-full cursor-pointer rounded-md border-white py-2 pl-3 pr-10 text-base hover:border-gray-300 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                                defaultValue={table.ttl}
-                                onChange={async (e) => {
-                                  await toast.promise(
-                                    setTableTtl.mutateAsync({
-                                      tableId: table.id,
-                                      ttl: parseInt(e.target.value),
-                                    }),
-                                    {
-                                      loading: "Updating TTL...",
-                                      success: "TTL updated",
-                                      error: "Failed to update TTL",
-                                    }
-                                  );
-
-                                  base.refetch();
-                                }}
+                            <td className="whitespace-nowrap px-3 py-1.5 text-sm text-gray-500">
+                              Coming Soon
+                            </td>
+                            <td className="whitespace-nowrap px-3 py-1.5 text-sm text-gray-500">
+                              {/* @ts-ignore */}
+                              <Tooltip
+                                title="You need to upgrade your plan to use this feature."
+                                position="top"
+                                trigger="mouseenter"
+                                disabled={
+                                  subscription.data?.level === "Team" ||
+                                  subscription.data?.level === "Business"
+                                }
                               >
-                                {ttlOptions.map((option) => (
-                                  <option
-                                    key={option.name}
-                                    value={option.seconds}
-                                  >
-                                    {option.name}
-                                  </option>
-                                ))}
-                              </select>
+                                <select
+                                  disabled={
+                                    subscription.data?.level !== "Team" &&
+                                    subscription.data?.level !== "Business"
+                                  }
+                                  className="mt-1 block w-full cursor-pointer rounded-md border-transparent bg-transparent py-2 pl-3 pr-10 text-base hover:border-gray-300 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                                  defaultValue={table.ttl}
+                                  onChange={async (e) => {
+                                    await toast.promise(
+                                      setTableTtl.mutateAsync({
+                                        tableId: table.id,
+                                        ttl: parseInt(e.target.value),
+                                      }),
+                                      {
+                                        loading: "Updating TTL...",
+                                        success: "TTL updated",
+                                        error: "Failed to update TTL",
+                                      }
+                                    );
+
+                                    base.refetch();
+                                  }}
+                                >
+                                  {ttlOptions.map((option) => (
+                                    <option
+                                      key={option.name}
+                                      value={option.seconds}
+                                    >
+                                      {option.name}
+                                    </option>
+                                  ))}
+                                </select>
+                              </Tooltip>
                             </td>
-                            {/* Actions */}
-                            <td className="whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                            <td className="relative whitespace-nowrap py-1.5 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                               <div className="flex items-center justify-end gap-x-3">
                                 {/* Bust Cache */}
                                 <button

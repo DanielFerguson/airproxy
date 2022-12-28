@@ -1,8 +1,12 @@
-import { CfListKeysResponse } from "../../../types/custom";
+import type { CfListKeysResponse } from "../../../types/custom";
 import { router, protectedProcedure } from "../trpc";
+
+type SubscriptionTier = "Free" | "Hobby" | "Team" | "Business";
 
 interface SubscriptionDetails {
   requestsPerMonth: number;
+  uniqueUsersPerMonth: number;
+  level: SubscriptionTier;
 }
 
 export const userRouter = router({
@@ -128,28 +132,49 @@ export const userRouter = router({
       if (!ctx.session) {
         return {
           requestsPerMonth: 0,
+          uniqueUsersPerMonth: 0,
+          level: "Free",
         };
       }
 
       const subscription = await ctx.prisma.subscription.findFirst({
         where: {
           userId: ctx.session.user.id,
+          AND: {
+            renewsAt: {
+              gte: new Date(),
+            },
+            status: "active",
+          },
         },
       });
 
       if (!subscription) {
         return {
           requestsPerMonth: 1_000,
+          uniqueUsersPerMonth: 250,
+          level: "Free",
         };
       }
 
       return {
         requestsPerMonth:
-          subscription.productName === "Hobby"
-            ? 10_000
-            : subscription.productName === "Team"
-            ? 50_000
-            : 300_000,
+          subscription.status === "active"
+            ? subscription.productName === "Hobby"
+              ? 10_000
+              : subscription.productName === "Team"
+              ? 50_000
+              : 300_000
+            : 1_000,
+        uniqueUsersPerMonth:
+          subscription.status === "active"
+            ? subscription.productName === "Hobby"
+              ? 1_000
+              : subscription.productName === "Team"
+              ? 5_000
+              : 20_000
+            : 250,
+        level: (subscription.productName as SubscriptionTier) ?? "Free",
       };
     }
   ),

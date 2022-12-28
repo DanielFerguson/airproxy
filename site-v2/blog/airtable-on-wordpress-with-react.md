@@ -10,12 +10,12 @@ tags:
   - records
   - generate
 images:
-  - https://images.unsplash.com/photo-1560472355-109703aa3edc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80
+  - https://images.unsplash.com/photo-1560472355-109703aa3edc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=60
 next:
   slug: getting-a-personal-access-token
   title: Getting a Personal Access Token
   description: Are you looking to integrate your Airtable data into other applications or services? We're going to show you how, using the new Personal Access Tokens.
-  image: https://images.unsplash.com/photo-1623282033815-40b05d96c903?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80
+  image: https://images.unsplash.com/photo-1623282033815-40b05d96c903?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=60
 ---
 
 To use Airtable with WordPress and React, you'll need to create a WordPress plugin that exposes an API endpoint for your React app to access the data in your Airtable base.

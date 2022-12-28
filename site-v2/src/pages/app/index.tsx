@@ -14,7 +14,6 @@ import NavBar from "../../components/NavBar";
 import Link from "next/link";
 import StatCard from "../../components/StatCard";
 import millify from "millify";
-import { secondsToStr } from "../../utils/helpers";
 import { trpc } from "../../utils/trpc";
 import { unstable_getServerSession } from "next-auth/next";
 import { authOptions } from "../api/auth/[...nextauth]";
@@ -142,6 +141,10 @@ const Page: NextPage = () => {
                     ? millify(stats.data.uniqueUsersCount, { precision: 2 })
                     : "0"
                 }
+                limit={millify(
+                  subscription.data ? subscription.data.uniqueUsersPerMonth : 0,
+                  { precision: 2 }
+                )}
               />
               {/* <StatCard name="Something" stat="Add" /> */}
             </dl>
@@ -319,6 +322,12 @@ const Page: NextPage = () => {
                             scope="col"
                             className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                           >
+                            Status
+                          </th>
+                          <th
+                            scope="col"
+                            className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                          >
                             Access
                           </th>
                           <th
@@ -326,12 +335,6 @@ const Page: NextPage = () => {
                             className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                           >
                             Tables
-                          </th>
-                          <th
-                            scope="col"
-                            className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                          >
-                            TTL
                           </th>
                           <th
                             scope="col"
@@ -356,6 +359,8 @@ const Page: NextPage = () => {
                               >
                                 <span className="mr-2">{base.name}</span>
                               </Link>
+                            </td>
+                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                               {base.active ? (
                                 <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
                                   Active
@@ -371,9 +376,6 @@ const Page: NextPage = () => {
                             </td>
                             <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                               {base.tables.length} tables
-                            </td>
-                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                              {secondsToStr(base.ttl)}
                             </td>
                             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                               <span className="flex items-center justify-center gap-2">

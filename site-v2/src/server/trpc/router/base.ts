@@ -3,6 +3,7 @@ import { router, protectedProcedure } from "../trpc";
 import { v4 as uuidv4 } from "uuid";
 import type { BaseApiResponse, TableApiResponse } from "../../../types/custom";
 import type { CfListKeysResponse } from "../../../types/custom";
+import { TRPCError } from "@trpc/server";
 
 export const baseRouter = router({
   get: protectedProcedure
@@ -61,6 +62,24 @@ export const baseRouter = router({
   createToken: protectedProcedure
     .input(z.object({ baseId: z.string() }))
     .mutation(async ({ ctx, input }) => {
+      // Check that the user has a valid subscription (Team|Business)
+      const subscription = await ctx.prisma.subscription.findFirst({
+        where: {
+          userId: ctx.session.user.id,
+          status: "active",
+          productName: {
+            in: ["Team", "Business"],
+          },
+        },
+      });
+
+      if (!subscription) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "You must have a valid subscription to create an API token",
+        });
+      }
+
       const base = await ctx.prisma.base.findUnique({
         where: {
           id: input.baseId,

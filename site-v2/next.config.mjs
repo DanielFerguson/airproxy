@@ -1,4 +1,5 @@
 import { withContentlayer } from "next-contentlayer";
+import NextBundleAnalyzer from "@next/bundle-analyzer";
 
 // @ts-check
 /**
@@ -26,4 +27,8 @@ const config = withContentlayer({
   pageExtensions: ["ts", "tsx", "mdx"],
 });
 
-export default config;
+const withBundleAnalyzer = NextBundleAnalyzer({
+  enabled: process.env.ANALYZE === "true",
+});
+
+export default withBundleAnalyzer(config);
