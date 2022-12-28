@@ -1,43 +1,15 @@
-import BlogLayout from "../../components/layouts/BlogLayout";
-
-export const meta = {
-  slug: "agile-project-management",
-  title: "Agile Project Management",
-  description:
-    "Airtable allows teams to collaborate and manage their agile projects in one central location. See how it can help your team streamline its agile workflow.",
-  published: "2022-12-12T09:00:00+11:00",
-  tags: [
-    "agile collaboration",
-    "project management",
-    "friendly user-interface",
-    "live collaboration",
-  ],
-  images: [
-    "https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80",
-  ],
-};
-
-export const nextArticle = {
-  slug: "social-media-collaboration",
-  title: "Social Media Collaboration",
-  description:
-    "Enabling teams to collaborate and execute social media strategies with integrations, automations, and a user-friendly interface to streamline efforts.",
-  published: "2022-12-12T09:00:00+11:00",
-  tags: [
-    "social media strategy",
-    "enabling collaboration with airtable",
-    "asyncronous collaboration and planning",
-  ],
-  images: [
-    "https://plus.unsplash.com/premium_photo-1661767473365-726c22407adf?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2426&q=80",
-  ],
-};
-
-export default ({ children }) => (
-  <BlogLayout meta={meta} nextArticle={nextArticle}>
-    {children}
-  </BlogLayout>
-);
+---
+title: Agile Project Management
+description: Airtable allows teams to collaborate and manage their agile projects in one central location. See how it can help your team streamline its agile workflow
+published: 2022-12-12T09:00:00+11:00
+tags:
+  - agile collaboration
+  - project management
+  - friendly user-interface
+  - live collaboration
+images:
+  - https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80
+---
 
 Are you looking for a better way to manage your agile team and projects? While there are many project management tools out there, such as Jira and Monday.com, Airtable offers a unique and versatile solution.
 

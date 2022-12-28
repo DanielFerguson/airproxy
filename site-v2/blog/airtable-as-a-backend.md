@@ -1,45 +1,21 @@
-import BlogLayout from "../../components/layouts/BlogLayout";
-
-export const meta = {
-  slug: "airtable-as-a-backend",
-  title: "Airtable as as Backend",
-  description:
-    "Whether Airtable is a suitable backend for your website depends on a number of factors, including your website, your budget, and your technical capabilities.",
-  published: "2022-12-04T09:00:00+11:00",
-  tags: [
-    "api",
-    "airtable",
-    "backend",
-    "saas",
-    "database",
-    "data",
-    "pros",
-    "cons",
-    "downfalls",
-    "shortcomings",
-  ],
-  images: [
-    "https://images.unsplash.com/photo-1589994965851-a8f479c573a9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8c2NhbGVzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=700&q=60",
-  ],
-};
-
-export const nextArticle = {
-  slug: "getting-a-personal-access-token",
-  title: "Getting a Personal Access Token",
-  description:
-    "Are you looking to integrate your Airtable data into other applications or services? We're going to show you how, using the new Personal Access Tokens.",
-  published: "2022-12-04T09:00:00+11:00",
-  tags: ["api", "airtable", "access", "token", "personal", "generate"],
-  images: [
-    "https://images.unsplash.com/photo-1623282033815-40b05d96c903?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
-  ],
-};
-
-export default ({ children }) => (
-  <BlogLayout meta={meta} nextArticle={nextArticle}>
-    {children}
-  </BlogLayout>
-);
+---
+title: Airtable as as Backend
+description: Whether Airtable is a suitable backend for your website depends on a number of factors, including your website, your budget, and your technical capabilities.
+published: 2022-12-04T09:00:00+11:00
+tags:
+  - api
+  - airtable
+  - backend
+  - saas
+  - database
+  - data
+  - pros
+  - cons
+  - downfalls
+  - shortcomings
+images:
+  - https://images.unsplash.com/photo-1589994965851-a8f479c573a9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8c2NhbGVzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=700&q=60
+---
 
 Whether Airtable is a suitable backend for your website depends on a number of factors, including the specific needs and requirements of your website, your budget, and your technical capabilities.
 

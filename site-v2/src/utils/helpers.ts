@@ -7,27 +7,27 @@ export function secondsToStr(seconds: number) {
     return number > 1 ? "s" : "";
   }
 
-  let years = Math.floor(seconds / 31536000);
+  const years = Math.floor(seconds / 31536000);
   if (years) {
     return years + " year" + numberEnding(years);
   }
 
-  let days = Math.floor((seconds %= 31536000) / 86400);
+  const days = Math.floor((seconds %= 31536000) / 86400);
   if (days) {
     return days + " day" + numberEnding(days);
   }
 
-  let hours = Math.floor((seconds %= 86400) / 3600);
+  const hours = Math.floor((seconds %= 86400) / 3600);
   if (hours) {
     return hours + " hour" + numberEnding(hours);
   }
 
-  let minutes = Math.floor((seconds %= 3600) / 60);
+  const minutes = Math.floor((seconds %= 3600) / 60);
   if (minutes) {
     return minutes + " minute" + numberEnding(minutes);
   }
 
-  let temp = seconds % 60;
+  const temp = seconds % 60;
   if (temp) {
     return temp + " second" + numberEnding(temp);
   }

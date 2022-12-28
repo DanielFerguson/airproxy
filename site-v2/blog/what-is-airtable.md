@@ -1,55 +1,20 @@
-import BlogLayout from "../../components/layouts/BlogLayout";
-
-export const meta = {
-  slug: "what-is-airtable",
-  title: "What is Airtable?",
-  description:
-    "Airtable is a cloud-based platform that combines the features of a database, a spreadsheet, and a project management tool.",
-  published: "2022-12-04T09:00:00+11:00",
-  tags: [
-    "what",
-    "airtable",
-    "is",
-    "project",
-    "management",
-    "database",
-    "spreadsheet",
-    "views",
-    "api",
-  ],
-  images: [
-    "https://images.unsplash.com/photo-1504253163759-c23fccaebb55?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8Y2xvdWR8ZW58MHx8MHx8&auto=format&fit=crop&w=700&q=60",
-  ],
-};
-
-export const nextArticle = {
-  slug: "airtable-as-a-backend",
-  title: "Airtable as as Backend",
-  description:
-    "Whether Airtable is a suitable backend for your website depends on a number of factors, including your website, your budget, and your technical capabilities.",
-  published: "2022-12-04T09:00:00+11:00",
-  tags: [
-    "api",
-    "airtable",
-    "backend",
-    "saas",
-    "database",
-    "data",
-    "pros",
-    "cons",
-    "downfalls",
-    "shortcomings",
-  ],
-  images: [
-    "https://images.unsplash.com/photo-1589994965851-a8f479c573a9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8c2NhbGVzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=700&q=60",
-  ],
-};
-
-export default ({ children }) => (
-  <BlogLayout meta={meta} nextArticle={nextArticle}>
-    {children}
-  </BlogLayout>
-);
+---
+title: What is Airtable?
+description: Airtable is a cloud-based platform that combines the features of a database, a spreadsheet, and a project management tool.
+published: 2022-12-04T09:00:00+11:00
+tags:
+  - what
+  - airtable
+  - is
+  - project
+  - management
+  - database
+  - spreadsheet
+  - views
+  - api
+images:
+  - https://images.unsplash.com/photo-1504253163759-c23fccaebb55?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8Y2xvdWR8ZW58MHx8MHx8&auto=format&fit=crop&w=700&q=60
+---
 
 Airtable is a cloud-based platform that combines the features of a database, a spreadsheet, and a project management tool. It allows users to create custom fields and views for their data, and to easily import, export, and share data between different systems. Airtable is known for its flexibility and customization, which makes it ideal for managing complex or multi-faceted content, such as product catalogs, project management, or event planning. It also has a robust API and integrations with other popular tools and services, which makes it a powerful and versatile platform for managing and organizing data.
 

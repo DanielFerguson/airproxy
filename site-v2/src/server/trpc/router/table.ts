@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { router, protectedProcedure } from "../trpc";
-import { CfListKeysResponse } from "../../../types/custom";
+import type { CfListKeysResponse } from "../../../types/custom";
 
 export const tableRouter = router({
   setStatus: protectedProcedure

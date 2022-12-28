@@ -13,6 +13,9 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
+    "paths": {
+      "contentlayer/generated": ["./.contentlayer/generated"]
+    },
     "incremental": true,
     "noUncheckedIndexedAccess": true
   },
@@ -22,7 +25,8 @@
     "**/*.tsx",
     "**/*.cjs",
     "**/*.mjs",
-    "next.config.js"
+    "next.config.js",
+    ".contentlayer/generated"
   ],
   "exclude": ["node_modules"]
 }

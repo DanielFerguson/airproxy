@@ -1,22 +1,18 @@
-import BlogLayout from "../../components/layouts/BlogLayout";
-
-export const meta = {
-  slug: "announcing-airproxy",
-  title: "Announcing Airproxy",
-  description:
-    "We are excited to announce the public release of Airproxy, the world's leading edge caching service for Airtable's API.",
-  published: "2022-12-04T09:00:00+11:00",
-  tags: [
-    "announcing",
-    "airproxy",
-    "scaling",
-    "global",
-    "availability",
-    "ease of use",
-    "api",
-  ],
-  images: ["/global-map.png"],
-};
+---
+title: Announcing Airproxy
+description: We are excited to announce the public release of Airproxy the world's leading edge caching service for Airtable's API.
+published: 2022-12-04T09:00:00+11:00
+tags:
+  - announcing
+  - airproxy
+  - scaling
+  - global
+  - availability
+  - ease of use
+  - api
+images:
+  - /global-map.png
+---
 
 export default ({ children }) => (
   <BlogLayout meta={meta}>{children}</BlogLayout>

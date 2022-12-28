@@ -4,19 +4,17 @@ import NavBar from "../../components/NavBar";
 import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import {
-  CheckIcon,
   ExclamationTriangleIcon,
   KeyIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { trpc } from "../../utils/trpc";
 import { TrashIcon } from "@heroicons/react/20/solid";
-import { PersonalAccessToken } from "@prisma/client";
+import type { PersonalAccessToken } from "@prisma/client";
 
 const Page = () => {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [addToken, setAddToken] = useState(false);
-  const [deleteToken, setDeleteToken] = useState(false);
   const [keyValue, setKeyValue] = useState("");
   const personalAccessTokens = trpc.personalAccessToken.getAll.useQuery();
   const deletePersonalAccessToken =

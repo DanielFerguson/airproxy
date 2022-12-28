@@ -1,55 +1,20 @@
-import BlogLayout from "../../components/layouts/BlogLayout";
-
-export const meta = {
-  slug: "security-and-airtable",
-  title: "Security and Airtable",
-  description:
-    "Airtable offers a secure platform for managing and collaborating on data. Airproxy adds an additional layer of security for serving data directly to clients.",
-  published: "2022-12-12T09:00:00+11:00",
-  tags: [
-    "Secure data on Airtable",
-    "Control access to data",
-    "Encryption at rest",
-    "SSL encryption",
-    "Roles and SSO",
-    "Airproxy for serving data to clients",
-    "Per-base API keys",
-    "Secure data in transit",
-    "Protect sensitive information",
-  ],
-  images: [
-    "https://images.unsplash.com/photo-1480843669328-3f7e37d196ae?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=720&q=80",
-  ],
-};
-
-export const nextArticle = {
-  slug: "airtable-as-a-backend",
-  title: "Airtable as as Backend",
-  description:
-    "Whether Airtable is a suitable backend for your website depends on a number of factors, including your website, your budget, and your technical capabilities.",
-  published: "2022-12-04T09:00:00+11:00",
-  tags: [
-    "api",
-    "airtable",
-    "backend",
-    "saas",
-    "database",
-    "data",
-    "pros",
-    "cons",
-    "downfalls",
-    "shortcomings",
-  ],
-  images: [
-    "https://images.unsplash.com/photo-1589994965851-a8f479c573a9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8c2NhbGVzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=700&q=60",
-  ],
-};
-
-export default ({ children }) => (
-  <BlogLayout meta={meta} nextArticle={nextArticle}>
-    {children}
-  </BlogLayout>
-);
+---
+title: Security and Airtable
+description: Airtable offers a secure platform for managing and collaborating on data. Airproxy adds an additional layer of security for serving data directly to clients.
+published: 2022-12-12T09:00:00+11:00
+tags:
+  - Secure data on Airtable
+  - Control access to data
+  - Encryption at rest
+  - SSL encryption
+  - Roles and SSO
+  - Airproxy for serving data to clients
+  - Per-base API keys
+  - Secure data in transit
+  - Protect sensitive information
+images:
+  - https://images.unsplash.com/photo-1480843669328-3f7e37d196ae?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=720&q=80
+---
 
 Are you concerned about the security of your data on Airtable? As more and more businesses turn to online platforms to manage their data and collaborate with their teams, security has become a top concern. Fortunately, operating on the Airtable platform itself is very secure.
 

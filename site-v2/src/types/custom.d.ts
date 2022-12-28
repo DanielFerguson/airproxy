@@ -30,8 +30,8 @@ export interface CfNamespace {
 
 export interface CfListKeysResponse {
   success: boolean;
-  errors: any[];
-  messages: any[];
+  errors: string[];
+  messages: string[];
   result: CfNamespace[];
   result_info: {
     count: number;

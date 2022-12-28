@@ -1,34 +1,17 @@
-import BlogLayout from "../../components/layouts/BlogLayout";
-
-export const meta = {
-  slug: "creating-multiple-records-at-once",
-  title: "Creating Multiple Records with Airtable",
-  description:
-    "We're going to take a look at how to create multiple records in your Airtable base, all in a single API request!",
-  published: "2022-12-04T09:00:00+11:00",
-  tags: ["api", "airtable", "creating", "multiple", "records", "generate"],
-  images: [
-    "https://images.unsplash.com/photo-1501526029524-a8ea952b15be?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
-  ],
-};
-
-export const nextArticle = {
-  slug: "getting-a-personal-access-token",
-  title: "Getting a Personal Access Token",
-  description:
-    "Are you looking to integrate your Airtable data into other applications or services? We're going to show you how, using the new Personal Access Tokens.",
-  published: "2022-12-04T09:00:00+11:00",
-  tags: ["api", "airtable", "access", "token", "personal", "generate"],
-  images: [
-    "https://images.unsplash.com/photo-1623282033815-40b05d96c903?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
-  ],
-};
-
-export default ({ children }) => (
-  <BlogLayout meta={meta} nextArticle={nextArticle}>
-    {children}
-  </BlogLayout>
-);
+---
+title: Creating Multiple Records with Airtable
+description: We're going to take a look at how to create multiple records in your Airtable base, all in a single API request!
+published: 2022-12-04T09:00:00+11:00
+tags:
+  - api
+  - airtable
+  - creating
+  - multiple
+  - records
+  - generate
+images:
+  - https://images.unsplash.com/photo-1501526029524-a8ea952b15be?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80
+---
 
 If you want to create multiple records in your Airtable base in a single API request, you can use the Airtable API's "create" endpoint with an array of record objects in the request body. This allows you to create multiple records at once, which can be more efficient and convenient than making separate API requests for each record. In this article, we will explain how to create multiple records in Airtable using the API.
 

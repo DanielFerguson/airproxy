@@ -1,10 +1,10 @@
 import { z } from "zod";
-import { router, publicProcedure, protectedProcedure } from "../trpc";
+import { router, publicProcedure } from "../trpc";
 
 export const newsletterRouter = router({
   register: publicProcedure
     .input(z.object({ email: z.string() }))
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ input }) => {
       await fetch("https://app.loops.so/api/v1/contacts/update", {
         method: "PUT",
         headers: {

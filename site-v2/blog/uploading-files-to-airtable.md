@@ -1,34 +1,17 @@
-import BlogLayout from "../../components/layouts/BlogLayout";
-
-export const meta = {
-  slug: "uploading-files-to-airtable",
-  title: "Uploading Files to Airtable",
-  description:
-    "If you want to upload files to your Airtable account using the API, there are a few steps you need to follow...",
-  published: "2022-12-04T09:00:00+11:00",
-  tags: ["uploading", "files", "airtable", "api", "base", "table"],
-  images: [
-    "https://images.unsplash.com/photo-1483478550801-ceba5fe50e8e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNiJTIwdG8lMjBjbG91ZHxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=700&q=60",
-  ],
-};
-
-export const nextArticle = {
-  slug: "getting-a-personal-access-token",
-  title: "Getting a Personal Access Token",
-  description:
-    "Are you looking to integrate your Airtable data into other applications or services? We're going to show you how, using the new Personal Access Tokens.",
-  published: "2022-12-04T09:00:00+11:00",
-  tags: ["api", "airtable", "access", "token", "personal", "generate"],
-  images: [
-    "https://images.unsplash.com/photo-1623282033815-40b05d96c903?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
-  ],
-};
-
-export default ({ children }) => (
-  <BlogLayout meta={meta} nextArticle={nextArticle}>
-    {children}
-  </BlogLayout>
-);
+---
+title: Uploading Files to Airtable
+description: If you want to upload files to your Airtable account using the API, there are a few steps you need to follow...
+published: 2022-12-04T09:00:00+11:00
+tags:
+  - uploading
+  - files
+  - airtable
+  - api
+  - base
+  - table
+images:
+  - https://images.unsplash.com/photo-1483478550801-ceba5fe50e8e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNiJTIwdG8lMjBjbG91ZHxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=700&q=60
+---
 
 If you want to upload files to your Airtable account using the API, there are a few steps you need to follow. The Airtable API allows you to create, read, update, and delete records in your Airtable bases, including files. In this article, we will explain how to upload files to Airtable using the API.
 

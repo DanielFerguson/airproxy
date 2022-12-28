@@ -1,34 +1,17 @@
-import BlogLayout from "../../components/layouts/BlogLayout";
-
-export const meta = {
-  slug: "airtable-on-wordpress-with-react",
-  title: "Using Airtable on Wordpress with React",
-  description:
-    "Looking to combine one of the most powerful website hosting platforms, with the power of Airtable? We're going to show you how, using React JS.",
-  published: "2022-12-04T09:00:00+11:00",
-  tags: ["api", "airtable", "creating", "multiple", "records", "generate"],
-  images: [
-    "https://images.unsplash.com/photo-1560472355-109703aa3edc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
-  ],
-};
-
-export const nextArticle = {
-  slug: "getting-a-personal-access-token",
-  title: "Getting a Personal Access Token",
-  description:
-    "Are you looking to integrate your Airtable data into other applications or services? We're going to show you how, using the new Personal Access Tokens.",
-  published: "2022-12-04T09:00:00+11:00",
-  tags: ["api", "airtable", "access", "token", "personal", "generate"],
-  images: [
-    "https://images.unsplash.com/photo-1623282033815-40b05d96c903?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
-  ],
-};
-
-export default ({ children }) => (
-  <BlogLayout meta={meta} nextArticle={nextArticle}>
-    {children}
-  </BlogLayout>
-);
+---
+title: Using Airtable on Wordpress with React
+description: Looking to combine one of the most powerful website hosting platforms, with the power of Airtable? We're going to show you how, using React JS.
+published: 2022-12-04T09:00:00+11:00
+tags:
+  - api
+  - airtable
+  - creating
+  - multiple
+  - records
+  - generate
+images:
+  - https://images.unsplash.com/photo-1560472355-109703aa3edc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80
+---
 
 To use Airtable with WordPress and React, you'll need to create a WordPress plugin that exposes an API endpoint for your React app to access the data in your Airtable base.
 

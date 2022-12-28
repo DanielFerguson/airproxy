@@ -1,8 +1,8 @@
 import { z } from "zod";
 import { router, protectedProcedure } from "../trpc";
 import { v4 as uuidv4 } from "uuid";
-import { BaseApiResponse, TableApiResponse } from "../../../types/custom";
-import { CfListKeysResponse } from "../../../types/custom";
+import type { BaseApiResponse, TableApiResponse } from "../../../types/custom";
+import type { CfListKeysResponse } from "../../../types/custom";
 
 export const baseRouter = router({
   get: protectedProcedure
@@ -140,7 +140,7 @@ export const baseRouter = router({
     }),
   bustCache: protectedProcedure
     .input(z.object({ baseId: z.string() }))
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ input }) => {
       // Bust the cache of each of these tables
       const CF_HEADERS = {
         Authorization: `Bearer ${process.env.CF_BEARER_TOKEN}`,

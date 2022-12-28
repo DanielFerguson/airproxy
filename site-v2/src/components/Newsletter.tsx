@@ -25,15 +25,11 @@ const Newsletter = () => {
             onSubmit={async (e) => {
               e.preventDefault();
 
-              await toast.promise(
-                // @ts-ignore
-                register.mutateAsync({ email }),
-                {
-                  loading: "Registering...",
-                  success: "Thanks for subscribing!",
-                  error: "Something went wrong.",
-                }
-              );
+              await toast.promise(register.mutateAsync({ email }), {
+                loading: "Registering...",
+                success: "Thanks for subscribing!",
+                error: "Something went wrong.",
+              });
 
               setEmail("");
             }}

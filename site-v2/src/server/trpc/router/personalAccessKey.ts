@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { router, protectedProcedure } from "../trpc";
-import { BaseApiResponse, TableApiResponse } from "../../../types/custom";
+import type { BaseApiResponse, TableApiResponse } from "../../../types/custom";
 
 export const personalAccessKeyRouter = router({
   add: protectedProcedure

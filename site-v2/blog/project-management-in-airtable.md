@@ -1,38 +1,17 @@
-import BlogLayout from "../../components/layouts/BlogLayout";
-
-export const meta = {
-  slug: "project-management-in-airtable",
-  title: "Project Management in Airtable",
-  description:
-    "Airtable can be critical in agile project management rituals. Here are a few examples of how you can use Airtable in your agile workflow...",
-  published: "2022-12-04T09:00:00+11:00",
-  tags: ["api", "airtable", "creating", "multiple", "records", "generate"],
-  images: [
-    "https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
-  ],
-};
-
-export const nextArticle = {
-  slug: "social-media-collaboration",
-  title: "Social Media Collaboration",
-  description:
-    "Enabling teams to collaborate and execute social media strategies with integrations, automations, and a user-friendly interface to streamline efforts.",
-  published: "2022-12-12T09:00:00+11:00",
-  tags: [
-    "social media strategy",
-    "enabling collaboration with airtable",
-    "asyncronous collaboration and planning",
-  ],
-  images: [
-    "https://plus.unsplash.com/premium_photo-1661767473365-726c22407adf?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2426&q=80",
-  ],
-};
-
-export default ({ children }) => (
-  <BlogLayout meta={meta} nextArticle={nextArticle}>
-    {children}
-  </BlogLayout>
-);
+---
+title: Project Management in Airtable
+description: Airtable can be critical in agile project management rituals. Here are a few examples of how you can use Airtable in your agile workflow...
+published: 2022-12-04T09:00:00+11:00
+tags:
+  - api
+  - airtable
+  - creating
+  - multiple
+  - records
+  - generate
+images:
+  - https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80
+---
 
 Airtable is a cloud-based database and collaboration platform that makes it easy to manage and organize your data. It's user-friendly interface and flexible data management features make it a great tool for project management, and its built-in collaboration features make it easy for teams to work together on the same data.
 

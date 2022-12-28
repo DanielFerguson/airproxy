@@ -1,28 +1,44 @@
-import { useState } from "react";
-import { Dialog } from "@headlessui/react";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
-import { NextSeo, ArticleJsonLd, BreadcrumbJsonLd } from "next-seo";
-import Footer from "../Footer";
+import { allArticles, type Article } from "contentlayer/generated";
+import Footer from "../../components/Footer";
+import TryAirtable from "../../components/cta/TryAirtable";
+import { ArticleJsonLd, BreadcrumbJsonLd, NextSeo } from "next-seo";
+import { useState } from "react";
 import { navigation } from "../../utils/globals";
-import TryAirtable from "../cta/TryAirtable";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Dialog } from "@headlessui/react";
+import type { GetStaticProps } from "next";
 
-interface Meta {
-  slug: string;
-  title: string;
-  description: string;
-  published: string;
-  tags: string[];
-  images: string[];
+export async function getStaticPaths() {
+  const paths = allArticles.map((article) => article.url);
+  return {
+    paths,
+    fallback: false,
+  };
 }
 
-interface IPageProps {
-  children: React.ReactNode;
-  meta: Meta;
-  nextArticle?: Meta;
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+  if (!params)
+    return {
+      notFound: true,
+    };
+
+  const article = allArticles.find(
+    (article) => article._raw.flattenedPath === params.slug
+  );
+
+  return {
+    props: {
+      article,
+    },
+  };
+};
+
+interface Props {
+  article: Article;
 }
 
-export default function Page({ children, meta, nextArticle }: IPageProps) {
+const ArticleLayout = ({ article }: Props) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -30,20 +46,20 @@ export default function Page({ children, meta, nextArticle }: IPageProps) {
       {/* SEO */}
       <>
         <NextSeo
-          title={meta.title}
-          description={meta.description}
-          canonical={`https://www.airproxy.app/blog/${meta.slug}`}
+          title={article.title}
+          description={article.description}
+          canonical={`https://www.airproxy.app/blog/${article.slug}`}
           openGraph={{
-            title: meta.title,
-            description: meta.description,
-            url: `https://www.airproxy.app/blog/${meta.slug}`,
+            title: article.title,
+            description: article.description,
+            url: `https://www.airproxy.app/blog/${article.slug}`,
             type: "article",
             article: {
-              publishedTime: meta.published,
-              modifiedTime: meta.published,
-              tags: meta.tags,
+              publishedTime: article.published,
+              modifiedTime: article.published,
+              tags: article.tags,
             },
-            images: meta.images.map((imageUrl) => ({
+            images: article.images.map((imageUrl) => ({
               url: imageUrl,
             })),
           }}
@@ -71,14 +87,14 @@ export default function Page({ children, meta, nextArticle }: IPageProps) {
 
         <ArticleJsonLd
           type="BlogPosting"
-          url={`https://www.airproxy.app/blog/${meta.slug}`}
-          title={meta.title}
-          images={meta.images}
-          datePublished={meta.published}
-          dateModified={meta.published}
+          url={`https://www.airproxy.app/blog/${article.slug}`}
+          title={article.title}
+          images={article.images}
+          datePublished={article.published}
+          dateModified={article.published}
           authorName="Dan Ferguson"
           isAccessibleForFree={true}
-          description={meta.description}
+          description={article.description}
         />
 
         <BreadcrumbJsonLd
@@ -86,12 +102,12 @@ export default function Page({ children, meta, nextArticle }: IPageProps) {
             {
               position: 1,
               name: "Blog",
-              item: "https://airproxy.app/blog",
+              item: "https://www.airproxy.app/blog",
             },
             {
               position: 2,
-              name: meta.title,
-              item: `https://airproxy.app/blog/${meta.slug}`,
+              name: article.title,
+              item: article.url,
             },
           ]}
         />
@@ -225,75 +241,77 @@ export default function Page({ children, meta, nextArticle }: IPageProps) {
       </div>
 
       {/* Content */}
-      <main className="prose lg:prose-xl mx-auto py-12 px-6 lg:py-32">
+      <main className="prose mx-auto py-12 px-6 lg:py-32 lg:prose-xl">
         <h1>
           <span className="block text-center text-lg font-semibold text-indigo-600">
             Airproxy
           </span>
           <span className="mt-2 block text-center text-3xl font-bold leading-8 tracking-tight text-gray-900 sm:text-4xl">
-            {meta.title}
+            {article.title}
           </span>
         </h1>
 
         <img
-          src={meta.images[0]}
-          alt={meta.title}
+          src={article.images[0]}
+          alt={article.title}
           className="h-64 w-full rounded-lg object-cover object-center"
         />
 
-        <article className="">{children}</article>
+        <article
+          dangerouslySetInnerHTML={{ __html: article.body.html }}
+        ></article>
       </main>
 
-      {/* Up Next */}
-      {nextArticle && (
-        <div className="mx-auto mb-24 max-w-7xl px-12">
-          <div
-            key={nextArticle.title}
-            className="grid grid-cols-5 overflow-hidden rounded-lg shadow-lg"
-          >
-            <div className="col-span-2">
-              <img
-                className="h-full w-full object-cover"
-                src={nextArticle.images[0]}
-                alt=""
-              />
-            </div>
-            <div className="col-span-3 flex flex-1 flex-col justify-between bg-white p-6">
-              <div className="flex-1">
-                <p className="text-sm font-medium text-indigo-600">Next Up</p>
-                <Link href={nextArticle.slug} className="mt-2 block">
-                  <p className="text-xl font-semibold text-gray-900">
-                    {nextArticle.title}
-                  </p>
-                  <p className="mt-3 text-base text-gray-500">
-                    {nextArticle.description}
-                  </p>
-                </Link>
+      {/* TODO: Up Next */}
+      {/* {nextArticle && (
+          <div className="mx-auto mb-24 max-w-7xl px-12">
+            <div
+              key={nextArticle.title}
+              className="grid grid-cols-5 overflow-hidden rounded-lg shadow-lg"
+            >
+              <div className="col-span-2">
+                <img
+                  className="h-full w-full object-cover"
+                  src={nextArticle.images[0]}
+                  alt=""
+                />
               </div>
-              <div className="mt-6 flex items-center">
-                <div className="flex-shrink-0">
-                  <span className="sr-only">Dan Ferguson</span>
-                  <div className="h-10 w-10 rounded-full bg-indigo-500">
-                    <img
-                      className="h-10 w-10 rounded-full"
-                      src="/danferg.webp"
-                      alt="Dan Ferguson"
-                    />
-                  </div>
+              <div className="col-span-3 flex flex-1 flex-col justify-between bg-white p-6">
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-indigo-600">Next Up</p>
+                  <Link href={nextArticle.slug} className="mt-2 block">
+                    <p className="text-xl font-semibold text-gray-900">
+                      {nextArticle.title}
+                    </p>
+                    <p className="mt-3 text-base text-gray-500">
+                      {nextArticle.description}
+                    </p>
+                  </Link>
                 </div>
-                <div className="ml-3">
-                  <p className="text-sm font-medium text-gray-900">
-                    Dan Ferguson
-                  </p>
-                  <div className="flex space-x-1 text-sm text-gray-500">
-                    <span>Co-Founder; Airproxy</span>
+                <div className="mt-6 flex items-center">
+                  <div className="flex-shrink-0">
+                    <span className="sr-only">Dan Ferguson</span>
+                    <div className="h-10 w-10 rounded-full bg-indigo-500">
+                      <img
+                        className="h-10 w-10 rounded-full"
+                        src="/danferg.webp"
+                        alt="Dan Ferguson"
+                      />
+                    </div>
+                  </div>
+                  <div className="ml-3">
+                    <p className="text-sm font-medium text-gray-900">
+                      Dan Ferguson
+                    </p>
+                    <div className="flex space-x-1 text-sm text-gray-500">
+                      <span>Co-Founder; Airproxy</span>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
+        )} */}
 
       {/* Try Airtable CTA */}
       <div className="mx-auto max-w-7xl py-16 px-4 sm:px-6 lg:px-8">
@@ -304,4 +322,6 @@ export default function Page({ children, meta, nextArticle }: IPageProps) {
       <Footer />
     </>
   );
-}
+};
+
+export default ArticleLayout;

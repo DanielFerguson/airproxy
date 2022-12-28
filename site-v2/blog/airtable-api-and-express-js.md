@@ -1,45 +1,17 @@
-import BlogLayout from "../../components/layouts/BlogLayout";
-
-export const meta = {
-  slug: "airtable-api-and-express-js",
-  title: "Using Express JS with the Airtable API",
-  description:
-    "Maybe you're looking to combine your business data with weather data, or some other data outside your base? Let's use Express JS and supercharge your business.",
-  published: "2022-12-04T09:00:00+11:00",
-  tags: ["api", "airtable", "creating", "multiple", "records", "generate"],
-  images: [
-    "https://images.unsplash.com/photo-1505739818593-e7506ebf74c0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
-  ],
-};
-
-export const nextArticle = {
-  slug: "airtable-as-a-backend",
-  title: "Airtable as as Backend",
-  description:
-    "Whether Airtable is a suitable backend for your website depends on a number of factors, including your website, your budget, and your technical capabilities.",
-  published: "2022-12-04T09:00:00+11:00",
-  tags: [
-    "api",
-    "airtable",
-    "backend",
-    "saas",
-    "database",
-    "data",
-    "pros",
-    "cons",
-    "downfalls",
-    "shortcomings",
-  ],
-  images: [
-    "https://images.unsplash.com/photo-1589994965851-a8f479c573a9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8c2NhbGVzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=700&q=60",
-  ],
-};
-
-export default ({ children }) => (
-  <BlogLayout meta={meta} nextArticle={nextArticle}>
-    {children}
-  </BlogLayout>
-);
+---
+title: Using Express JS with the Airtable API
+description: Maybe you're looking to combine your business data with weather data, or some other data outside your base? Let's use Express JS and supercharge your business.
+published: 2022-12-04T09:00:00+11:00
+tags:
+  - api
+  - airtable
+  - creating
+  - multiple
+  - records
+  - generate
+images:
+  - https://images.unsplash.com/photo-1505739818593-e7506ebf74c0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80
+---
 
 To use the Airtable API with Express scripts, you will need to follow these steps:
 
