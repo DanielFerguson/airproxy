@@ -3,6 +3,11 @@ import { type NextApiRequest, type NextApiResponse } from "next";
 
 export interface WebhookRequest {
   data: Data;
+  meta: {
+    custom_data: {
+      user_id: string;
+    };
+  };
 }
 
 export interface Data {
@@ -18,6 +23,7 @@ export interface Attributes {
   ends_at: string;
   created_at: string;
   updated_at: string;
+  product_name: string;
   user_name: string;
   user_email: string;
 }
@@ -36,7 +42,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const user = await prisma.user.findUnique({
     where: {
-      email: data.attributes.user_email,
+      id: body.meta.custom_data.user_id,
     },
   });
 
@@ -51,7 +57,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   await prisma.subscription.upsert({
     where: {
-      orderId: data.attributes.order_id,
+      subscriptionId: data.id,
     },
     update: {
       status: data.attributes.status,
@@ -60,15 +66,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       updatedAt: new Date(data.attributes.updated_at),
     },
     create: {
+      subscriptionId: data.id,
       orderId: data.attributes.order_id,
       status: data.attributes.status,
       renewsAt: new Date(data.attributes.renews_at),
       endsAt: new Date(data.attributes.ends_at),
       createdAt: new Date(data.attributes.created_at),
       updatedAt: new Date(data.attributes.updated_at),
+      productName: data.attributes.product_name,
       user: {
         connect: {
-          email: data.attributes.user_email,
+          id: body.meta.custom_data.user_id,
         },
       },
     },

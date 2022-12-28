@@ -3,63 +3,39 @@ import {
   PlusIcon,
   PauseIcon,
   PlayIcon,
-  InformationCircleIcon,
   ArrowPathIcon,
-  PencilIcon,
-  ClipboardIcon,
   KeyIcon as SolidKeyIcon,
 } from "@heroicons/react/20/solid";
-import {
-  ArrowDownTrayIcon,
-  CheckCircleIcon,
-  KeyIcon,
-  XCircleIcon,
-} from "@heroicons/react/24/outline";
+import { KeyIcon } from "@heroicons/react/24/outline";
 import toast, { Toaster } from "react-hot-toast";
-import {
-  Tooltip as ChartTooltip,
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-} from "recharts";
 import { useState } from "react";
 import { Tooltip } from "react-tippy";
 import NavBar from "../../components/NavBar";
 import Link from "next/link";
 import StatCard from "../../components/StatCard";
 import millify from "millify";
-import {
-  ComposableMap,
-  Geographies,
-  Geography,
-  Marker,
-} from "react-simple-maps";
 import { secondsToStr } from "../../utils/helpers";
-import { geoUrl } from "../../utils/globals";
 import { trpc } from "../../utils/trpc";
+import { unstable_getServerSession } from "next-auth/next";
+import { authOptions } from "../api/auth/[...nextauth]";
+import type { GetServerSideProps } from "next";
+import type { NextPage } from "next";
 
-export default function Page() {
+const Page: NextPage = () => {
   const [keyValue, setKeyValue] = useState("");
-
   const bases = trpc.base.getAll.useQuery();
   const addPersonalAccessToken = trpc.personalAccessToken.add.useMutation();
   const toggleBase = trpc.base.toggleStatus.useMutation();
-  const requests = trpc.request.getAll.useQuery();
   const stats = trpc.stat.overall.useQuery();
   const bustBaseCache = trpc.base.bustCache.useMutation();
   const setAllBaseStatus = trpc.base.setAllStatus.useMutation();
   const refetchBases = trpc.base.refetch.useMutation();
+  const subscription = trpc.user.subscription.useQuery();
 
   return (
     <div>
       <Head>
         <title>Airproxy | Airtable in production, fearlessly.</title>
-        <link
-          rel="icon"
-          href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>☁️</text></svg>"
-        ></link>
       </Head>
 
       <Toaster />
@@ -154,7 +130,10 @@ export default function Page() {
                     ? millify(stats.data?.totalRequests, { precision: 2 })
                     : "0"
                 }
-                limit={millify(200000, { precision: 2 })}
+                limit={millify(
+                  subscription.data ? subscription.data.requestsPerMonth : 0,
+                  { precision: 2 }
+                )}
               />
               <StatCard
                 name="Unique Users"
@@ -285,7 +264,7 @@ export default function Page() {
                     }}
                     className="mr-2 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                   >
-                    <ArrowDownTrayIcon className="h-5 w-5" />
+                    <ArrowPathIcon className="h-5 w-5" />
                   </button>
                 </Tooltip>
                 <button
@@ -497,4 +476,24 @@ export default function Page() {
       )}
     </div>
   );
-}
+};
+
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  // If the user is not authenticated, redirect to the login page
+  const session = await unstable_getServerSession(req, res, authOptions);
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/api/auth/signin",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {},
+  };
+};
+
+export default Page;

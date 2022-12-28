@@ -11,8 +11,11 @@ import {
 import { trpc } from "../../utils/trpc";
 import { TrashIcon } from "@heroicons/react/20/solid";
 import type { PersonalAccessToken } from "@prisma/client";
+import { useRouter } from "next/router";
 
 const Page = () => {
+  const router = useRouter();
+
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [addToken, setAddToken] = useState(false);
   const [keyValue, setKeyValue] = useState("");
@@ -20,15 +23,13 @@ const Page = () => {
   const deletePersonalAccessToken =
     trpc.personalAccessToken.delete.useMutation();
   const createPersonalAccessToken = trpc.personalAccessToken.add.useMutation();
+  const deleteAccount = trpc.user.delete.useMutation();
 
   const [selectedToken, setSelectedToken] =
     useState<PersonalAccessToken | null>();
 
-  // TODO: Implement deleteAccount with tRPC
-
   return (
     <div>
-      {/* TODO: Add favicon */}
       <Head>
         <title>Settings | Airproxy</title>
       </Head>
@@ -101,7 +102,17 @@ const Page = () => {
                     <button
                       type="button"
                       className="inline-flex w-full justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
-                      onClick={() => setConfirmDelete(false)}
+                      onClick={async () => {
+                        toast.promise(deleteAccount.mutateAsync(), {
+                          loading: "Deleting account...",
+                          success: "Account deleted",
+                          error: "Failed to delete account",
+                        });
+
+                        setConfirmDelete(false);
+
+                        await router.push("/");
+                      }}
                     >
                       Delete
                     </button>

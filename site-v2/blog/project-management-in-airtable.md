@@ -11,6 +11,11 @@ tags:
   - generate
 images:
   - https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80
+next:
+  slug: social-media-collaboration
+  title: Social Media Collaboration
+  description: Enabling teams to collaborate and execute social media strategies with integrations, automations, and a user-friendly interface to streamline efforts.
+  image: https://plus.unsplash.com/premium_photo-1661767473365-726c22407adf?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2426&q=80
 ---
 
 Airtable is a cloud-based database and collaboration platform that makes it easy to manage and organize your data. It's user-friendly interface and flexible data management features make it a great tool for project management, and its built-in collaboration features make it easy for teams to work together on the same data.

@@ -10,6 +10,11 @@ tags:
   - comparing google sheets and airtable
 images:
   - https://images.unsplash.com/photo-1545830571-53a9a0967c88?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2370&q=80
+next:
+  slug: what-is-airtable
+  title: What is Airtable?
+  description: Airtable is a cloud-based platform that combines the features of a database, a spreadsheet, and a project management tool.
+  image: https://images.unsplash.com/photo-1504253163759-c23fccaebb55?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8Y2xvdWR8ZW58MHx8MHx8&auto=format&fit=crop&w=700&q=60
 ---
 
 Are you tired of using clunky and outdated programs to organize your data? Are you looking for a more intuitive and user-friendly platform to manage your spreadsheet information? Look no further than Airtable.

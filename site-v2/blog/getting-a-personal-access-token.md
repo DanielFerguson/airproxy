@@ -11,6 +11,11 @@ tags:
   - generate
 images:
   - https://images.unsplash.com/photo-1623282033815-40b05d96c903?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80
+next:
+  slug: security-and-airtable
+  title: Security and Airtable
+  description: Airtable offers a secure platform for managing and collaborating on data. Airproxy adds an additional layer of security for serving data directly to clients.
+  image: https://images.unsplash.com/photo-1480843669328-3f7e37d196ae?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=720&q=80
 ---
 
 Are you looking to integrate your Airtable account with other applications or services? One of the first steps in doing so is to generate a personal access token.

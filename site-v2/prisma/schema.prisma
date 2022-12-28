@@ -45,14 +45,16 @@ model Account {
 }
 
 model Subscription {
-  orderId   Int      @id
-  status    String
-  renewsAt  DateTime
-  endsAt    DateTime
-  createdAt DateTime
-  updatedAt DateTime
-  user      User?    @relation(fields: [userId], references: [id])
-  userId    String?
+  subscriptionId String   @id
+  orderId        Int
+  status         String
+  renewsAt       DateTime
+  endsAt         DateTime
+  createdAt      DateTime
+  updatedAt      DateTime
+  productName    String
+  user           User?    @relation(fields: [userId], references: [id])
+  userId         String?
 
   @@index([userId])
 }

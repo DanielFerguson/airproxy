@@ -5,29 +5,12 @@ import NavBar from "../../../components/NavBar";
 import StatCard from "../../../components/StatCard";
 import {
   ArrowPathIcon,
-  ArrowTrendingUpIcon,
-  CalendarDaysIcon,
-  ClockIcon,
-  InboxIcon,
   InformationCircleIcon,
   PauseIcon,
-  PhotoIcon,
   PlayIcon,
-  QuestionMarkCircleIcon,
   ShareIcon,
-  Square2StackIcon,
-  Squares2X2Icon,
-  ViewColumnsIcon,
 } from "@heroicons/react/20/solid";
 import { Tooltip } from "react-tippy";
-import {
-  Bar,
-  BarChart,
-  ResponsiveContainer,
-  Tooltip as ChartTooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
 import millify from "millify";
 import { ClipboardDocumentIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { trpc } from "../../../utils/trpc";
@@ -50,19 +33,15 @@ const Page = () => {
   const setBaseStatus = trpc.base.setStatus.useMutation();
   const setAllTablesStatus = trpc.base.setAllTablesStatus.useMutation();
   const bustTableCache = trpc.table.bustCache.useMutation();
+  const subscription = trpc.user.subscription.useQuery();
 
   return (
     <div>
       <Head>
         <title>{base.data?.name} | Airproxy</title>
-        <link
-          rel="icon"
-          href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>☁️</text></svg>"
-        />
       </Head>
 
       <Toaster />
-
       <NavBar />
 
       <main className="mx-auto mt-16 grid max-w-3xl gap-y-12 pb-24">
@@ -145,7 +124,10 @@ const Page = () => {
                   ? millify(stats.data.totalRequests, { precision: 2 })
                   : "0"
               }
-              limit={millify(200000, { precision: 2 })}
+              limit={millify(
+                subscription.data ? subscription.data?.requestsPerMonth : 0,
+                { precision: 2 }
+              )}
             />
             <StatCard
               name="Unique Users"
@@ -161,43 +143,6 @@ const Page = () => {
             />
           </dl>
 
-          {/* Chart */}
-          <div className="mt-5 h-64 w-full overflow-hidden rounded-lg bg-white shadow">
-            <div className="px-4 py-5 sm:p-6">
-              <h3 className="text-base font-normal text-gray-900">
-                Requests (Live)
-              </h3>
-            </div>
-
-            {/* TODO: Re-add */}
-            {/* <ResponsiveContainer>
-              <BarChart
-                data={requests && requests.length > 0 ? requests : dummyData}
-                margin={{
-                  top: 0,
-                  right: 0,
-                  bottom: 40,
-                  left: 0,
-                }}
-              >
-                <Bar dataKey="requests" fill="#8884d8" />
-                {requests && requests.length > 0 && (
-                  <ChartTooltip
-                    formatter={(value, name, props) => [value, "Requests"]}
-                  />
-                )}
-                <YAxis
-                  type="number"
-                  domain={
-                    requests && requests.length > 0 ? [0, "dataMax"] : [0, 100]
-                  }
-                  hide
-                />
-                <XAxis domain={[0, "dataMax"]} dataKey="time" />
-              </BarChart>
-            </ResponsiveContainer> */}
-          </div>
-
           {/* Notification */}
           {base.data?.requests && base.data?.requests.length === 0 && (
             <div className="mt-4 rounded-md bg-blue-50 p-4">
@@ -210,8 +155,8 @@ const Page = () => {
                 </div>
                 <div className="ml-3 flex-1 md:flex md:justify-between">
                   <p className="text-sm text-blue-700">
-                    When you start receiving requests, you will be able to
-                    monitor them here.
+                    When you start receiving requests, you will be able to see
+                    stats here.
                   </p>
                 </div>
               </div>

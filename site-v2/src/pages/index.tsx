@@ -1,20 +1,10 @@
 import { type NextPage } from "next";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
-import { useState } from "react";
+import { signIn, useSession } from "next-auth/react";
+import { useState, useEffect } from "react";
 import { Dialog } from "@headlessui/react";
 import { ComposableMap, Geographies, Geography } from "react-simple-maps";
-import {
-  Bars3Icon,
-  XMarkIcon,
-  CogIcon,
-  ShieldCheckIcon,
-  ArrowTrendingUpIcon,
-  ChartBarIcon,
-  UsersIcon,
-  GlobeAsiaAustraliaIcon,
-  CheckIcon,
-} from "@heroicons/react/24/outline";
+import { Bars3Icon, XMarkIcon, CheckIcon } from "@heroicons/react/24/outline";
 import {
   NextSeo,
   OrganizationJsonLd,
@@ -22,113 +12,22 @@ import {
   SoftwareAppJsonLd,
 } from "next-seo";
 import { classNames } from "../utils/helpers";
-import { navigation } from "../utils/globals";
-
+import { navigation, features, pricing } from "../utils/globals";
 import Newsletter from "../components/Newsletter";
 import Footer from "../components/Footer";
 import Script from "next/script";
-
-const features = [
-  {
-    name: "Scale Fearlessly",
-    description:
-      "Get the power of Airtable with the comfort of being able to scale globally, instantly.",
-    icon: ArrowTrendingUpIcon,
-    comingSoon: false,
-  },
-  {
-    name: "Protect Everything",
-    description:
-      "Your data is your edge. We help you protect what's important so you can innovate quickly.",
-    icon: ShieldCheckIcon,
-    comingSoon: false,
-  },
-  {
-    name: "Observe Ability",
-    description:
-      "Location, location, location - it's not just for real estate. Gain deeper insights of your users.",
-    icon: ChartBarIcon,
-    comingSoon: false,
-  },
-  {
-    name: "Total Customisation",
-    description:
-      "Bases, tables, and views - we've got you covered. Set defaults, individual TTLs, and much more.",
-    icon: CogIcon,
-    comingSoon: false,
-  },
-  {
-    name: "Bring Your Team",
-    description:
-      "Share schemas with your developers, generate test data, and get TypeScript types to build your UIs safely.",
-    icon: UsersIcon,
-    comingSoon: true,
-  },
-  {
-    name: "CDNs For Days",
-    description:
-      "Did Airtable removing its file serving capabilities really suck for you, too? We've got you covered.",
-    icon: GlobeAsiaAustraliaIcon,
-    comingSoon: true,
-  },
-];
-
-const pricing = {
-  tiers: [
-    {
-      title: "Hobby",
-      price: 27,
-      frequency: "/month",
-      description: "The essentials to provide your best work for clients.",
-      features: ["Unlimited Bases", "Unlimited Tables", "10k Requests / month"],
-      cta: "Get Started",
-      link: "https://airproxy.lemonsqueezy.com/checkout/buy/61a1ef0c-65a3-453b-aaf8-97aff3af1712?embed=1",
-      mostPopular: false,
-    },
-    {
-      title: "Team",
-      price: 69,
-      frequency: "/month",
-      description: "A plan that scales with your rapidly growing business.",
-      features: [
-        "Unlimited Bases",
-        "Unlimited Tables",
-        "50k Requests / month",
-        "Custom TTLs",
-        "TypeScript Definition Generation",
-        "API Protection",
-      ],
-      link: "https://airproxy.lemonsqueezy.com/checkout/buy/a8b9d123-0dda-4869-ac1d-689d33e43d3b?embed=1",
-      cta: "Get Started",
-      mostPopular: false,
-    },
-    {
-      title: "Business",
-      price: 149,
-      frequency: "/month",
-      description: "Dedicated support and infrastructure for your company.",
-      features: [
-        "Unlimited Bases",
-        "Unlimited Tables",
-        "300k Requests / month",
-        "Custom TTLs",
-        "TypeScript Definition Generation",
-        "API Protection",
-        "Toggle View Access",
-        "Image CDN",
-      ],
-      link: "https://airproxy.lemonsqueezy.com/checkout/buy/847e3d05-7540-48d9-9229-2edad8c22c44?embed=1",
-      cta: "Get Started",
-      mostPopular: true,
-    },
-  ],
-};
 
 const Home: NextPage = () => {
   const session = useSession();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // TODO: Get requests with tRPC
+  useEffect(() => {
+    // Check that this is the client
+    if (typeof window !== "undefined") return;
+
+    // @ts-ignore
+    window.createLemonSqueezy();
+  }, []);
 
   return (
     <>
@@ -433,7 +332,7 @@ const Home: NextPage = () => {
                           ))
                         }
                       </Geographies>
-                      {/* TODO: Connect up with tRPC */}
+                      {/* NOTE: Connect up with tRPC */}
                       {/* {requests &&
                         requests.map(({ id, latitude, longitude }) => (
                           <Marker key={id} coordinates={[longitude, latitude]}>
@@ -691,17 +590,35 @@ const Home: NextPage = () => {
                 </ul>
               </div>
 
-              <a
-                href={tier.link}
-                className={classNames(
-                  tier.mostPopular
-                    ? "bg-[#544CE6] text-white hover:bg-[#544CE6]"
-                    : "bg-indigo-50 text-indigo-700 hover:bg-indigo-100",
-                  "lemonsqueezy-button mt-8 block w-full rounded-md border border-transparent py-3 px-6 text-center font-medium"
-                )}
-              >
-                {tier.cta}
-              </a>
+              {session.status === "authenticated" ? (
+                <a
+                  href={`${tier.link}&checkout[custom][user_id]=${session.data.user?.id}`}
+                  className={classNames(
+                    tier.mostPopular
+                      ? "bg-[#544CE6] text-white hover:bg-[#544CE6]"
+                      : "bg-indigo-50 text-indigo-700 hover:bg-indigo-100",
+                    "lemonsqueezy-button mt-8 block w-full rounded-md border border-transparent py-3 px-6 text-center font-medium"
+                  )}
+                >
+                  {tier.cta}
+                </a>
+              ) : (
+                <button
+                  onClick={() =>
+                    signIn(undefined, {
+                      callbackUrl: "http://localhost:3000/#pricing",
+                    })
+                  }
+                  className={classNames(
+                    tier.mostPopular
+                      ? "bg-[#544CE6] text-white hover:bg-[#544CE6]"
+                      : "bg-indigo-50 text-indigo-700 hover:bg-indigo-100",
+                    "mt-8 block w-full rounded-md border border-transparent py-3 px-6 text-center font-medium"
+                  )}
+                >
+                  {tier.cta}
+                </button>
+              )}
             </div>
           ))}
         </div>
@@ -714,27 +631,3 @@ const Home: NextPage = () => {
 };
 
 export default Home;
-
-// const AuthShowcase: React.FC = () => {
-//   const { data: sessionData } = useSession();
-
-//   const { data: secretMessage } = trpc.auth.getSecretMessage.useQuery(
-//     undefined, // no input
-//     { enabled: sessionData?.user !== undefined }
-//   );
-
-//   return (
-//     <div className="flex flex-col items-center justify-center gap-4">
-//       <p className="text-center text-2xl text-white">
-//         {sessionData && <span>Logged in as {sessionData.user?.name}</span>}
-//         {secretMessage && <span> - {secretMessage}</span>}
-//       </p>
-//       <button
-//         className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
-//         onClick={sessionData ? () => signOut() : () => signIn()}
-//       >
-//         {sessionData ? "Sign out" : "Sign in"}
-//       </button>
-//     </div>
-//   );
-// };

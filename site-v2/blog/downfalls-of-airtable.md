@@ -14,6 +14,11 @@ tags:
   - request limit
 images:
   - https://images.unsplash.com/photo-1501862169286-518c291e3eed?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80
+next:
+  slug: announcing-airproxy
+  title: Announcing Airproxy
+  description: We are excited to announce the public release of Airproxy, the world's leading edge caching service for Airtable's API.
+  image: /global-map.png
 ---
 
 Airtable is a cloud-based database and collaboration platform that is popular for its user-friendly interface and flexible data management features. However, it is not without its drawbacks. Some potential drawbacks of using Airtable include its cost, the API request limit of 5 requests per second, limited customizability, and dependence on a third-party service. While Airtable offers many benefits, it is important to carefully consider these limitations before using it for your data management needs.

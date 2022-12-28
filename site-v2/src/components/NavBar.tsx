@@ -7,34 +7,7 @@ import Link from "next/link";
 const NavBar = () => {
   const { data: session } = useSession();
 
-  const userHasSubscription = false;
-
-  //   TODO: Move over to tRPC
-  //   const { data: preferences, mutate } = useSWR<UserPreferences>(
-  //     "/api/preferences",
-  //     fetcher
-  //   );
-
-  //   const toggleDarkModePreference = async () => {
-  //     if (!preferences) return;
-
-  //     let updatedPreferences = preferences;
-  //     updatedPreferences.prefersDarkMode = !updatedPreferences.prefersDarkMode;
-
-  //     await toast.promise(
-  //       fetch("/api/preferences", {
-  //         method: "PUT",
-  //         body: JSON.stringify({ ...updatedPreferences }),
-  //       }),
-  //       {
-  //         loading: "Updating preferences..",
-  //         error: "Whoops! Something went wrong.",
-  //         success: "Preferences saved!",
-  //       }
-  //     );
-
-  //     await mutate();
-  //   };
+  // const userHasSubscription = false;
 
   return (
     <header className="mx-auto flex w-full max-w-3xl items-center justify-between pt-6">
@@ -48,7 +21,7 @@ const NavBar = () => {
       </div>
 
       <div className="flex items-center gap-3">
-        {/* TODO: Dark Mode Toggle */}
+        {/* NOTE: If I want to add dark mode, this is here. */}
         {/* <button onClick={() => toggleDarkModePreference()}>
           {preferences && preferences.prefersDarkMode ? (
             <SunIcon className="h-5 w-5 text-gray-800" />
@@ -91,7 +64,7 @@ const NavBar = () => {
                   </Link>
                 )}
               </Menu.Item>
-              <Menu.Item>
+              {/* <Menu.Item>
                 {({ active }) => (
                   <Link
                     href={
@@ -106,7 +79,7 @@ const NavBar = () => {
                     Subscriptions
                   </Link>
                 )}
-              </Menu.Item>
+              </Menu.Item> */}
               <Menu.Item>
                 {({ active }) => (
                   <Link

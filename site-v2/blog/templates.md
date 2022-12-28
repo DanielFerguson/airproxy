@@ -11,6 +11,11 @@ tags:
   - recipe collection
 images:
   - https://images.unsplash.com/photo-1530435460869-d13625c69bbf?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8dGVtcGxhdGVzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=700&q=60
+next:
+  slug: what-is-airtable
+  title: What is Airtable?
+  description: Airtable is a cloud-based platform that combines the features of a database, a spreadsheet, and a project management tool.
+  image: https://images.unsplash.com/photo-1504253163759-c23fccaebb55?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8Y2xvdWR8ZW58MHx8MHx8&auto=format&fit=crop&w=700&q=60
 ---
 
 Airtable templates are pre-built bases that you can use as a starting point for your own data. They include pre-defined tables, views, and records, as well as examples of how to use different features in Airtable.

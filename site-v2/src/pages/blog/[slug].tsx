@@ -262,56 +262,55 @@ const ArticleLayout = ({ article }: Props) => {
         ></article>
       </main>
 
-      {/* TODO: Up Next */}
-      {/* {nextArticle && (
-          <div className="mx-auto mb-24 max-w-7xl px-12">
-            <div
-              key={nextArticle.title}
-              className="grid grid-cols-5 overflow-hidden rounded-lg shadow-lg"
-            >
-              <div className="col-span-2">
-                <img
-                  className="h-full w-full object-cover"
-                  src={nextArticle.images[0]}
-                  alt=""
-                />
+      {article.next && (
+        <div className="mx-auto mb-24 -mt-28 max-w-3xl">
+          <div
+            key={article.next.title}
+            className="grid grid-cols-5 overflow-hidden rounded-lg shadow-lg"
+          >
+            <div className="col-span-2">
+              <img
+                className="h-full w-full object-cover"
+                src={article.next.image}
+                alt={article.next.title}
+              />
+            </div>
+            <div className="col-span-3 flex flex-1 flex-col justify-between bg-white p-6">
+              <div className="flex-1">
+                <p className="font-medium text-indigo-600">Next Up</p>
+                <Link href={article.next.slug} className="mt-2 block">
+                  <p className="text-2xl font-semibold text-gray-900">
+                    {article.next.title}
+                  </p>
+                  <p className="mt-3 text-base leading-7 text-gray-500">
+                    {article.next.description}
+                  </p>
+                </Link>
               </div>
-              <div className="col-span-3 flex flex-1 flex-col justify-between bg-white p-6">
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-indigo-600">Next Up</p>
-                  <Link href={nextArticle.slug} className="mt-2 block">
-                    <p className="text-xl font-semibold text-gray-900">
-                      {nextArticle.title}
-                    </p>
-                    <p className="mt-3 text-base text-gray-500">
-                      {nextArticle.description}
-                    </p>
-                  </Link>
-                </div>
-                <div className="mt-6 flex items-center">
-                  <div className="flex-shrink-0">
-                    <span className="sr-only">Dan Ferguson</span>
-                    <div className="h-10 w-10 rounded-full bg-indigo-500">
-                      <img
-                        className="h-10 w-10 rounded-full"
-                        src="/danferg.webp"
-                        alt="Dan Ferguson"
-                      />
-                    </div>
+              <div className="mt-8 flex items-center">
+                <div className="flex-shrink-0">
+                  <span className="sr-only">Dan Ferguson</span>
+                  <div className="h-10 w-10 rounded-full bg-indigo-500">
+                    <img
+                      className="h-10 w-10 rounded-full"
+                      src="/danferg.webp"
+                      alt="Dan Ferguson"
+                    />
                   </div>
-                  <div className="ml-3">
-                    <p className="text-sm font-medium text-gray-900">
-                      Dan Ferguson
-                    </p>
-                    <div className="flex space-x-1 text-sm text-gray-500">
-                      <span>Co-Founder; Airproxy</span>
-                    </div>
+                </div>
+                <div className="ml-3">
+                  <p className="text-sm font-medium text-gray-900">
+                    Dan Ferguson
+                  </p>
+                  <div className="flex space-x-1 text-sm text-gray-500">
+                    <span>Co-Founder; Airproxy</span>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        )} */}
+        </div>
+      )}
 
       {/* Try Airtable CTA */}
       <div className="mx-auto max-w-7xl py-16 px-4 sm:px-6 lg:px-8">

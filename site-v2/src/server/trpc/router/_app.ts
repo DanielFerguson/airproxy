@@ -6,6 +6,7 @@ import { personalAccessKeyRouter } from "./personalAccessKey";
 import { requestRouter } from "./request";
 import { statRouter } from "./stat";
 import { tableRouter } from "./table";
+import { userRouter } from "./user";
 
 export const appRouter = router({
   auth: authRouter,
@@ -15,6 +16,7 @@ export const appRouter = router({
   table: tableRouter,
   request: requestRouter,
   newsletter: newsletterRouter,
+  user: userRouter,
 });
 
 // export type definition of API

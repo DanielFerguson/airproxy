@@ -30,6 +30,7 @@ export const serverSchema = z.object({
   CF_KV_ID: z.string(),
   CF_BEARER_TOKEN: z.string(),
   LEMONSQUEEZY_SIGNING_KEY: z.string(),
+  LMS_BEARER_TOKEN: z.string(),
 });
 
 /**

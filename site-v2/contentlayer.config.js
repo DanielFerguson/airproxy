@@ -1,4 +1,18 @@
-import { defineDocumentType, makeSource } from "contentlayer/source-files";
+import {
+  defineDocumentType,
+  defineNestedType,
+  makeSource,
+} from "contentlayer/source-files";
+
+const NextArticle = defineNestedType(() => ({
+  name: "NextArticle",
+  fields: {
+    title: { type: "string", required: true },
+    description: { type: "string", required: true },
+    image: { type: "string", required: true },
+    slug: { type: "string", required: true },
+  },
+}));
 
 export const Article = defineDocumentType(() => ({
   name: "Article",
@@ -30,6 +44,11 @@ export const Article = defineDocumentType(() => ({
       of: { type: "string" },
       description: "The images of the article",
       required: true,
+    },
+    next: {
+      type: "nested",
+      of: NextArticle,
+      required: false,
     },
   },
   computedFields: {
