@@ -8,6 +8,7 @@ import Footer from "../../components/Footer";
 import { navigation } from "../../utils/globals";
 import { allArticles, type Article } from "contentlayer/generated";
 import { compareDesc } from "date-fns";
+import Image from "next/image";
 
 interface Props {
   articles: Article[];
@@ -101,7 +102,9 @@ const Page = ({ articles }: Props) => {
               <div className="flex lg:min-w-0 lg:flex-1" aria-label="Global">
                 <Link href="/" className="-m-1.5 p-1.5">
                   <span className="sr-only">Airproxy</span>
-                  <img src="/cloud.png" alt="Airproxy" className="h-16 w-16" />
+                  <div className="relative h-16 w-16">
+                    <Image src="/cloud.png" alt="Airproxy" fill={true} />
+                  </div>
                 </Link>
               </div>
               <div className="flex lg:hidden">
@@ -144,11 +147,9 @@ const Page = ({ articles }: Props) => {
                   <div className="flex">
                     <Link href="/" className="-m-1.5 p-1.5">
                       <span className="sr-only">Airproxy</span>
-                      <img
-                        src="/cloud.png"
-                        alt="Airproxy"
-                        className="h-16 w-16"
-                      />
+                      <div className="relative h-16 w-16">
+                        <Image src="/cloud.png" alt="Airproxy" fill={true} />
+                      </div>
                     </Link>
                   </div>
                   <div className="flex">
@@ -276,11 +277,14 @@ const Page = ({ articles }: Props) => {
               className="flex flex-col overflow-hidden rounded-lg shadow-lg"
             >
               <div className="flex-shrink-0">
-                <img
-                  className="h-48 w-full object-cover"
-                  src={article.images[0]}
-                  alt={article.title}
-                />
+                <div className="relative h-48 w-full">
+                  <Image
+                    className="object-cover"
+                    src={article.images[0] ?? "#"}
+                    alt={article.title}
+                    layout="fill"
+                  />
+                </div>
               </div>
               <div className="flex flex-1 flex-col justify-between bg-white p-6">
                 <div className="flex-1">

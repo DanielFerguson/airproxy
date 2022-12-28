@@ -24,6 +24,9 @@ const config = withContentlayer({
       },
     ];
   },
+  images: {
+    domains: ["images.unsplash.com", "plus.unsplash.com"],
+  },
   pageExtensions: ["ts", "tsx", "mdx"],
 });
 

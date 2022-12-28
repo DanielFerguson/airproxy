@@ -8,6 +8,7 @@ import { navigation } from "../../utils/globals";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Dialog } from "@headlessui/react";
 import type { GetStaticProps } from "next";
+import Image from "next/image";
 
 export async function getStaticPaths() {
   const paths = allArticles.map((article) => article.url);
@@ -154,7 +155,14 @@ const ArticleLayout = ({ article }: Props) => {
               <div className="flex lg:min-w-0 lg:flex-1" aria-label="Global">
                 <Link href="/" className="-m-1.5 p-1.5">
                   <span className="sr-only">Airproxy</span>
-                  <img src="/cloud.png" alt="Airproxy" className="h-16 w-16" />
+                  <div className="relative h-16 w-16">
+                    <Image
+                      src="/cloud.png"
+                      alt="Airproxy"
+                      className="h-16 w-16"
+                      fill
+                    />
+                  </div>
                 </Link>
               </div>
               <div className="flex lg:hidden">
@@ -193,11 +201,9 @@ const ArticleLayout = ({ article }: Props) => {
                   <div className="flex">
                     <Link href="#" className="-m-1.5 p-1.5">
                       <span className="sr-only">Airproxy</span>
-                      <img
-                        src="/cloud.png"
-                        alt="Airproxy"
-                        className="h-16 w-16"
-                      />
+                      <div className="relative h-16 w-16">
+                        <Image src="/cloud.png" alt="Airproxy" fill />
+                      </div>
                     </Link>
                   </div>
                   <div className="flex">
@@ -251,11 +257,14 @@ const ArticleLayout = ({ article }: Props) => {
           </span>
         </h1>
 
-        <img
-          src={article.images[0]}
-          alt={article.title}
-          className="h-64 w-full rounded-lg object-cover object-center"
-        />
+        <div className="relative mb-24 h-64 w-full">
+          <Image
+            src={article.images[0] ?? "#"}
+            alt={article.title}
+            className="rounded-lg object-cover object-center"
+            fill
+          />
+        </div>
 
         <article
           dangerouslySetInnerHTML={{ __html: article.body.html }}
@@ -269,11 +278,14 @@ const ArticleLayout = ({ article }: Props) => {
             className="grid grid-cols-5 overflow-hidden rounded-lg shadow-lg"
           >
             <div className="col-span-2">
-              <img
-                className="h-full w-full object-cover"
-                src={article.next.image}
-                alt={article.next.title}
-              />
+              <div className="relative h-full w-full">
+                <Image
+                  className="object-cover"
+                  src={article.next.image}
+                  alt={article.next.title}
+                  fill
+                />
+              </div>
             </div>
             <div className="col-span-3 flex flex-1 flex-col justify-between bg-white p-6">
               <div className="flex-1">
@@ -290,11 +302,12 @@ const ArticleLayout = ({ article }: Props) => {
               <div className="mt-8 flex items-center">
                 <div className="flex-shrink-0">
                   <span className="sr-only">Dan Ferguson</span>
-                  <div className="h-10 w-10 rounded-full bg-indigo-500">
-                    <img
-                      className="h-10 w-10 rounded-full"
+                  <div className="relative h-10 w-10 rounded-full bg-indigo-500">
+                    <Image
+                      className="rounded-full"
                       src="/danferg.webp"
                       alt="Dan Ferguson"
+                      fill
                     />
                   </div>
                 </div>
