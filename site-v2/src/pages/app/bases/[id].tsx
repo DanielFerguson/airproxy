@@ -31,36 +31,7 @@ import {
 import millify from "millify";
 import { ClipboardDocumentIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { trpc } from "../../../utils/trpc";
-import { toTitleCase } from "../../../utils/helpers";
 import { ttlOptions } from "../../../utils/globals";
-
-const viewTypeIcon = (type: string): JSX.Element => {
-  switch (type) {
-    case "grid":
-      return <Squares2X2Icon className="mr-1.5 h-3 w-3" />;
-
-    case "form":
-      return <InboxIcon className="mr-1.5 h-3 w-3" />;
-
-    case "calendar":
-      return <CalendarDaysIcon className="mr-1.5 h-3 w-3" />;
-
-    case "gallery":
-      return <PhotoIcon className="mr-1.5 h-3 w-3" />;
-
-    case "kanban":
-      return <ViewColumnsIcon className="mr-1.5 h-3 w-3" />;
-
-    case "timeline":
-      return <ClockIcon className="mr-1.5 h-3 w-3" />;
-
-    case "block":
-      return <Square2StackIcon className="mr-1.5 h-3 w-3" />;
-
-    default:
-      return <QuestionMarkCircleIcon className="mr-1.5 h-3 w-3" />;
-  }
-};
 
 const Page = () => {
   const router = useRouter();
@@ -177,10 +148,10 @@ const Page = () => {
               limit={millify(200000, { precision: 2 })}
             />
             <StatCard
-              name="Customers"
+              name="Unique Users"
               stat={
                 stats.data
-                  ? millify(stats.data.customerCount, { precision: 2 })
+                  ? millify(stats.data.uniqueUsersCount, { precision: 2 })
                   : "0"
               }
             />

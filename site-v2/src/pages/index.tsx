@@ -46,7 +46,7 @@ const features = [
   {
     name: "Observe Ability",
     description:
-      "Location, location, location - it's not just for real estate. Gain deeper insights of your customers.",
+      "Location, location, location - it's not just for real estate. Gain deeper insights of your users.",
     icon: ChartBarIcon,
     comingSoon: false,
   },
@@ -114,8 +114,8 @@ const pricing = {
         "Custom TTLs",
         "TypeScript Definition Generation",
         "API Protection",
-        "Image CDN",
         "Toggle View Access",
+        "Image CDN",
       ],
       link: "https://airproxy.lemonsqueezy.com/checkout/buy/847e3d05-7540-48d9-9229-2edad8c22c44?embed=1",
       cta: "Get Started",

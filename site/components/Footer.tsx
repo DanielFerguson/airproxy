@@ -26,7 +26,7 @@ const Footer = () => {
           ))}
         </nav>
         <p className="mt-8 text-center text-base text-gray-400">
-          &copy; 2022 Aaiga, Inc. All rights reserved.
+          &copy; 2022 aaiga, Inc. All rights reserved.
         </p>
       </div>
     </footer>

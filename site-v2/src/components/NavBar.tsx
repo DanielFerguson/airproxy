@@ -122,7 +122,10 @@ const NavBar = () => {
               <Menu.Item>
                 {({ active }) => (
                   <button
-                    onClick={() => signOut()}
+                    onClick={() => {
+                      signOut();
+                      window.location.href = "/";
+                    }}
                     className={`block w-full px-4 py-2 text-left text-sm text-gray-700 ${
                       active ? "bg-gray-100" : ""
                     }`}

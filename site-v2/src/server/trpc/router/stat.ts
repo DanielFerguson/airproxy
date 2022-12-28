@@ -3,7 +3,7 @@ import { router, protectedProcedure } from "../trpc";
 
 interface Stats {
   totalRequests: number;
-  customerCount: number;
+  uniqueUsersCount: number;
 }
 
 export const statRouter = router({
@@ -11,7 +11,7 @@ export const statRouter = router({
     const data: Stats[] = (await ctx.prisma.$queryRaw`
         SELECT
             count(id) as totalRequests,
-            COUNT(DISTINCT(latlng)) as customerCount
+            COUNT(DISTINCT(latlng)) as uniqueUsersCount
         FROM
             Request
         WHERE
@@ -26,7 +26,7 @@ export const statRouter = router({
     if (data.length === 0) {
       return {
         totalRequests: 0,
-        customerCount: 0,
+        uniqueUsersCount: 0,
       };
     }
 
@@ -38,7 +38,7 @@ export const statRouter = router({
       const data: Stats[] = await ctx.prisma.$queryRaw`
         SELECT
             count(id) as totalRequests,
-            COUNT(DISTINCT(latlng)) as customerCount
+            COUNT(DISTINCT(latlng)) as uniqueUsersCount
         FROM
             Request
         WHERE

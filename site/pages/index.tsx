@@ -16,12 +16,16 @@ import {
   ChartBarIcon,
   UsersIcon,
   GlobeAsiaAustraliaIcon,
+  CheckIcon,
 } from "@heroicons/react/24/outline";
-import { CheckIcon } from "@heroicons/react/20/solid";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-import { NextSeo } from "next-seo";
-import { OrganizationJsonLd, LogoJsonLd, SoftwareAppJsonLd } from "next-seo";
+import {
+  NextSeo,
+  OrganizationJsonLd,
+  LogoJsonLd,
+  SoftwareAppJsonLd,
+} from "next-seo";
 import useSWR from "swr";
 import Newsletter from "../components/Newsletter";
 import Footer from "../components/Footer";

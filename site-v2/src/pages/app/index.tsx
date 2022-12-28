@@ -157,10 +157,10 @@ export default function Page() {
                 limit={millify(200000, { precision: 2 })}
               />
               <StatCard
-                name="Customers"
+                name="Unique Users"
                 stat={
                   stats.data
-                    ? millify(stats.data.customerCount, { precision: 2 })
+                    ? millify(stats.data.uniqueUsersCount, { precision: 2 })
                     : "0"
                 }
               />

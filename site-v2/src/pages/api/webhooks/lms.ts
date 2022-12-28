@@ -12,7 +12,7 @@ export interface Data {
 }
 
 export interface Attributes {
-  order_number: number;
+  order_id: number;
   status: string;
   renews_at: string;
   ends_at: string;
@@ -27,6 +27,12 @@ const prisma = new PrismaClient();
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { body } = req;
   const { data }: WebhookRequest = body;
+
+  // Check that the user-agent is LemonSqueezy-Hookshot
+  if (req.headers["user-agent"] !== "LemonSqueezy-Hookshot") {
+    res.status(403).json({ error: "Forbidden" });
+    return;
+  }
 
   const user = await prisma.user.findUnique({
     where: {
@@ -45,7 +51,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   await prisma.subscription.upsert({
     where: {
-      orderId: data.attributes.order_number,
+      orderId: data.attributes.order_id,
     },
     update: {
       status: data.attributes.status,
@@ -54,7 +60,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       updatedAt: new Date(data.attributes.updated_at),
     },
     create: {
-      orderId: data.attributes.order_number,
+      orderId: data.attributes.order_id,
       status: data.attributes.status,
       renewsAt: new Date(data.attributes.renews_at),
       endsAt: new Date(data.attributes.ends_at),
