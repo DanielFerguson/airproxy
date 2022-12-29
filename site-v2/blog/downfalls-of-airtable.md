@@ -18,7 +18,7 @@ next:
   slug: announcing-airproxy
   title: Announcing Airproxy
   description: We are excited to announce the public release of Airproxy, the world's leading edge caching service for Airtable's API.
-  image: /global-map.png
+  image: /global-map.webp
 ---
 
 Airtable is a cloud-based database and collaboration platform that is popular for its user-friendly interface and flexible data management features. However, it is not without its drawbacks. Some potential drawbacks of using Airtable include its cost, the API request limit of 5 requests per second, limited customizability, and dependence on a third-party service. While Airtable offers many benefits, it is important to carefully consider these limitations before using it for your data management needs.

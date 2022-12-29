@@ -32,8 +32,8 @@ const Page = ({ articles }: Props) => {
             "We're here to help you take your Airtable game to the next level so you can deliver your value faster, futher, and more quickly.",
           images: [
             {
-              url: "https://www.airproxy.app/airproxy.jpg",
-              type: "image/jpeg",
+              url: "https://www.airproxy.app/og.png",
+              type: "image/png",
               width: 1200,
               height: 680,
               alt: "Airproxy helps you scale, fast.",
@@ -318,9 +318,10 @@ const Page = ({ articles }: Props) => {
 };
 
 export async function getStaticProps() {
-  const articles = allArticles.sort((a, b) => {
-    return compareDesc(new Date(a.published), new Date(b.published));
-  });
+  const articles = allArticles.sort((a, b) =>
+    compareDesc(new Date(a.published), new Date(b.published))
+  );
+
   return { props: { articles } };
 }
 

@@ -43,8 +43,8 @@ const Home: NextPage = () => {
               "Gain the full power of the Airtable platform, and build businesses fearlessly without worrying about scaling, or rate limits. Get busy building!",
             images: [
               {
-                url: "https://www.airproxy.app/airproxy.jpg",
-                type: "image/jpeg",
+                url: "https://www.airproxy.app/og.png",
+                type: "image/png",
                 width: 1200,
                 height: 680,
                 alt: "Airproxy helps you scale, fast!",

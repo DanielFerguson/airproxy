@@ -27,7 +27,7 @@ When Imperial Wealth was designing their platform, they knew they needed a platf
 
 Airtable allows Imperial Wealth to stay one step ahead of their competition; focusing on delivering exceptional value to their clients, rather than dedicating precious resources to the management of platforms like Wordpress.
 
-However, as they continued to grow, they ran into problems; and if you've used Airtable in production, you'll know them too - the API has a hard time scaling. On top of that, Airtable [recently made a change](https://community.airtable.com/t5/formulas/no-more-static-urls-for-attachments/td-p/50546) that meant that you now can't host static files like images on their service and use it as a content delivery network.
+However, as they continued to grow, they ran into problems; and if you've used Airtable in production, you'll know them too - the API has a hard time scaling. On top of that, Airtable [recently made a change](https://support.airtable.com/docs/changes-to-airtable-attachments) that meant that you now can't host static files like images on their service and use it as a content delivery network.
 
 This presented Imperial Wealth with quick a dilema - would they need to ditch Airtable and move to another platform? If so, which one? How many resources will they need to dedicate to this? How can they keep it reliable, fast, and allow their team to focus on product, not infrastructure?
 

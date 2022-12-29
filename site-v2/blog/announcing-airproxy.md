@@ -11,7 +11,7 @@ tags:
   - ease of use
   - api
 images:
-  - /global-map.png
+  - /global-map.webp
 ---
 
 We are excited to announce the public release of Airproxy, the world's leading edge caching service for Airtable's API. Airproxy allows you to access your Airtable data with millisecond response times and unlimited scaling capabilities, so you can focus on building great experiences for your users.

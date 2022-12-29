@@ -1,5 +1,6 @@
 import { NextPage } from "next";
 import { signIn, useSession } from "next-auth/react";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { toast, Toaster } from "react-hot-toast";
@@ -28,6 +29,14 @@ const Page: NextPage = () => {
   return (
     <div className="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">
       <Toaster />
+
+      <Head>
+        <title>Sign In | Airproxy</title>
+        <meta
+          name="description"
+          content="Get started with a free account and try out Airproxy today, or sign in to your existing account and start using Airtable in production fearlessly, today."
+        />
+      </Head>
 
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <img
