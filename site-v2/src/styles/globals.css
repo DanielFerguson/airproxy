@@ -1,4 +1,4 @@
-@import url(https://fonts.bunny.net/css?family=chewy:400);
+@import url(https://fonts.bunny.net/css?family=chewy:400|inter:300,400,500,600,700,800,900);
 @import url(https://unpkg.com/dracula-prism/dist/css/dracula-prism.css);
 
 @import "react-tippy/dist/tippy.css";
@@ -10,6 +10,10 @@
 html,
 body {
   @apply h-full scroll-smooth;
+}
+
+body {
+  @apply font-[Inter] text-gray-900;
 }
 
 #__next {
