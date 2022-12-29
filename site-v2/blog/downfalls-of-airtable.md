@@ -13,7 +13,7 @@ tags:
   - expensive
   - request limit
 images:
-  - https://images.unsplash.com/photo-1501862169286-518c291e3eed?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=60
+  - https://images.unsplash.com/photo-1501862169286-518c291e3eed?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&q=60
 next:
   slug: announcing-airproxy
   title: Announcing Airproxy

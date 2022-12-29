@@ -15,7 +15,7 @@ next:
   slug: getting-a-personal-access-token
   title: Getting a Personal Access Token
   description: Are you looking to integrate your Airtable data into other applications or services? We're going to show you how, using the new Personal Access Tokens.
-  image: https://images.unsplash.com/photo-1623282033815-40b05d96c903?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=60
+  image: https://images.unsplash.com/photo-1623282033815-40b05d96c903?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&q=60
 ---
 
 If you want to upload files to your Airtable account using the API, there are a few steps you need to follow. The Airtable API allows you to create, read, update, and delete records in your Airtable bases, including files. In this article, we will explain how to upload files to Airtable using the API.

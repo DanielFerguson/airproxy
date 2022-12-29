@@ -13,7 +13,7 @@ next:
   slug: social-media-collaboration
   title: Social Media Collaboration
   description: Enabling teams to collaborate and execute social media strategies with integrations, automations, and a user-friendly interface to streamline efforts.
-  image: https://plus.unsplash.com/premium_photo-1661767473365-726c22407adf?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2426&q=60
+  image: https://plus.unsplash.com/premium_photo-1661767473365-726c22407adf?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&q=60
 ---
 
 Are you looking for a better way to manage your agile team and projects? While there are many project management tools out there, such as Jira and Monday.com, Airtable offers a unique and versatile solution.
