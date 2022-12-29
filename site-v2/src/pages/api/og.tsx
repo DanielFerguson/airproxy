@@ -33,13 +33,13 @@ export default async function (req: NextRequest) {
           flexDirection: "column",
           backgroundColor: "white",
           backgroundImage: "url(https://www.airproxy.app/og-background.png)",
-          paddingLeft: "50px",
+          paddingLeft: "60px",
           paddingTop: "40px",
         }}
       >
         <img
           src="https://www.airproxy.app/cloud.png"
-          tw="h-36 w-36 mb-12"
+          tw="h-36 w-36 -ml-4"
           height={100}
         />
         <h1
@@ -48,14 +48,19 @@ export default async function (req: NextRequest) {
         >
           {title}
         </h1>
-        <div tw="flex items-center mt-6">
+        <div tw="flex items-center mt-12">
           <div tw="flex h-20 w-20 bg-indigo-600 rounded-full">
             <img
               src="https://www.airproxy.app/danferg.png"
               tw="h-20 w-20 rounded-full"
             />
           </div>
-          <h2 tw="pl-6 font-bold text-3xl text-indigo-600">Dan Ferguson</h2>
+          <div tw="flex flex-col pl-6 font-bold gap-2">
+            <h2 tw="text-3xl mb-0 pb-0 text-indigo-600">Dan Ferguson</h2>
+            <h3 tw="mt-0 pt-0 text-2xl text-indigo-500">
+              Co-founder; Airproxy
+            </h3>
+          </div>
         </div>
         {/* Author */}
       </div>
