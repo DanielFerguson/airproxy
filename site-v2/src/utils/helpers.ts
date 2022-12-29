@@ -40,3 +40,11 @@ export function toTitleCase(str: string) {
     return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
   });
 }
+
+export function isDiscountPeriod() {
+  const today = new Date();
+  const discountStart = new Date("2022-01-01");
+  const discountEnd = new Date("2023-01-15");
+
+  return today >= discountStart && today <= discountEnd;
+}

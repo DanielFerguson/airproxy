@@ -9,7 +9,11 @@
 
 html,
 body {
-  @apply scroll-smooth;
+  @apply h-full scroll-smooth;
+}
+
+#__next {
+  @apply h-full;
 }
 
 .rsm-geography {

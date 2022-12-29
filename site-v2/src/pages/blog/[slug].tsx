@@ -146,7 +146,7 @@ const ArticleLayout = ({ article }: Props) => {
         </div>
 
         {/* Heaeder */}
-        <div className="px-6 pt-6 lg:px-8">
+        <div className="mx-auto max-w-7xl px-6 pt-6 lg:px-8">
           <div>
             <nav
               className="flex h-9 items-center justify-between"
@@ -272,12 +272,12 @@ const ArticleLayout = ({ article }: Props) => {
       </main>
 
       {article.next && (
-        <div className="mx-auto mb-24 -mt-28 max-w-3xl">
+        <div className="mx-auto -mb-8 max-w-3xl px-4 lg:mb-24 lg:-mt-28 lg:px-0">
           <div
             key={article.next.title}
             className="grid grid-cols-5 overflow-hidden rounded-lg shadow-lg"
           >
-            <div className="col-span-2">
+            <div className="col-span-5 sm:col-span-2">
               <div className="relative h-full w-full">
                 <Image
                   className="object-cover"
@@ -287,7 +287,7 @@ const ArticleLayout = ({ article }: Props) => {
                 />
               </div>
             </div>
-            <div className="col-span-3 flex flex-1 flex-col justify-between bg-white p-6">
+            <div className="col-span-5 flex flex-1 flex-col justify-between bg-white p-6 sm:col-span-3">
               <div className="flex-1">
                 <p className="font-medium text-indigo-600">Next Up</p>
                 <Link href={article.next.slug} className="mt-2 block">

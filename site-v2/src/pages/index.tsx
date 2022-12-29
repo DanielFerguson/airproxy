@@ -11,7 +11,7 @@ import {
   LogoJsonLd,
   SoftwareAppJsonLd,
 } from "next-seo";
-import { classNames } from "../utils/helpers";
+import { classNames, isDiscountPeriod } from "../utils/helpers";
 import { navigation, features, pricing } from "../utils/globals";
 import Newsletter from "../components/Newsletter";
 import Footer from "../components/Footer";
@@ -24,14 +24,6 @@ const LemonSqueezy = dynamic(() => import("../components/LemonSqueezy"), {
 const Home: NextPage = () => {
   const session = useSession();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  const isDiscountPeriod = () => {
-    const today = new Date();
-    const discountStart = new Date("2022-01-01");
-    const discountEnd = new Date("2023-01-15");
-
-    return today >= discountStart && today <= discountEnd;
-  };
 
   return (
     <>
@@ -157,7 +149,7 @@ const Home: NextPage = () => {
         </div>
 
         {/* Header */}
-        <div className="px-6 pt-6 lg:px-8">
+        <div className="mx-auto max-w-7xl px-6 pt-6 lg:px-8">
           <div>
             <nav
               className="flex h-9 items-center justify-between"

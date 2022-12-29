@@ -93,7 +93,7 @@ const Page = ({ articles }: Props) => {
         </div>
 
         {/* Heaeder */}
-        <div className="px-6 pt-6 lg:px-8">
+        <div className="mx-auto max-w-7xl px-6 pt-6 lg:px-8">
           <div>
             <nav
               className="flex h-9 items-center justify-between"
