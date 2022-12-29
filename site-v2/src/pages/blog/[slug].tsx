@@ -60,9 +60,11 @@ const ArticleLayout = ({ article }: Props) => {
               modifiedTime: article.published,
               tags: article.tags,
             },
-            images: article.images.map((imageUrl) => ({
-              url: imageUrl,
-            })),
+            images: [
+              {
+                url: `https://www.airproxy.app/api/og?title=${article.title}`,
+              },
+            ],
           }}
           twitter={{
             handle: "@thedannyferg",
