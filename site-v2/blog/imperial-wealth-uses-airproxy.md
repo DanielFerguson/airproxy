@@ -23,7 +23,7 @@ Imperial Wealth is a one-stop platform for everything you need to learn, and cap
 
 When Imperial Wealth was designing their platform, they knew they needed a platform that was versatile enough to enable them to response to market changes quickly, empower their development team to iterate quickly and allow their industry experts to deliver information quickly to clients as soon as it becomes available.
 
-**This is why they chose Airtable.**
+This is why they chose **Airtable.**
 
 Airtable allows Imperial Wealth to stay one step ahead of their competition; focusing on delivering exceptional value to their clients, rather than dedicating precious resources to the management of platforms like Wordpress.
 
