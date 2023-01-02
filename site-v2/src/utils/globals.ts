@@ -76,17 +76,17 @@ export const features = [
     comingSoon: false,
   },
   {
-    name: "Bring Your Team",
-    description:
-      "Share schemas with your developers, generate test data, and get TypeScript types to build your UIs safely.",
-    icon: UsersIcon,
-    comingSoon: true,
-  },
-  {
     name: "CDNs For Days",
     description:
       "Did Airtable removing its file serving capabilities really suck for you, too? We've got you covered.",
     icon: GlobeAsiaAustraliaIcon,
+    comingSoon: false,
+  },
+  {
+    name: "Bring Your Team",
+    description:
+      "Share schemas with your developers, generate test data, and get TypeScript types to build your UIs safely.",
+    icon: UsersIcon,
     comingSoon: true,
   },
 ];
