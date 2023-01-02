@@ -31,6 +31,6 @@ We at ☁️ Airproxy were shocked to see this change. While we understand that 
 
 Airproxy is a tool that enables you to use Airtable in production, fearlessly. Scale instantly, serve static files, globally, all while keeping your response times low. We do the heavy lifting, so you can focus on doing what you do best.
 
-Interested? Give Airproxy [a whirl for free](/auth/signin), and see just how powerful you can be with Airtable, and Airproxy. #airstack ☁️🥞
+Interested? Give Airproxy [a whirl for free](/api/auth/signin), and see just how powerful you can be with Airtable, and Airproxy. #airstack ☁️🥞
 
 Want to see how Imperial Wealth is using Airproxy to power their global, data-intensive business? Check out their case study below!

@@ -1,34 +1,15 @@
-import { connect, type Connection } from "@planetscale/database";
-
-export interface Env {
-  KV_STORE: KVNamespace;
-  DB_HOST: string;
-  DB_USER: string;
-  DB_PASS: string;
-}
-
-interface TableRowResult {
-  tableIsActive: boolean;
-  baseIsActive: boolean;
-  viewIsActive?: boolean;
-  ttl: number;
-  baseToken: string;
-  apiToken?: string;
-}
-
-interface CfDetails {
-  city: string;
-  regionCode: string;
-  country: string;
-  continent: string;
-  asn: number;
-  latitude: string;
-  longitude: string;
-}
-
-interface CacheResponse {
-  result: string | null;
-}
+import { connect } from "@planetscale/database";
+import { extractAssetUrls, getAccessDetails } from "./functions";
+import type {
+  CfDetails,
+  Env,
+  AssetDetails,
+  QueueMessage,
+  RecordGroup,
+  RequestDetails,
+  TableRowResult,
+  MessageSendRequest,
+} from "./types";
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
@@ -36,9 +17,28 @@ export default {
     // Parse request path
     //
 
-    // const details = request.cf as CfDetails;
+    const { asn, continent, country, regionCode, city, latitude, longitude } =
+      request.cf as CfDetails;
+
     const path = new URL(request.url).pathname;
     const [_, baseId, tableId, viewId] = path.split("/");
+
+    await env.QUEUE.send({
+      action: "save-request",
+      data: {
+        createdAt: new Date().toISOString().slice(0, 19).replace("T", " "),
+        asn: asn,
+        continent: continent,
+        country: country,
+        region: regionCode,
+        city: city,
+        baseId: baseId,
+        tableId: tableId,
+        latitude: parseFloat(latitude),
+        longitude: parseFloat(longitude),
+        latlng: `${latitude}, ${longitude}`,
+      },
+    });
 
     if (!baseId || !tableId) {
       return new Response(
@@ -62,21 +62,17 @@ export default {
     // Validate the request, if the base has an API token
     //
 
-    // const dbConn = connect({
-    //   host: env.DB_HOST,
-    //   username: env.DB_USER,
-    //   password: env.DB_PASS,
-    // });
+    console.log(env);
 
-    // const [, accessDetails] = await Promise.all([
-    //   saveRequest(dbConn, details, baseId, tableId),
-    //   getAccessDetails(baseId, tableId, viewId, env.KV_STORE, dbConn),
-    // ]);
+    const accessDetailsResponse = await getAccessDetails(
+      baseId,
+      tableId,
+      viewId,
+      env
+    );
 
-    const accessDetails = await getAccessDetails(baseId, tableId, viewId, env);
-
-    if (accessDetails instanceof Response) {
-      return accessDetails;
+    if (accessDetailsResponse instanceof Response) {
+      return accessDetailsResponse;
     }
 
     const {
@@ -86,7 +82,7 @@ export default {
       ttl,
       baseToken,
       apiToken,
-    } = accessDetails as TableRowResult;
+    } = accessDetailsResponse as TableRowResult;
 
     if (!tableIsActive || !baseIsActive || viewIsActive === false) {
       return new Response("Table, base, or view is inactive.", {
@@ -103,7 +99,7 @@ export default {
         });
       }
 
-      if (authHeader !== `Bearer ${apiToken}`) {
+      if (authHeader && authHeader !== `Bearer ${apiToken}`) {
         return new Response("Authorization header is invalid.", {
           status: 401,
         });
@@ -114,21 +110,22 @@ export default {
     // Check whether data is in the cache
     //
 
-    let cacheKey = `data:${baseId}:${tableId}`;
+    const cacheKey = `data:${baseId}:${tableId}`;
 
-    if (viewId) cacheKey += `:${viewId}`;
-    if (page) cacheKey += `:page-${page}`;
-    if (pageSize) cacheKey += `:pageSize-${pageSize}`;
+    // !
+    // if (viewId) cacheKey += `:${viewId}`;
+    // if (page) cacheKey += `:page-${page}`;
+    // if (pageSize) cacheKey += `:pageSize-${pageSize}`;
 
-    let cachedValue = await env.KV_STORE.get(cacheKey);
+    // let cachedValue = await env.CACHE.get(cacheKey);
 
-    if (cachedValue) {
-      return new Response(cachedValue, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-    }
+    // if (cachedValue) {
+    //   return new Response(cachedValue, {
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //   });
+    // }
 
     //
     // Fetch the data from Airtable
@@ -140,102 +137,108 @@ export default {
     if (page) url.searchParams.set("page", page);
     if (pageSize) url.searchParams.set("pageSize", pageSize);
 
-    const response = await fetch(url.href, {
+    const data: RecordGroup = await fetch(url.href, {
       headers: {
         Authorization: `Bearer ${baseToken}`,
       },
+    }).then((res) => res.json());
+
+    let assets: AssetDetails[] = [];
+
+    data.records.forEach((record) => {
+      assets = [...assets, ...extractAssetUrls(record)];
     });
 
-    const data: string = await response.json();
+    // Remove duplicates by id
+    const uniqueAssets = assets.filter(
+      (asset, index, self) =>
+        index === self.findIndex((t) => t.key === asset.key)
+    );
 
-    await env.KV_STORE.put(cacheKey, JSON.stringify(data), {
-      expirationTtl: ttl,
-    });
+    let batches = [];
+    const MAX_BATCH_SIZE = 100;
 
-    // await Promise.all([
-    //   ,
-    //   saveRequest(dbConn, details, baseId, tableId),
-    // ]);
+    for (let i = 0; i < uniqueAssets.length; i += MAX_BATCH_SIZE) {
+      const batch: MessageSendRequest[] = uniqueAssets
+        .slice(i, i + MAX_BATCH_SIZE)
+        .map((asset) => ({
+          body: {
+            action: "download-image",
+            data: asset,
+          },
+        }));
+
+      batches.push(batch);
+    }
+
+    await Promise.all([
+      ...batches.map((batch) => env.QUEUE.sendBatch(batch)),
+      env.CACHE.put(cacheKey, JSON.stringify(data), {
+        expirationTtl: ttl,
+      }),
+    ]);
 
     //
     // Return the data
     //
 
-    return new Response(data, {
+    return new Response(JSON.stringify(data), {
       headers: {
         "Content-Type": "application/json",
       },
     });
   },
-};
-
-const getAccessDetails = async (
-  baseId: string,
-  tableId: string,
-  viewId: string | null,
-  env: Env
-): Promise<TableRowResult | Response> => {
-  let cacheKey = `access:${baseId}:${tableId}`;
-
-  if (viewId) {
-    cacheKey += `:${viewId}`;
-  }
-
-  const response = await env.KV_STORE.get<CacheResponse>(cacheKey);
-
-  if (response?.result) {
-    return JSON.parse(response.result);
-  }
-
-  const dbConn = connect({
-    host: env.DB_HOST,
-    username: env.DB_USER,
-    password: env.DB_PASS,
-  });
-
-  let result = viewId
-    ? await dbConn.execute(
-        "SELECT t.active AS tableIsActive,b.active AS baseIsActive,b.active AS viewIsActive,k.token AS baseToken,b.apiToken,t.ttl FROM`Table` AS t LEFT JOIN Base AS b ON t.baseId=b.id LEFT JOIN PersonalAccessToken AS k ON b.userId=k.userId LEFT JOIN `View` AS v ON v.tableId=t.id WHERE b.id=? AND t.id=? AND v.id=?",
-        [baseId, tableId, viewId]
-      )
-    : await dbConn.execute(
-        "SELECT t.active AS tableIsActive,b.active AS baseIsActive,k.token AS baseToken,b.apiToken,t.ttl FROM`Table` AS t LEFT JOIN Base AS b ON t.baseId=b.id LEFT JOIN PersonalAccessToken AS k ON b.userId=k.userId WHERE b.id=? AND t.id=?",
-        [baseId, tableId]
-      );
-
-  if (result.rows.length === 0) {
-    return new Response("Unable to find that table.", {
-      status: 404,
+  async queue(batch: MessageBatch, env: Env): Promise<void> {
+    const conn = connect({
+      host: env.DB_HOST,
+      username: env.DB_USER,
+      password: env.DB_PASS,
     });
-  }
 
-  const results = result.rows[0] as TableRowResult;
+    await Promise.all([
+      ...batch.messages.map(async (message) => {
+        const parsedMessage = message.body as QueueMessage;
 
-  await env.KV_STORE.put(cacheKey, JSON.stringify(results));
+        switch (parsedMessage.action) {
+          case "save-request":
+            const requestDetails = parsedMessage.data as RequestDetails;
 
-  return results;
+            await conn.execute(
+              "INSERT INTO Request (createdAt, asn, continent, country, region, city, baseId, tableId, latitude, longitude, latlng) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+              [
+                requestDetails.createdAt,
+                requestDetails.asn,
+                requestDetails.continent,
+                requestDetails.country,
+                requestDetails.region,
+                requestDetails.city,
+                requestDetails.baseId,
+                requestDetails.tableId,
+                requestDetails.latitude,
+                requestDetails.longitude,
+                requestDetails.latlng,
+              ]
+            );
+            break;
+
+          case "download-image":
+            const assetDetails = parsedMessage.data as AssetDetails;
+
+            const record = await env.BUCKET.head(assetDetails.key);
+            if (record) break;
+
+            const image = await fetch(assetDetails.url).then((res) =>
+              res.arrayBuffer()
+            );
+
+            await env.BUCKET.put(assetDetails.key, image);
+            break;
+
+          default:
+            console.error("Unknown action: " + parsedMessage.action);
+            break;
+        }
+      }),
+    ]);
+  },
 };
-
-// const saveRequest = (
-//   dbConn: Connection,
-//   details: CfDetails,
-//   baseId: string,
-//   tableId: string
-// ) => {
-//   return dbConn.execute(
-//     "INSERT INTO Request (createdAt, asn, continent, country, region, city, baseId, tableId, latitude, longitude, latlng) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-//     [
-//       new Date().toISOString().slice(0, 19).replace("T", " "),
-//       details.asn,
-//       details.continent,
-//       details.country,
-//       details.regionCode,
-//       details.city,
-//       baseId,
-//       tableId,
-//       parseFloat(details.latitude),
-//       parseFloat(details.longitude),
-//       `${details.latitude}, ${details.longitude}`,
-//     ]
-//   );
-// };

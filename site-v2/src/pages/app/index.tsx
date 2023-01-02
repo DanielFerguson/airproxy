@@ -43,7 +43,7 @@ const Page: NextPage = () => {
 
       {/* Register key */}
       {bases.data?.length === 0 && (
-        <main className="mx-auto mt-16 max-w-3xl">
+        <main className="mx-auto mt-16 max-w-3xl px-4 md:px-0">
           {/* Register a Token */}
           <div className="text-center">
             <KeyIcon className="mx-auto h-12 w-12 text-gray-400" />
@@ -114,9 +114,9 @@ const Page: NextPage = () => {
       )}
 
       {bases.data && bases.data.length > 0 && (
-        <main className="mx-auto mt-16 grid max-w-3xl gap-y-12 pb-24">
+        <main className="mx-auto mt-6 grid max-w-3xl gap-y-12 pb-24 sm:mt-16">
           {/* Stats */}
-          <div>
+          <div className="px-4 md:px-0">
             {/* Cards */}
             <h3 className="text-lg font-medium leading-6 text-gray-900">
               Last 30 days
@@ -237,7 +237,7 @@ const Page: NextPage = () => {
           {/* Bases */}
           <div>
             {/* Header */}
-            <div className="sm:flex sm:items-center">
+            <div className="px-4 sm:flex sm:items-center md:px-0">
               <div className="sm:flex-auto">
                 <h1 className="text-xl font-semibold text-gray-900">Bases</h1>
                 <p className="mt-2 text-sm text-gray-700">
@@ -305,172 +305,173 @@ const Page: NextPage = () => {
             </div>
 
             {/* Table */}
-            <div className="mt-8 flex flex-col">
-              <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-                  <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-                    <table className="min-w-full divide-y divide-gray-300">
-                      <thead className="bg-gray-50">
-                        <tr>
-                          <th
-                            scope="col"
-                            className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+            <div className="mt-8 block min-w-full overscroll-contain py-2 align-middle">
+              <div className="overflow-auto shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                <table className="min-w-full divide-y divide-gray-300 overflow-x-auto">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th
+                        scope="col"
+                        className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                      >
+                        Name
+                      </th>
+                      <th
+                        scope="col"
+                        className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:inline-block"
+                      >
+                        Status
+                      </th>
+                      <th
+                        scope="col"
+                        className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:inline-block"
+                      >
+                        Access
+                      </th>
+                      <th
+                        scope="col"
+                        className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:inline-block"
+                      >
+                        Tables
+                      </th>
+                      <th
+                        scope="col"
+                        className="relative py-3.5 pl-3 pr-4 sm:pr-6"
+                      >
+                        <span className="sr-only">Edit</span>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white">
+                    {bases.data.map((base, index) => (
+                      <tr
+                        key={base.id}
+                        className={index % 2 === 0 ? undefined : "bg-gray-50"}
+                      >
+                        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                          <Link
+                            href={`/app/bases/${base.id}`}
+                            className="text-indigo-600 hover:text-indigo-900"
                           >
-                            Name
-                          </th>
-                          <th
-                            scope="col"
-                            className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                          >
-                            Status
-                          </th>
-                          <th
-                            scope="col"
-                            className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                          >
-                            Access
-                          </th>
-                          <th
-                            scope="col"
-                            className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                          >
-                            Tables
-                          </th>
-                          <th
-                            scope="col"
-                            className="relative py-3.5 pl-3 pr-4 sm:pr-6"
-                          >
-                            <span className="sr-only">Edit</span>
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="bg-white">
-                        {bases.data.map((base, index) => (
-                          <tr
-                            key={base.id}
-                            className={
-                              index % 2 === 0 ? undefined : "bg-gray-50"
-                            }
-                          >
-                            <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                              <Link
-                                href={`/app/bases/${base.id}`}
-                                className="text-indigo-600 hover:text-indigo-900"
+                            <span className="mr-2">{base.name}</span>
+                          </Link>
+                          {base.active ? (
+                            <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800 sm:hidden">
+                              Active
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-800 sm:hidden">
+                              Disabled
+                            </span>
+                          )}
+                        </td>
+                        <td className="hidden whitespace-nowrap px-3 py-4 text-sm text-gray-500 sm:inline-block">
+                          {base.active ? (
+                            <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
+                              Active
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-800">
+                              Disabled
+                            </span>
+                          )}
+                        </td>
+                        <td className="hidden whitespace-nowrap px-3 py-4 text-sm text-gray-500 sm:inline-block">
+                          {base.apiToken ? "Protected" : "Public"}
+                        </td>
+                        <td className="hidden whitespace-nowrap px-3 py-4 text-sm text-gray-500 sm:inline-block">
+                          {base.tables.length} tables
+                        </td>
+                        <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                          <span className="flex items-center justify-center gap-2">
+                            {/* @ts-ignore */}
+                            <Tooltip
+                              title="Bust Cache"
+                              position="top"
+                              trigger="mouseenter"
+                            >
+                              <button
+                                onClick={async () => {
+                                  await toast.promise(
+                                    bustBaseCache.mutateAsync({
+                                      baseId: base.id,
+                                    }),
+                                    {
+                                      loading: "Busting...",
+                                      success: `Busted ${base.name}`,
+                                      error: "Whoops! Something went wrong.",
+                                    }
+                                  );
+
+                                  bases.refetch();
+                                }}
                               >
-                                <span className="mr-2">{base.name}</span>
-                              </Link>
-                            </td>
-                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                              {base.active ? (
-                                <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
-                                  Active
-                                </span>
-                              ) : (
-                                <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-800">
-                                  Disabled
-                                </span>
-                              )}
-                            </td>
-                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                              {base.apiToken ? "Protected" : "Public"}
-                            </td>
-                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                              {base.tables.length} tables
-                            </td>
-                            <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                              <span className="flex items-center justify-center gap-2">
-                                {/* @ts-ignore */}
-                                <Tooltip
-                                  title="Bust Cache"
-                                  position="top"
-                                  trigger="mouseenter"
-                                >
-                                  <button
-                                    onClick={async () => {
-                                      await toast.promise(
-                                        bustBaseCache.mutateAsync({
-                                          baseId: base.id,
-                                        }),
-                                        {
-                                          loading: "Busting...",
-                                          success: `Busted ${base.name}`,
-                                          error:
-                                            "Whoops! Something went wrong.",
-                                        }
-                                      );
+                                <ArrowPathIcon className="h-3 w-3" />
+                              </button>
+                            </Tooltip>
+                            {/* @ts-ignore */}
+                            <Tooltip
+                              title={base.active ? "Disable" : "Activate"}
+                              position="top"
+                              trigger="mouseenter"
+                            >
+                              <button
+                                onClick={async () => {
+                                  await toast.promise(
+                                    toggleBase.mutateAsync({
+                                      baseId: base.id,
+                                    }),
+                                    {
+                                      loading: "Toggling...",
+                                      success: base.active
+                                        ? `Disabled ${base.name}`
+                                        : `Activated ${base.name}`,
+                                      error: "Whoops! Something went wrong.",
+                                    }
+                                  );
 
-                                      bases.refetch();
-                                    }}
-                                  >
-                                    <ArrowPathIcon className="h-3 w-3" />
-                                  </button>
-                                </Tooltip>
-                                {/* @ts-ignore */}
-                                <Tooltip
-                                  title={base.active ? "Disable" : "Activate"}
-                                  position="top"
-                                  trigger="mouseenter"
-                                >
-                                  <button
-                                    onClick={async () => {
-                                      await toast.promise(
-                                        toggleBase.mutateAsync({
-                                          baseId: base.id,
-                                        }),
-                                        {
-                                          loading: "Toggling...",
-                                          success: base.active
-                                            ? `Disabled ${base.name}`
-                                            : `Activated ${base.name}`,
-                                          error:
-                                            "Whoops! Something went wrong.",
-                                        }
-                                      );
+                                  bases.refetch();
+                                }}
+                              >
+                                {base.active ? (
+                                  <PauseIcon className="h-3 w-3" />
+                                ) : (
+                                  <PlayIcon className="h-3 w-3" />
+                                )}
+                              </button>
+                            </Tooltip>
+                            {/* @ts-ignore */}
+                            <Tooltip
+                              title="Copy API Key"
+                              position="top"
+                              trigger="mouseenter"
+                              disabled={!base.apiToken}
+                            >
+                              <button
+                                disabled={!base.apiToken}
+                                onClick={() => {
+                                  if (!base.apiToken) return;
 
-                                      bases.refetch();
-                                    }}
-                                  >
-                                    {base.active ? (
-                                      <PauseIcon className="h-3 w-3" />
-                                    ) : (
-                                      <PlayIcon className="h-3 w-3" />
-                                    )}
-                                  </button>
-                                </Tooltip>
-                                {/* @ts-ignore */}
-                                <Tooltip
-                                  title="Copy API Key"
-                                  position="top"
-                                  trigger="mouseenter"
-                                  disabled={!base.apiToken}
-                                >
-                                  <button
-                                    disabled={!base.apiToken}
-                                    onClick={() => {
-                                      if (!base.apiToken) return;
+                                  navigator.clipboard.writeText(
+                                    base.apiToken ?? ""
+                                  );
 
-                                      navigator.clipboard.writeText(
-                                        base.apiToken ?? ""
-                                      );
-
-                                      toast.success("Copied API Key!");
-                                    }}
-                                  >
-                                    <SolidKeyIcon
-                                      className={`h-3 w-3 ${
-                                        base.apiToken ? "" : "text-gray-300"
-                                      }`}
-                                    />
-                                  </button>
-                                </Tooltip>
-                              </span>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
+                                  toast.success("Copied API Key!");
+                                }}
+                              >
+                                <SolidKeyIcon
+                                  className={`h-3 w-3 ${
+                                    base.apiToken ? "" : "text-gray-300"
+                                  }`}
+                                />
+                              </button>
+                            </Tooltip>
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
@@ -487,7 +488,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   if (!session) {
     return {
       redirect: {
-        destination: "/api/auth/signin",
+        destination: "/",
         permanent: false,
       },
     };

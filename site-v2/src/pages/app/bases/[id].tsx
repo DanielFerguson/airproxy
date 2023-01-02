@@ -46,7 +46,7 @@ const Page = () => {
 
       <main className="mx-auto mt-16 grid max-w-3xl gap-y-12 pb-24">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between px-4 md:px-0">
           <div className="flex items-center gap-5">
             <h2 className="text-3xl font-medium text-gray-900">
               {base.data?.name}
@@ -111,7 +111,7 @@ const Page = () => {
         </div>
 
         {/* Stats */}
-        <div>
+        <div className="px-4 md:px-0">
           {/* Cards */}
           <h3 className="text-lg font-medium leading-6 text-gray-900">
             Last 30 days
@@ -165,7 +165,7 @@ const Page = () => {
         </div>
 
         {/* API Tokens */}
-        <div>
+        <div className="px-4 md:px-0">
           {/* Header */}
           <div className="sm:flex sm:items-center">
             <div className="sm:flex-auto">
@@ -269,7 +269,7 @@ const Page = () => {
         {/* Tables */}
         <div>
           {/* Header */}
-          <div className="sm:flex sm:items-center">
+          <div className="px-4 sm:flex sm:items-center md:px-0">
             <div className="sm:flex-auto">
               <h1 className="text-xl font-semibold text-gray-900">Tables</h1>
               <p className="mt-2 text-sm text-gray-700">
@@ -309,219 +309,214 @@ const Page = () => {
             </div>
           </div>
           {/* Table */}
-          <div className="mt-8 flex flex-col">
-            <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
-              <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-                <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-                  <table className="min-w-full divide-y divide-gray-300">
-                    <thead className="bg-gray-50">
-                      <tr>
-                        <th
-                          scope="col"
-                          className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+          <div className="mt-8 overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+            <table className="min-w-full divide-y divide-gray-300">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th
+                    scope="col"
+                    className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                  >
+                    Name
+                  </th>
+                  <th
+                    scope="col"
+                    className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:inline-block"
+                  >
+                    Status
+                  </th>
+                  <th
+                    scope="col"
+                    className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:inline-block"
+                  >
+                    Requests
+                  </th>
+                  <th
+                    scope="col"
+                    className="hidden px-3 py-3.5 pl-6 text-left text-sm font-semibold text-gray-900 sm:inline-block"
+                  >
+                    TTL
+                  </th>
+                  <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
+                    <span className="sr-only">Edit</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white">
+                {base.data?.tables
+                  .sort((a, b) => a.name.localeCompare(b.name))
+                  .map((table, index) => (
+                    <tr
+                      key={table.id}
+                      className={index % 2 === 0 ? undefined : "bg-gray-50"}
+                    >
+                      <td className="whitespace-nowrap py-3.5 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                        <span>{table.name}</span>
+                        {table.active ? (
+                          <span className="ml-2 inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800 sm:hidden">
+                            Active
+                          </span>
+                        ) : (
+                          <span className="ml-2 inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-800 sm:hidden">
+                            Disabled
+                          </span>
+                        )}
+                      </td>
+                      <td className="hidden whitespace-nowrap px-3 py-3.5 text-sm text-gray-500 sm:inline-block">
+                        {table.active ? (
+                          <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
+                            Active
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-800">
+                            Disabled
+                          </span>
+                        )}
+                      </td>
+                      <td className="hidden whitespace-nowrap px-3 py-3.5 text-sm text-gray-500 sm:inline-block">
+                        Coming Soon
+                      </td>
+                      <td className="hidden whitespace-nowrap px-3 py-3.5 text-sm text-gray-500 sm:inline-block">
+                        {/* @ts-ignore */}
+                        <Tooltip
+                          title="You need to upgrade your plan to use this feature."
+                          position="top"
+                          trigger="mouseenter"
+                          disabled={
+                            subscription.data?.level === "Team" ||
+                            subscription.data?.level === "Business"
+                          }
                         >
-                          Name
-                        </th>
-                        <th
-                          scope="col"
-                          className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                        >
-                          Status
-                        </th>
-                        <th
-                          scope="col"
-                          className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                        >
-                          Requests
-                        </th>
-                        <th
-                          scope="col"
-                          className="px-3 py-3.5 pl-6 text-left text-sm font-semibold text-gray-900"
-                        >
-                          TTL
-                        </th>
-                        <th
-                          scope="col"
-                          className="relative py-3.5 pl-3 pr-4 sm:pr-6"
-                        >
-                          <span className="sr-only">Edit</span>
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="bg-white">
-                      {base.data?.tables
-                        .sort((a, b) => a.name.localeCompare(b.name))
-                        .map((table, index) => (
-                          <tr
-                            key={table.id}
-                            className={
-                              index % 2 === 0 ? undefined : "bg-gray-50"
+                          <select
+                            disabled={
+                              subscription.data?.level !== "Team" &&
+                              subscription.data?.level !== "Business"
                             }
-                          >
-                            <td className="whitespace-nowrap py-1.5 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                              <span>{table.name}</span>
-                            </td>
-                            <td className="whitespace-nowrap px-3 py-1.5 text-sm text-gray-500">
-                              {table.active ? (
-                                <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
-                                  Active
-                                </span>
-                              ) : (
-                                <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-800">
-                                  Disabled
-                                </span>
-                              )}
-                            </td>
-                            <td className="whitespace-nowrap px-3 py-1.5 text-sm text-gray-500">
-                              Coming Soon
-                            </td>
-                            <td className="whitespace-nowrap px-3 py-1.5 text-sm text-gray-500">
-                              {/* @ts-ignore */}
-                              <Tooltip
-                                title="You need to upgrade your plan to use this feature."
-                                position="top"
-                                trigger="mouseenter"
-                                disabled={
-                                  subscription.data?.level === "Team" ||
-                                  subscription.data?.level === "Business"
+                            className="mt-1 block w-full cursor-pointer rounded-md border-transparent bg-transparent py-2 pl-3 pr-10 text-base hover:border-gray-300 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                            defaultValue={table.ttl}
+                            onChange={async (e) => {
+                              await toast.promise(
+                                setTableTtl.mutateAsync({
+                                  tableId: table.id,
+                                  ttl: parseInt(e.target.value),
+                                }),
+                                {
+                                  loading: "Updating TTL...",
+                                  success: "TTL updated",
+                                  error: "Failed to update TTL",
                                 }
-                              >
-                                <select
-                                  disabled={
-                                    subscription.data?.level !== "Team" &&
-                                    subscription.data?.level !== "Business"
-                                  }
-                                  className="mt-1 block w-full cursor-pointer rounded-md border-transparent bg-transparent py-2 pl-3 pr-10 text-base hover:border-gray-300 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                                  defaultValue={table.ttl}
-                                  onChange={async (e) => {
-                                    await toast.promise(
-                                      setTableTtl.mutateAsync({
-                                        tableId: table.id,
-                                        ttl: parseInt(e.target.value),
-                                      }),
-                                      {
-                                        loading: "Updating TTL...",
-                                        success: "TTL updated",
-                                        error: "Failed to update TTL",
-                                      }
-                                    );
+                              );
 
-                                    base.refetch();
-                                  }}
-                                >
-                                  {ttlOptions.map((option) => (
-                                    <option
-                                      key={option.name}
-                                      value={option.seconds}
-                                    >
-                                      {option.name}
-                                    </option>
-                                  ))}
-                                </select>
-                              </Tooltip>
-                            </td>
-                            <td className="relative whitespace-nowrap py-1.5 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                              <div className="flex items-center justify-end gap-x-3">
-                                {/* Bust Cache */}
-                                <button
-                                  onClick={async () => {
-                                    await toast.promise(
-                                      bustTableCache.mutateAsync({
-                                        tableId: table.id,
-                                      }),
-                                      {
-                                        loading: "Busting cache...",
-                                        success: "Cache busted",
-                                        error: "Failed to bust cache",
-                                      }
-                                    );
+                              base.refetch();
+                            }}
+                          >
+                            {ttlOptions.map((option) => (
+                              <option key={option.name} value={option.seconds}>
+                                {option.name}
+                              </option>
+                            ))}
+                          </select>
+                        </Tooltip>
+                      </td>
+                      <td className="relative whitespace-nowrap py-1.5 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                        <div className="flex items-center justify-end gap-x-3">
+                          {/* Bust Cache */}
+                          <button
+                            onClick={async () => {
+                              await toast.promise(
+                                bustTableCache.mutateAsync({
+                                  tableId: table.id,
+                                }),
+                                {
+                                  loading: "Busting cache...",
+                                  success: "Cache busted",
+                                  error: "Failed to bust cache",
+                                }
+                              );
 
-                                    base.refetch();
-                                  }}
-                                  className="text-indigo-600 hover:text-indigo-900"
-                                >
-                                  {/* @ts-ignore */}
-                                  <Tooltip
-                                    title="Refresh data"
-                                    position="top"
-                                    trigger="mouseenter"
-                                  >
-                                    <ArrowPathIcon className="h-4 w-4" />
-                                  </Tooltip>
-                                </button>
-                                <button
-                                  onClick={async () => {
-                                    await toast.promise(
-                                      setTableStatus.mutateAsync({
-                                        tableId: table.id,
-                                        active: !table.active,
-                                      }),
-                                      {
-                                        loading: "Updating...",
-                                        success: table.active
-                                          ? "Table disabled"
-                                          : "Table enabled",
-                                        error: "Failed to update table",
-                                      }
-                                    );
+                              base.refetch();
+                            }}
+                            className="text-indigo-600 hover:text-indigo-900"
+                          >
+                            {/* @ts-ignore */}
+                            <Tooltip
+                              title="Refresh data"
+                              position="top"
+                              trigger="mouseenter"
+                            >
+                              <ArrowPathIcon className="h-4 w-4" />
+                            </Tooltip>
+                          </button>
+                          <button
+                            onClick={async () => {
+                              await toast.promise(
+                                setTableStatus.mutateAsync({
+                                  tableId: table.id,
+                                  active: !table.active,
+                                }),
+                                {
+                                  loading: "Updating...",
+                                  success: table.active
+                                    ? "Table disabled"
+                                    : "Table enabled",
+                                  error: "Failed to update table",
+                                }
+                              );
 
-                                    base.refetch();
-                                  }}
-                                  disabled={!base.data?.active}
-                                  className={`${
-                                    base.data?.active
-                                      ? "text-indigo-600 hover:text-indigo-900"
-                                      : "text-gray-500"
-                                  }`}
-                                >
-                                  {/* @ts-ignore */}
-                                  <Tooltip
-                                    title={
-                                      !base.data?.active
-                                        ? "Base is disabled"
-                                        : table.active
-                                        ? "Disable API access"
-                                        : "Enable API access"
-                                    }
-                                    position="top"
-                                    trigger="mouseenter"
-                                  >
-                                    {table.active ? (
-                                      <PauseIcon className="h-4 w-4" />
-                                    ) : (
-                                      <PlayIcon className="h-4 w-4" />
-                                    )}
-                                  </Tooltip>
-                                </button>
-                                <button
-                                  onClick={() => {
-                                    // Copy the API URL
-                                    navigator.clipboard.writeText(
-                                      `https://api.airproxy.app/${base.data?.id}/${table.id}`
-                                    );
+                              base.refetch();
+                            }}
+                            disabled={!base.data?.active}
+                            className={`${
+                              base.data?.active
+                                ? "text-indigo-600 hover:text-indigo-900"
+                                : "text-gray-500"
+                            }`}
+                          >
+                            {/* @ts-ignore */}
+                            <Tooltip
+                              title={
+                                !base.data?.active
+                                  ? "Base is disabled"
+                                  : table.active
+                                  ? "Disable API access"
+                                  : "Enable API access"
+                              }
+                              position="top"
+                              trigger="mouseenter"
+                            >
+                              {table.active ? (
+                                <PauseIcon className="h-4 w-4" />
+                              ) : (
+                                <PlayIcon className="h-4 w-4" />
+                              )}
+                            </Tooltip>
+                          </button>
+                          <button
+                            onClick={() => {
+                              // Copy the API URL
+                              navigator.clipboard.writeText(
+                                `https://api.airproxy.app/${base.data?.id}/${table.id}`
+                              );
 
-                                    toast.success("Copied the API URL");
-                                  }}
-                                  className="text-indigo-600 hover:text-indigo-900"
-                                >
-                                  {/* @ts-ignore */}
-                                  <Tooltip
-                                    title="Copy the API URL"
-                                    position="top"
-                                    trigger="mouseenter"
-                                  >
-                                    <ShareIcon className="h-4 w-4" />
-                                  </Tooltip>
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                        ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
+                              toast.success("Copied the API URL");
+                            }}
+                            className="text-indigo-600 hover:text-indigo-900"
+                          >
+                            {/* @ts-ignore */}
+                            <Tooltip
+                              title="Copy the API URL"
+                              position="top"
+                              trigger="mouseenter"
+                            >
+                              <ShareIcon className="h-4 w-4" />
+                            </Tooltip>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </main>

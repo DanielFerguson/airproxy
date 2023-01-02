@@ -1,5 +1,5 @@
 import { NextSeo, ArticleJsonLd } from "next-seo";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
 import { Dialog } from "@headlessui/react";
@@ -10,56 +10,55 @@ import { allArticles, type Article } from "contentlayer/generated";
 import { compareDesc } from "date-fns";
 import Image from "next/image";
 
-interface Props {
-  articles: Article[];
-}
-
-const Page = ({ articles }: Props) => {
+const Page = ({ articles }: { articles: Article[] }) => {
   const session = useSession();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
     <div>
-      <NextSeo
-        title="Blog | Airproxy"
-        description="We're here to help you take your Airtable game to the next level so you can deliver your value faster, futher, and more quickly."
-        canonical="https://www.airproxy.app/blog"
-        openGraph={{
-          type: "website",
-          url: "https://www.airproxy.app/blog",
-          title: "Blog | Airproxy",
-          description:
-            "We're here to help you take your Airtable game to the next level so you can deliver your value faster, futher, and more quickly.",
-          images: [
-            {
-              url: "https://www.airproxy.app/og.png",
-              type: "image/png",
-              width: 1200,
-              height: 680,
-              alt: "Airproxy helps you scale, fast.",
-            },
-          ],
-        }}
-        twitter={{
-          handle: "@thedannyferg",
-          site: "@airproxyapp",
-          cardType: "summary_large_image",
-        }}
-      />
-
-      {articles.map((article) => (
-        <ArticleJsonLd
-          key={`${article.title}-article-id`}
-          type="Blog"
-          url={`/blog/${article.slug}`}
-          title={article.title}
-          images={[article.images[0] ?? ""]}
-          datePublished={article.published}
-          dateModified={article.published}
-          authorName="Dan Ferguson"
-          description={article.description}
+      {/* SEO */}
+      <>
+        <NextSeo
+          title="Blog | Airproxy"
+          description="We're here to help you take your Airtable game to the next level so you can deliver your value faster, futher, and more quickly."
+          canonical="https://www.airproxy.app/blog"
+          openGraph={{
+            type: "website",
+            url: "https://www.airproxy.app/blog",
+            title: "Blog | Airproxy",
+            description:
+              "We're here to help you take your Airtable game to the next level so you can deliver your value faster, futher, and more quickly.",
+            images: [
+              {
+                url: "https://www.airproxy.app/og.png",
+                type: "image/png",
+                width: 1200,
+                height: 680,
+                alt: "Airproxy helps you scale, fast.",
+              },
+            ],
+          }}
+          twitter={{
+            handle: "@thedannyferg",
+            site: "@airproxyapp",
+            cardType: "summary_large_image",
+          }}
         />
-      ))}
+
+        {articles.map((article) => (
+          <ArticleJsonLd
+            key={`${article.title}-article-id`}
+            type="Blog"
+            url={`/blog/${article.slug}`}
+            title={article.title}
+            images={[article.images[0] ?? ""]}
+            datePublished={article.published}
+            dateModified={article.published}
+            authorName="Dan Ferguson"
+            description={article.description}
+          />
+        ))}
+      </>
 
       {/* Hero */}
       <div className="isolate">
@@ -129,16 +128,21 @@ const Page = ({ articles }: Props) => {
                 ))}
               </div>
               <div className="hidden lg:flex lg:min-w-0 lg:flex-1 lg:justify-end">
-                <Link
-                  href={
-                    session.status === "authenticated"
-                      ? "/app"
-                      : "/api/auth/signin"
-                  }
-                  className="inline-block rounded-lg px-3 py-1.5 text-sm font-semibold leading-6 text-gray-900 shadow-sm ring-1 ring-gray-900/10 hover:ring-gray-900/20"
-                >
-                  {session.status === "authenticated" ? "Dashboard" : "Log in"}
-                </Link>
+                {session.status === "authenticated" ? (
+                  <Link
+                    href="/app"
+                    className="inline-block rounded-lg px-3 py-1.5 text-sm font-semibold leading-6 text-gray-900 shadow-sm ring-1 ring-gray-900/10 hover:ring-gray-900/20"
+                  >
+                    Dashboard
+                  </Link>
+                ) : (
+                  <a
+                    href="/auth/signin"
+                    className="inline-block rounded-lg px-3 py-1.5 text-sm font-semibold leading-6 text-gray-900 shadow-sm ring-1 ring-gray-900/10 hover:ring-gray-900/20"
+                  >
+                    Log in
+                  </a>
+                )}
               </div>
             </nav>
             <Dialog as="div" open={mobileMenuOpen} onClose={setMobileMenuOpen}>
@@ -177,18 +181,21 @@ const Page = ({ articles }: Props) => {
                       ))}
                     </div>
                     <div className="py-6">
-                      <Link
-                        href={
-                          session.status === "authenticated"
-                            ? "/app"
-                            : "/api/auth/signin"
-                        }
-                        className="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-6 text-gray-900 hover:bg-gray-400/10"
-                      >
-                        {session.status === "authenticated"
-                          ? "Dashboard"
-                          : "Log in"}
-                      </Link>
+                      {session.status === "authenticated" ? (
+                        <Link
+                          href="/app"
+                          className="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-6 text-gray-900 hover:bg-gray-400/10"
+                        >
+                          Dashboard
+                        </Link>
+                      ) : (
+                        <a
+                          href="/auth/signin"
+                          className="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-6 text-gray-900 hover:bg-gray-400/10"
+                        >
+                          Log in
+                        </a>
+                      )}
                     </div>
                   </div>
                 </div>

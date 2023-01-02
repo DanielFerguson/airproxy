@@ -191,12 +191,12 @@ const Home: NextPage = () => {
                     Dashboard
                   </Link>
                 ) : (
-                  <button
-                    onClick={() => signIn()}
+                  <a
+                    href="/auth/signin"
                     className="inline-block rounded-lg px-3 py-1.5 text-sm font-semibold leading-6 text-gray-900 shadow-sm ring-1 ring-gray-900/10 hover:ring-gray-900/20"
                   >
                     Log in
-                  </button>
+                  </a>
                 )}
               </div>
             </nav>
@@ -246,12 +246,12 @@ const Home: NextPage = () => {
                           Dashboard
                         </Link>
                       ) : (
-                        <button
-                          onClick={() => signIn()}
+                        <a
+                          href="/auth/signin"
                           className="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-6 text-gray-900 hover:bg-gray-400/10"
                         >
                           Log in
-                        </button>
+                        </a>
                       )}
                     </div>
                   </div>
@@ -301,12 +301,12 @@ const Home: NextPage = () => {
                         Go to Dashboard
                       </Link>
                     ) : (
-                      <button
-                        onClick={() => signIn()}
+                      <a
+                        href="/auth/signin"
                         className="inline-block rounded-lg bg-[#544CE6] px-4 py-1.5 text-base font-semibold leading-7 text-white shadow-sm ring-1 ring-[#544CE6] hover:bg-indigo-700 hover:ring-indigo-700"
                       >
                         Get started today!
-                      </button>
+                      </a>
                     )}
                     {/* <Link
                         href="#"
@@ -390,9 +390,9 @@ const Home: NextPage = () => {
       </div>
 
       {/* Newsletter CTA */}
-      <div id="newsletter" className="relative z-30 -mt-24">
+      {/* <div id="newsletter" className="relative z-30 -mt-24">
         <Newsletter />
-      </div>
+      </div> */}
 
       {/* Stats */}
       {/* <div className="pt-12 sm:pt-16">
@@ -445,7 +445,7 @@ const Home: NextPage = () => {
       </div> */}
 
       {/* Features */}
-      <div id="features" className="relative py-24 sm:py-32 lg:py-40">
+      <div id="features" className="relative pb-24 sm:pb-32 lg:pb-40">
         <div className="mx-auto max-w-md px-6 text-center sm:max-w-3xl lg:max-w-7xl lg:px-8">
           <h2 className="text-lg font-semibold text-[#544CE6]">
             Innovate faster
@@ -495,7 +495,7 @@ const Home: NextPage = () => {
       </div>
 
       {/* Testimony */}
-      <div className="relative mx-auto max-w-7xl px-4 pb-48 sm:px-6 lg:px-8">
+      <div className="relative mx-auto max-w-7xl px-4 pb-24 sm:px-6 sm:pb-32 lg:px-8 lg:pb-40">
         <div className="relative">
           <img
             className="mx-auto h-8"
@@ -609,7 +609,7 @@ const Home: NextPage = () => {
 
               {session.status === "authenticated" ? (
                 <a
-                  href={`${tier.link}&checkout[custom][user_id]=${session.data.user?.id}&checkout[email]=${session.data.user?.email}&checkout[name]=${session.data.user?.name}&checkout[discount_code]=EARLYBIRD`}
+                  href={`${tier.link}&checkout[custom][user_id]=${session.data.user?.id}&checkout[email]=${session.data.user?.email}&checkout[discount_code]=EARLYBIRD`}
                   className={classNames(
                     tier.mostPopular
                       ? "bg-[#544CE6] text-white hover:bg-[#544CE6]"
@@ -620,8 +620,8 @@ const Home: NextPage = () => {
                   Get Started
                 </a>
               ) : (
-                <button
-                  onClick={() => signIn()}
+                <a
+                  href="/auth/signin"
                   className={classNames(
                     tier.mostPopular
                       ? "bg-[#544CE6] text-white hover:bg-[#544CE6]"
@@ -630,7 +630,7 @@ const Home: NextPage = () => {
                   )}
                 >
                   Get Started
-                </button>
+                </a>
               )}
             </div>
           ))}

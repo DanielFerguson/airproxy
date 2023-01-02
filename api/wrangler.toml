@@ -1,16 +1,32 @@
 name = "airproxy-api"
 main = "src/index.ts"
 compatibility_date = "2022-11-29"
-
-kv_namespaces = [
-  { binding = "KV_STORE", id = "d8f23409891f406585a9a63a894f2e84", preview_id = "c5def7564dc9459bb88116309cbb5c44" }
-]
-
-routes = [	
-  { pattern = "api.airproxy.app", custom_domain = true, zone_name = "airproxy.app" }
-]
+usage_model = "unbound"
 
 [vars]
 DB_HOST="aws.connect.psdb.cloud"
 DB_USER="5ng9u4mdhpsg1ue68r4h"
 DB_PASS="pscale_pw_dD4fBbK73QWFrSrT0gqvSWAEQtJ6fiobWqU4CDSPTb8"
+
+routes = [	
+  { pattern = "api.airproxy.app", custom_domain = true, zone_name = "airproxy.app" }
+]
+
+[[r2_buckets]]
+binding = 'BUCKET'
+bucket_name = 'airproxy'
+preview_bucket_name = 'airproxy-dev'
+
+[[kv_namespaces]]
+binding = "CACHE"
+id = "d8f23409891f406585a9a63a894f2e84"
+preview_id = "c5def7564dc9459bb88116309cbb5c44"
+
+[[queues.producers]] 
+queue = "airproxy" 
+binding = "QUEUE"
+
+[[queues.consumers]] 
+queue = "airproxy" 
+max_batch_timeout = 5
+max_batch_size = 5

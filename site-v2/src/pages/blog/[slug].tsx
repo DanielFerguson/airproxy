@@ -9,6 +9,7 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Dialog } from "@headlessui/react";
 import type { GetStaticProps } from "next";
 import Image from "next/image";
+import { signIn } from "next-auth/react";
 
 export async function getStaticPaths() {
   const paths = allArticles.map((article) => article.url);
@@ -35,11 +36,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   };
 };
 
-interface Props {
-  article: Article;
-}
-
-const ArticleLayout = ({ article }: Props) => {
+const ArticleLayout = ({ article }: { article: Article }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -189,12 +186,12 @@ const ArticleLayout = ({ article }: Props) => {
                 ))}
               </div>
               <div className="hidden lg:flex lg:min-w-0 lg:flex-1 lg:justify-end">
-                <Link
-                  href="/api/auth/signin"
+                <a
+                  href="/auth/signin"
                   className="inline-block rounded-lg px-3 py-1.5 text-sm font-semibold leading-6 text-gray-900 shadow-sm ring-1 ring-gray-900/10 hover:ring-gray-900/20"
                 >
                   Log in
-                </Link>
+                </a>
               </div>
             </nav>
             <Dialog as="div" open={mobileMenuOpen} onClose={setMobileMenuOpen}>
@@ -233,12 +230,12 @@ const ArticleLayout = ({ article }: Props) => {
                       ))}
                     </div>
                     <div className="py-6">
-                      <Link
-                        href="/api/auth/signin"
+                      <a
+                        href="/auth/signin"
                         className="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-6 text-gray-900 hover:bg-gray-400/10"
                       >
                         Log in
-                      </Link>
+                      </a>
                     </div>
                   </div>
                 </div>

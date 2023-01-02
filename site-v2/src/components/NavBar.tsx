@@ -10,12 +10,12 @@ const NavBar = () => {
   // const userHasSubscription = false;
 
   return (
-    <header className="mx-auto flex w-full max-w-3xl items-center justify-between pt-6">
+    <header className="mx-auto flex w-full max-w-3xl items-center justify-between px-4 pt-6 md:px-0">
       <div>
         <Link href="/app">
           <h1 className="flex items-center gap-2 font-[Chewy] text-2xl text-gray-800">
             <img src="/cloud.png" alt="Airproxy" className="h-16 w-16" />
-            <span>Airproxy</span>
+            {/* <span>Airproxy</span> */}
           </h1>
         </Link>
       </div>

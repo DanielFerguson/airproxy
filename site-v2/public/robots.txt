@@ -1,5 +1,4 @@
 User-agent: *
 Disallow: /app
-Disallow: /auth/signin
 Disallow: /cdn-cgi* 
 Sitemap: https://www.airproxy.app/sitemap.xml
