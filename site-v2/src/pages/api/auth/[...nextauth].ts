@@ -14,6 +14,22 @@ export const authOptions: NextAuthOptions = {
     // newUser: '/auth/new-user' // New users will be directed here on first sign in (leave the property out if not of interest)
   },
   callbacks: {
+    async signIn({ user, account, profile, email, credentials }) {
+      await fetch("https://app.loops.so/api/v1/contacts/update", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${env.LOOPS_BEARER_TOKEN}`,
+        },
+        body: JSON.stringify({
+          email: user.email,
+          name: user.name,
+          airproxy: true,
+        }),
+      });
+
+      return true;
+    },
     session({ session, user }) {
       if (session.user) {
         session.user.id = user.id;
