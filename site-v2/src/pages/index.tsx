@@ -1,6 +1,6 @@
 import { type NextPage } from "next";
 import Link from "next/link";
-import { signIn, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { Dialog } from "@headlessui/react";
 import { ComposableMap, Geographies, Geography } from "react-simple-maps";
@@ -13,7 +13,7 @@ import {
 } from "next-seo";
 import { classNames, isDiscountPeriod } from "../utils/helpers";
 import { navigation, features, pricing } from "../utils/globals";
-import Newsletter from "../components/Newsletter";
+// import Newsletter from "../components/Newsletter";
 import Footer from "../components/Footer";
 import dynamic from "next/dynamic";
 
@@ -191,12 +191,12 @@ const Home: NextPage = () => {
                     Dashboard
                   </Link>
                 ) : (
-                  <a
+                  <Link
                     href="/auth/signin"
                     className="inline-block rounded-lg px-3 py-1.5 text-sm font-semibold leading-6 text-gray-900 shadow-sm ring-1 ring-gray-900/10 hover:ring-gray-900/20"
                   >
                     Log in
-                  </a>
+                  </Link>
                 )}
               </div>
             </nav>
@@ -246,12 +246,12 @@ const Home: NextPage = () => {
                           Dashboard
                         </Link>
                       ) : (
-                        <a
+                        <Link
                           href="/auth/signin"
                           className="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-6 text-gray-900 hover:bg-gray-400/10"
                         >
                           Log in
-                        </a>
+                        </Link>
                       )}
                     </div>
                   </div>
@@ -301,12 +301,12 @@ const Home: NextPage = () => {
                         Go to Dashboard
                       </Link>
                     ) : (
-                      <a
+                      <Link
                         href="/auth/signin"
                         className="inline-block rounded-lg bg-[#544CE6] px-4 py-1.5 text-base font-semibold leading-7 text-white shadow-sm ring-1 ring-[#544CE6] hover:bg-indigo-700 hover:ring-indigo-700"
                       >
                         Get started today!
-                      </a>
+                      </Link>
                     )}
                     {/* <Link
                         href="#"
@@ -620,7 +620,7 @@ const Home: NextPage = () => {
                   Get Started
                 </a>
               ) : (
-                <a
+                <Link
                   href="/auth/signin"
                   className={classNames(
                     tier.mostPopular
@@ -630,7 +630,7 @@ const Home: NextPage = () => {
                   )}
                 >
                   Get Started
-                </a>
+                </Link>
               )}
             </div>
           ))}
