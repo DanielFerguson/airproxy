@@ -23,7 +23,7 @@ export default {
     const path = new URL(request.url).pathname;
     const [_, baseId, tableId, viewId] = path.split("/");
 
-    await env.QUEUE.send({
+    const pageViewRequest = env.QUEUE.send({
       action: "save-request",
       data: {
         createdAt: new Date().toISOString().slice(0, 19).replace("T", " "),
@@ -61,8 +61,6 @@ export default {
     //
     // Validate the request, if the base has an API token
     //
-
-    console.log(env);
 
     const accessDetailsResponse = await getAccessDetails(
       baseId,
@@ -110,22 +108,24 @@ export default {
     // Check whether data is in the cache
     //
 
-    const cacheKey = `data:${baseId}:${tableId}`;
+    let cacheKey = `data:${baseId}:${tableId}`;
 
-    // !
-    // if (viewId) cacheKey += `:${viewId}`;
-    // if (page) cacheKey += `:page-${page}`;
-    // if (pageSize) cacheKey += `:pageSize-${pageSize}`;
+    if (viewId) cacheKey += `:${viewId}`;
+    if (page) cacheKey += `:page-${page}`;
+    if (pageSize) cacheKey += `:pageSize-${pageSize}`;
 
-    // let cachedValue = await env.CACHE.get(cacheKey);
+    const cachedValue = await env.CACHE.get(cacheKey);
 
-    // if (cachedValue) {
-    //   return new Response(cachedValue, {
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //   });
-    // }
+    if (cachedValue) {
+      // Make sure the page view request is sent to the queue
+      await pageViewRequest;
+
+      return new Response(cachedValue, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    }
 
     //
     // Fetch the data from Airtable
@@ -181,6 +181,9 @@ export default {
     //
     // Return the data
     //
+
+    // Make sure the page view request is sent to the queue
+    await pageViewRequest;
 
     return new Response(JSON.stringify(data), {
       headers: {
