@@ -2,19 +2,44 @@ import { useRouter } from "next/router";
 import Head from "next/head";
 import toast, { Toaster } from "react-hot-toast";
 import NavBar from "../../../components/NavBar";
-import StatCard from "../../../components/StatCard";
 import {
   ArrowPathIcon,
-  InformationCircleIcon,
   PauseIcon,
   PlayIcon,
   ShareIcon,
 } from "@heroicons/react/20/solid";
 import { Tooltip } from "react-tippy";
 import millify from "millify";
-import { ClipboardDocumentIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import {
+  PauseCircleIcon,
+  PlayCircleIcon,
+  SignalIcon,
+  SignalSlashIcon,
+} from "@heroicons/react/24/outline";
 import { trpc } from "../../../utils/trpc";
 import { ttlOptions } from "../../../utils/globals";
+import {
+  Title,
+  Text,
+  ColGrid,
+  Card,
+  Flex,
+  Metric,
+  Block,
+  ButtonInline,
+  Table,
+  TableHead,
+  TableRow,
+  TableHeaderCell,
+  TableBody,
+  TableCell,
+  Badge,
+  Button,
+} from "@tremor/react";
+import { authOptions } from "../../../pages/api/auth/[...nextauth]";
+import { unstable_getServerSession } from "next-auth/next";
+import { GetServerSideProps } from "next/types";
+import Link from "next/link";
 
 const Page = () => {
   const router = useRouter();
@@ -44,241 +69,146 @@ const Page = () => {
       <Toaster />
       <NavBar />
 
-      <main className="mx-auto mt-16 grid max-w-3xl gap-y-12 pb-24">
-        {/* Header */}
-        <div className="flex items-center justify-between px-4 md:px-0">
-          <div className="flex items-center gap-5">
-            <h2 className="text-3xl font-medium text-gray-900">
-              {base.data?.name}
-            </h2>
-            {base.data?.active ? (
-              <span className="inline-flex items-center rounded-md bg-green-100 px-2.5 py-0.5 text-sm font-medium text-green-800">
-                <span className="relative -ml-0.5 mr-1.5 flex h-2 w-2">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75"></span>
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500"></span>
-                </span>
-                Active
-              </span>
-            ) : (
-              <span className="inline-flex items-center rounded-md bg-gray-100 px-2.5 py-0.5 text-sm font-medium text-gray-800">
-                <span className="relative -ml-0.5 mr-1.5 flex h-2 w-2">
-                  <span className="absolute inline-flex h-full w-full rounded-full bg-gray-400 opacity-75"></span>
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-gray-500"></span>
-                </span>
-                Disabled
-              </span>
-            )}
-          </div>
-
-          <div>
-            {/* Toggle Base Active Status */}
-            {/* @ts-ignore */}
-            <Tooltip
-              title={base.data?.active ? "Disable base" : "Enable base"}
-              position="top"
-              trigger="mouseenter"
-            >
-              <button
-                type="button"
-                onClick={async () => {
-                  if (!base.data) return;
-
-                  await toast.promise(
-                    setBaseStatus.mutateAsync({
-                      baseId: base.data.id,
-                      status: !base.data.active,
-                    }),
-                    {
-                      loading: "Updating base status...",
-                      success: base.data.active
-                        ? "Base disabled"
-                        : "Base enabled",
-                      error: "Failed to update base status",
-                    }
-                  );
-
-                  base.refetch();
-                }}
-              >
-                {base.data?.active ? (
-                  <PauseIcon className="h-5 w-5" />
-                ) : (
-                  <PlayIcon className="h-5 w-5" />
-                )}
-              </button>
-            </Tooltip>
-          </div>
-        </div>
+      <main className="mx-auto max-w-3xl px-4 pb-24 sm:mt-8">
+        <Title>{base.data?.name}</Title>
+        <Text>Interact with tables, and stats over the last 30 days.</Text>
 
         {/* Stats */}
-        <div className="px-4 md:px-0">
-          {/* Cards */}
-          <h3 className="text-lg font-medium leading-6 text-gray-900">
-            Last 30 days
-          </h3>
-          <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
-            <StatCard
-              name="Total Requests"
-              stat={
-                stats.data
-                  ? millify(stats.data.totalRequests, { precision: 2 })
-                  : "0"
-              }
-              limit={millify(
-                subscription.data ? subscription.data?.requestsPerMonth : 0,
-                { precision: 2 }
-              )}
-            />
-            <StatCard
-              name="Unique Users"
-              stat={
-                stats.data
+        <ColGrid numColsMd={3} gapX="gap-x-6" gapY="gap-y-6" marginTop="mt-6">
+          <Card decoration="top" decorationColor="indigo">
+            <Text>Total Requests</Text>
+            <Flex
+              justifyContent="justify-start"
+              alignItems="items-center"
+              spaceX="space-x-1.5"
+            >
+              <Metric>
+                {stats.data
+                  ? millify(stats.data?.totalRequests, { precision: 2 })
+                  : "0"}
+              </Metric>
+            </Flex>
+          </Card>
+          <Card decoration="top" decorationColor="indigo">
+            <Text>Unique Users</Text>
+            <Flex
+              justifyContent="justify-start"
+              alignItems="items-center"
+              spaceX="space-x-1.5"
+            >
+              <Metric>
+                {stats.data
                   ? millify(stats.data.uniqueUsersCount, { precision: 2 })
-                  : "0"
-              }
-            />
-            <StatCard
-              name="Protection Status"
-              stat={base.data?.apiToken ? "Protected" : "Unprotected"}
-            />
-          </dl>
+                  : "0"}
+              </Metric>
+            </Flex>
+          </Card>
+          {/* TODO */}
+          <Card
+            decoration="top"
+            decorationColor={base.data?.apiToken ? "emerald" : "red"}
+          >
+            <Text>Protection</Text>
+            <Metric>{base.data?.apiToken ? "Protected" : "Public"}</Metric>
+          </Card>
+        </ColGrid>
 
-          {/* Notification */}
-          {base.data?.requests && base.data?.requests.length === 0 && (
-            <div className="mt-4 rounded-md bg-blue-50 p-4">
-              <div className="flex">
-                <div className="flex-shrink-0">
-                  <InformationCircleIcon
-                    className="h-5 w-5 text-blue-400"
-                    aria-hidden="true"
-                  />
-                </div>
-                <div className="ml-3 flex-1 md:flex md:justify-between">
-                  <p className="text-sm text-blue-700">
-                    When you start receiving requests, you will be able to see
-                    stats here.
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* API Tokens */}
-        <div className="px-4 md:px-0">
-          {/* Header */}
-          <div className="sm:flex sm:items-center">
-            <div className="sm:flex-auto">
-              <h1 className="text-xl font-semibold text-gray-900">
-                {base.data?.apiToken ? "Protected" : "Unprotected"}
-              </h1>
-              <p className="mt-2 text-sm text-gray-700">
-                {base.data?.apiToken
+        {/* TODO: API Token */}
+        <Card marginTop="mt-6">
+          <Flex>
+            <Block>
+              <Title>API Token</Title>
+              <Text>
+                {subscription.data?.level !== "Team" &&
+                subscription.data?.level !== "Business"
+                  ? "You need a Team or Business subscription in order to create API tokens."
+                  : base.data?.apiToken
                   ? "The APIs under this base are protected with an API key."
                   : "The APIs under this base are unprotected and can be accessed by anyone."}
-              </p>
-            </div>
+              </Text>
+              {subscription.data?.level !== "Team" &&
+                subscription.data?.level !== "Business" && (
+                  <Link href="/#pricing">
+                    <Text color="indigo">
+                      Upgrade to get access to API keys.
+                    </Text>
+                  </Link>
+                )}
+            </Block>
+            <Button
+              type="button"
+              text={base.data?.apiToken ? "Remove Token" : "Create Token"}
+              disabled={
+                subscription.data?.level !== "Team" &&
+                subscription.data?.level !== "Business"
+              }
+              iconPosition="left"
+              size="sm"
+              color="indigo"
+              importance="secondary"
+              onClick={async () => {
+                if (!base.data?.id) return;
 
-            {/* Protected Actions */}
-            {base.data?.apiToken ? (
-              <div className="flex gap-3">
-                {/* @ts-ignore */}
-                <Tooltip title="Remove Key" position="top" trigger="mouseenter">
-                  <button
-                    type="button"
-                    onClick={async () => {
-                      if (!base.data?.apiToken) return;
-
-                      await toast.promise(
-                        removeToken.mutateAsync({ baseId: base.data.id }),
-                        {
-                          loading: "Removing API token...",
-                          success: "Removed API token.",
-                          error: "Failed to remove API.",
-                        }
-                      );
-
-                      base.refetch();
-                    }}
-                    className="inline-flex items-center rounded-md border border-white bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                  >
-                    <XMarkIcon className="h-5 w-5" />
-                  </button>
-                </Tooltip>
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (!base.data?.apiToken) return;
-
-                    navigator.clipboard.writeText(base.data.apiToken);
-                    toast.success("Copied to clipboard!");
-                  }}
-                  className="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                >
-                  <ClipboardDocumentIcon className="h-5 w-5" />
-                </button>
-              </div>
-            ) : (
-              <div className="flex gap-3">
-                {/* @ts-ignore */}
-                <Tooltip
-                  title="You need to upgrade your plan to use this feature."
-                  position="top"
-                  trigger="mouseenter"
-                  disabled={
-                    subscription.data?.level === "Team" ||
-                    subscription.data?.level === "Business"
-                  }
-                >
-                  <button
-                    type="button"
-                    disabled={
-                      subscription.data?.level !== "Team" &&
-                      subscription.data?.level !== "Business"
+                if (base.data?.apiToken) {
+                  // Remove token
+                  await toast.promise(
+                    removeToken.mutateAsync({
+                      baseId: base.data.id,
+                    }),
+                    {
+                      loading: "Removing API token...",
+                      success: "Removed API token.",
+                      error: "Failed to remove API.",
                     }
-                    onClick={async () => {
-                      if (!base.data?.id) return;
-
-                      await toast.promise(
-                        createToken.mutateAsync({ baseId: base.data.id }),
-                        {
-                          loading: "Creating token...",
-                          success: "Token created!",
-                          error: "Failed to create token",
-                        }
-                      );
-
-                      base.refetch();
-                    }}
-                    className={
-                      "inline-flex items-center rounded-md border border-white bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" +
-                      (subscription.data?.level !== "Team" &&
-                      subscription.data?.level !== "Business"
-                        ? " cursor-not-allowed opacity-50"
-                        : "")
+                  );
+                } else {
+                  // Create token
+                  await toast.promise(
+                    createToken.mutateAsync({ baseId: base.data.id }),
+                    {
+                      loading: "Creating token...",
+                      success: "Token created!",
+                      error: "Failed to create token",
                     }
-                  >
-                    Create token
-                  </button>
-                </Tooltip>
-              </div>
-            )}
-          </div>
-        </div>
+                  );
+                }
+
+                base.refetch();
+              }}
+            />
+          </Flex>
+        </Card>
 
         {/* Tables */}
-        <div>
-          {/* Header */}
-          <div className="px-4 sm:flex sm:items-center md:px-0">
-            <div className="sm:flex-auto">
-              <h1 className="text-xl font-semibold text-gray-900">Tables</h1>
-              <p className="mt-2 text-sm text-gray-700">
-                A list of all the tables under this base, and their controls.
-              </p>
-            </div>
-            <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-              <button
+        <Card marginTop="mt-6">
+          <Flex>
+            <Block>
+              <Title>Tables</Title>
+              <Text>A list of all the tables, and their controls.</Text>
+            </Block>
+            <Flex
+              alignItems="items-end"
+              justifyContent="justify-end"
+              spaceX="space-x-4"
+            >
+              {/* Toggle every table */}
+              <ButtonInline
                 type="button"
+                text={
+                  base.data &&
+                  base.data.tables.filter((table) => table.active).length > 0
+                    ? "Disable all"
+                    : "Enable all"
+                }
+                value=""
+                icon={
+                  base.data &&
+                  base.data.tables.filter((table) => table.active).length > 0
+                    ? PauseCircleIcon
+                    : PlayCircleIcon
+                }
+                iconPosition="left"
+                color="indigo"
                 onClick={async () => {
                   if (!base.data) return;
 
@@ -299,84 +229,44 @@ const Page = () => {
 
                   base.refetch();
                 }}
-                className="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              >
-                {base.data &&
-                base.data.tables.filter((table) => table.active).length > 0
-                  ? "Disable all"
-                  : "Enable all"}
-              </button>
-            </div>
-          </div>
-          {/* Table */}
-          <div className="mt-8 overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-            <table className="min-w-full divide-y divide-gray-300">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th
-                    scope="col"
-                    className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                  >
-                    Name
-                  </th>
-                  <th
-                    scope="col"
-                    className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:inline-block"
-                  >
-                    Status
-                  </th>
-                  <th
-                    scope="col"
-                    className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:inline-block"
-                  >
-                    Requests
-                  </th>
-                  <th
-                    scope="col"
-                    className="hidden px-3 py-3.5 pl-6 text-left text-sm font-semibold text-gray-900 sm:inline-block"
-                  >
-                    TTL
-                  </th>
-                  <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
-                    <span className="sr-only">Edit</span>
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white">
-                {base.data?.tables
+              />
+            </Flex>
+          </Flex>
+          <Table marginTop="mt-5">
+            <TableHead>
+              <TableRow>
+                <TableHeaderCell>Name</TableHeaderCell>
+                <TableHeaderCell>Status</TableHeaderCell>
+                <TableHeaderCell>Requests</TableHeaderCell>
+                <TableHeaderCell>TTL</TableHeaderCell>
+                <TableHeaderCell>
+                  <span className="sr-only">Actions</span>
+                </TableHeaderCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {/* @ts-ignore */}
+              {base.data &&
+                base.data.tables
                   .sort((a, b) => a.name.localeCompare(b.name))
-                  .map((table, index) => (
-                    <tr
-                      key={table.id}
-                      className={index % 2 === 0 ? undefined : "bg-gray-50"}
-                    >
-                      <td className="whitespace-nowrap py-3.5 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                        <span>{table.name}</span>
-                        {table.active ? (
-                          <span className="ml-2 inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800 sm:hidden">
-                            Active
-                          </span>
-                        ) : (
-                          <span className="ml-2 inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-800 sm:hidden">
-                            Disabled
-                          </span>
-                        )}
-                      </td>
-                      <td className="hidden whitespace-nowrap px-3 py-3.5 text-sm text-gray-500 sm:inline-block">
-                        {table.active ? (
-                          <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
-                            Active
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-800">
-                            Disabled
-                          </span>
-                        )}
-                      </td>
-                      <td className="hidden whitespace-nowrap px-3 py-3.5 text-sm text-gray-500 sm:inline-block">
-                        Coming Soon
-                      </td>
-                      <td className="hidden whitespace-nowrap px-3 py-3.5 text-sm text-gray-500 sm:inline-block">
+                  .map((table) => (
+                    <TableRow key={table.id}>
+                      <TableCell>
+                        <Text>{table.name}</Text>
+                      </TableCell>
+                      <TableCell>
+                        <Text>
+                          <Badge
+                            text={table.active ? "Active" : "Disabled"}
+                            color={table.active ? "emerald" : "gray"}
+                            icon={table.active ? SignalIcon : SignalSlashIcon}
+                          />
+                        </Text>
+                      </TableCell>
+                      <TableCell>
+                        <Text>Coming Soon</Text>
+                      </TableCell>
+                      <TableCell>
                         {/* @ts-ignore */}
                         <Tooltip
                           title="You need to upgrade your plan to use this feature."
@@ -417,111 +307,129 @@ const Page = () => {
                             ))}
                           </select>
                         </Tooltip>
-                      </td>
-                      <td className="relative whitespace-nowrap py-1.5 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                        <div className="flex items-center justify-end gap-x-3">
-                          {/* Bust Cache */}
-                          <button
-                            onClick={async () => {
-                              await toast.promise(
-                                bustTableCache.mutateAsync({
-                                  tableId: table.id,
-                                }),
-                                {
-                                  loading: "Busting cache...",
-                                  success: "Cache busted",
-                                  error: "Failed to bust cache",
-                                }
-                              );
-
-                              base.refetch();
-                            }}
-                            className="text-indigo-600 hover:text-indigo-900"
+                      </TableCell>
+                      <TableCell>
+                        <Flex>
+                          {/* Bust cache */}
+                          {/* @ts-ignore */}
+                          <Tooltip
+                            title="Bust Cache"
+                            position="top"
+                            trigger="mouseenter"
                           >
-                            {/* @ts-ignore */}
-                            <Tooltip
-                              title="Refresh data"
-                              position="top"
-                              trigger="mouseenter"
-                            >
-                              <ArrowPathIcon className="h-4 w-4" />
-                            </Tooltip>
-                          </button>
-                          <button
-                            onClick={async () => {
-                              await toast.promise(
-                                setTableStatus.mutateAsync({
-                                  tableId: table.id,
-                                  active: !table.active,
-                                }),
-                                {
-                                  loading: "Updating...",
-                                  success: table.active
-                                    ? "Table disabled"
-                                    : "Table enabled",
-                                  error: "Failed to update table",
-                                }
-                              );
+                            <ButtonInline
+                              type="button"
+                              icon={ArrowPathIcon}
+                              iconPosition="left"
+                              size="xs"
+                              color="indigo"
+                              text=""
+                              onClick={async () => {
+                                await toast.promise(
+                                  bustTableCache.mutateAsync({
+                                    tableId: table.id,
+                                  }),
+                                  {
+                                    loading: "Busting cache...",
+                                    success: "Cache busted",
+                                    error: "Failed to bust cache",
+                                  }
+                                );
 
-                              base.refetch();
-                            }}
-                            disabled={!base.data?.active}
-                            className={`${
-                              base.data?.active
-                                ? "text-indigo-600 hover:text-indigo-900"
-                                : "text-gray-500"
-                            }`}
+                                base.refetch();
+                              }}
+                            />
+                          </Tooltip>
+                          {/* Disable table */}
+                          {/* @ts-ignore */}
+                          <Tooltip
+                            title={table.active ? "Disable" : "Activate"}
+                            position="top"
+                            trigger="mouseenter"
                           >
-                            {/* @ts-ignore */}
-                            <Tooltip
-                              title={
-                                !base.data?.active
-                                  ? "Base is disabled"
-                                  : table.active
-                                  ? "Disable API access"
-                                  : "Enable API access"
-                              }
-                              position="top"
-                              trigger="mouseenter"
-                            >
-                              {table.active ? (
-                                <PauseIcon className="h-4 w-4" />
-                              ) : (
-                                <PlayIcon className="h-4 w-4" />
-                              )}
-                            </Tooltip>
-                          </button>
-                          <button
-                            onClick={() => {
-                              // Copy the API URL
-                              navigator.clipboard.writeText(
-                                `https://api.airproxy.app/${base.data?.id}/${table.id}`
-                              );
+                            <ButtonInline
+                              type="button"
+                              icon={table.active ? PauseIcon : PlayIcon}
+                              iconPosition="left"
+                              size="xs"
+                              color="indigo"
+                              text=""
+                              onClick={async () => {
+                                await toast.promise(
+                                  setTableStatus.mutateAsync({
+                                    tableId: table.id,
+                                    active: !table.active,
+                                  }),
+                                  {
+                                    loading: "Updating...",
+                                    success: table.active
+                                      ? "Table disabled"
+                                      : "Table enabled",
+                                    error: "Failed to update table",
+                                  }
+                                );
 
-                              toast.success("Copied the API URL");
-                            }}
-                            className="text-indigo-600 hover:text-indigo-900"
+                                base.refetch();
+                              }}
+                            />
+                          </Tooltip>
+                          {/* Copy API key */}
+                          {/* @ts-ignore */}
+                          <Tooltip
+                            title="Copy API URL"
+                            position="top"
+                            trigger="mouseenter"
                           >
-                            {/* @ts-ignore */}
-                            <Tooltip
-                              title="Copy the API URL"
-                              position="top"
-                              trigger="mouseenter"
-                            >
-                              <ShareIcon className="h-4 w-4" />
-                            </Tooltip>
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
+                            <ButtonInline
+                              type="button"
+                              icon={ShareIcon}
+                              iconPosition="left"
+                              size="xs"
+                              color="indigo"
+                              text=""
+                              onClick={() => {
+                                // Copy the API URL
+                                navigator.clipboard.writeText(
+                                  `https://api.airproxy.app/${base.data?.id}/${table.id}`
+                                );
+
+                                toast.success("Copied the API URL");
+                              }}
+                            />
+                          </Tooltip>
+                        </Flex>
+                      </TableCell>
+                    </TableRow>
                   ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+            </TableBody>
+          </Table>
+        </Card>
       </main>
     </div>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await unstable_getServerSession(
+    context.req,
+    context.res,
+    authOptions
+  );
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/auth/signin",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      session,
+    },
+  };
 };
 
 export default Page;

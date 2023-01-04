@@ -6,12 +6,32 @@ import { Dialog, Transition } from "@headlessui/react";
 import {
   ExclamationTriangleIcon,
   KeyIcon,
+  PlusCircleIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { trpc } from "../../utils/trpc";
 import { TrashIcon } from "@heroicons/react/20/solid";
 import type { PersonalAccessToken } from "@prisma/client";
 import { useRouter } from "next/router";
+import { GetServerSideProps } from "next/types";
+import { unstable_getServerSession } from "next-auth/next";
+import { authOptions } from "../api/auth/[...nextauth]";
+import {
+  Title,
+  Text,
+  Card,
+  Flex,
+  ButtonInline,
+  Table,
+  TableHead,
+  TableRow,
+  TableHeaderCell,
+  TableBody,
+  TableCell,
+  Block,
+  ColGrid,
+  Button,
+} from "@tremor/react";
 
 const Page = () => {
   const router = useRouter();
@@ -35,7 +55,6 @@ const Page = () => {
       </Head>
 
       <Toaster />
-
       <NavBar />
 
       {/* Confirm Delete Modal */}
@@ -355,142 +374,122 @@ const Page = () => {
         </Dialog>
       </Transition.Root>
 
-      <main className="mx-auto mt-16 grid w-full max-w-3xl px-4 pb-24 sm:gap-y-12 md:px-0">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-5">
-            <h2 className="text-3xl font-medium text-gray-900">Settings</h2>
-          </div>
-        </div>
+      <main className="mx-auto max-w-3xl px-4 pb-24 sm:mt-8">
+        <Title>Settings</Title>
+        <Text>Gain total control over your account from here.</Text>
 
         {/* Personal Access Tokens */}
-        <div className="mt-8">
-          <div className="sm:flex sm:items-center">
-            <div className="sm:flex-auto">
-              <h1 className="text-xl font-semibold text-gray-900">
-                Personal Access Tokens
-              </h1>
-              <p className="mt-2 text-sm text-gray-700">
+        <Card marginTop="mt-6">
+          <Flex>
+            <Block>
+              <Title>Personal Access Tokens</Title>
+              <Text>
                 A list of all the Personal Access Tokens attached to your
                 account.
-              </p>
-            </div>
-            <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-              <button
+              </Text>
+            </Block>
+            <Flex justifyContent="justify-end">
+              <ButtonInline
                 type="button"
+                text="Add token"
+                value=""
+                icon={PlusCircleIcon}
+                iconPosition="left"
+                color="indigo"
                 onClick={() => setAddToken(true)}
-                className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
-              >
-                Add token
-              </button>
-            </div>
-          </div>
-          <div className="mt-8 flex flex-col">
-            <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
-              <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-                <table className="min-w-full divide-y divide-gray-300">
-                  <thead>
-                    <tr>
-                      <th
-                        scope="col"
-                        className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6 md:pl-0"
-                      >
-                        Token
-                      </th>
-                      <th
-                        scope="col"
-                        className="py-3.5 px-3 text-left text-sm font-semibold text-gray-900"
-                      >
-                        Created
-                      </th>
-                      <th
-                        scope="col"
-                        className="py-3.5 px-3 text-left text-sm font-semibold text-gray-900"
-                      >
-                        Bases
-                      </th>
-                      <th
-                        scope="col"
-                        className="py-3.5 px-3 text-left text-sm font-semibold text-gray-900"
-                      >
-                        Tables
-                      </th>
-                      <th
-                        scope="col"
-                        className="relative py-3.5 pl-3 pr-4 sm:pr-6 md:pr-0"
-                      >
-                        <span className="sr-only">Actions</span>
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-200">
-                    {personalAccessTokens.data?.map((token) => (
-                      <tr key={token.id}>
-                        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 md:pl-0">
-                          {token.token.slice(0, 12) + "..."}
-                        </td>
-                        <td className="whitespace-nowrap py-4 px-3 text-sm text-gray-500">
-                          {token.createdAt.toDateString()}
-                        </td>
-                        <td className="whitespace-nowrap py-4 px-3 text-sm text-gray-500">
-                          {/* {token.bases.length} */}-
-                        </td>
-                        <td className="whitespace-nowrap py-4 px-3 text-sm text-gray-500">
-                          {/* {token.bases.reduce(
-                            (total, base) => total + base.tables.length,
-                            0
-                          )} */}
-                          -
-                        </td>
-                        <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6 md:pr-0">
-                          <button
-                            className="pr-4 text-indigo-600 hover:text-indigo-900"
-                            onClick={() => setSelectedToken(token)}
-                          >
-                            <TrashIcon className="h-3 w-3" />
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
+              />
+            </Flex>
+          </Flex>
+          <Table marginTop="mt-5">
+            <TableHead>
+              <TableRow>
+                <TableHeaderCell>Token</TableHeaderCell>
+                <TableHeaderCell>Created</TableHeaderCell>
+                <TableHeaderCell>Bases</TableHeaderCell>
+                <TableHeaderCell>Tables</TableHeaderCell>
+                <TableHeaderCell>
+                  <span className="sr-only">Actions</span>
+                </TableHeaderCell>
+              </TableRow>
+            </TableHead>
+            {personalAccessTokens.data && (
+              <TableBody>
+                {personalAccessTokens.data?.map((token) => (
+                  <TableRow key={token.id}>
+                    <TableCell>
+                      <Text>{token.token.slice(0, 12) + "..."}</Text>
+                    </TableCell>
+                    <TableCell>
+                      <Text>{token.createdAt.toDateString()}</Text>
+                    </TableCell>
+                    <TableCell>
+                      <Text>{/* {token.bases.length} */}-</Text>
+                    </TableCell>
+                    <TableCell>
+                      <Text>{/* {token.bases.length} */}-</Text>
+                    </TableCell>
+                    <TableCell>
+                      <Flex justifyContent="justify-end">
+                        <ButtonInline
+                          text={""}
+                          icon={TrashIcon}
+                          color="red"
+                          size="sm"
+                          onClick={() => setSelectedToken(token)}
+                        />
+                      </Flex>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            )}
+          </Table>
+        </Card>
 
-        {/* Actions */}
-        <div className="items-between mt-8 flex w-full flex-col justify-center">
-          <div className="sm:flex sm:items-center">
-            <div className="sm:flex-auto">
-              <h1 className="text-xl font-semibold text-gray-900">
-                Account Actions
-              </h1>
-              <p className="mt-2 text-sm text-gray-700">
-                Actions that can be performed on your account.
-              </p>
-            </div>
-          </div>
-          {/* Delete Your Account */}
-          <div className="mt-8 flex w-full items-center justify-between">
-            <label
-              htmlFor="username"
-              className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
-            >
-              Delete Your Account
-            </label>
-            <button
-              type="button"
+        {/* Account Actions */}
+        <Card marginTop="mt-6">
+          <Title>Account Actions</Title>
+          <Text>Actions that can be performed on your account.</Text>
+          <Flex
+            alignItems="items-center"
+            justifyContent="justify-between"
+            marginTop="mt-5"
+          >
+            <Text>Delete Your Account</Text>
+            <Button
+              text="Delete account"
+              icon={TrashIcon}
+              color="red"
               onClick={() => setConfirmDelete(true)}
-              className="inline-flex items-center rounded-md border border-transparent bg-red-100 px-4 py-2 text-sm font-medium text-red-700 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-            >
-              Delete Account
-            </button>
-          </div>
-        </div>
+            />
+          </Flex>
+        </Card>
       </main>
     </div>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await unstable_getServerSession(
+    context.req,
+    context.res,
+    authOptions
+  );
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/auth/signin",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      session,
+    },
+  };
 };
 
 export default Page;

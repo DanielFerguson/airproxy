@@ -4,21 +4,49 @@ import {
   PauseIcon,
   PlayIcon,
   ArrowPathIcon,
-  KeyIcon as SolidKeyIcon,
 } from "@heroicons/react/20/solid";
-import { KeyIcon } from "@heroicons/react/24/outline";
+import {
+  InformationCircleIcon,
+  KeyIcon,
+  LockClosedIcon,
+  LockOpenIcon,
+  PauseCircleIcon,
+  PlayCircleIcon,
+  SignalIcon,
+  SignalSlashIcon,
+} from "@heroicons/react/24/outline";
 import toast, { Toaster } from "react-hot-toast";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Tooltip } from "react-tippy";
 import NavBar from "../../components/NavBar";
 import Link from "next/link";
-import StatCard from "../../components/StatCard";
 import millify from "millify";
 import { trpc } from "../../utils/trpc";
 import { unstable_getServerSession } from "next-auth/next";
 import { authOptions } from "../api/auth/[...nextauth]";
-import type { GetServerSideProps } from "next";
-import type { NextPage } from "next";
+import type { NextPage, GetServerSideProps } from "next";
+import "@tremor/react/dist/esm/tremor.css";
+import {
+  Card,
+  Title,
+  Text,
+  ColGrid,
+  Block,
+  Metric,
+  Callout,
+  AreaChart,
+  Table,
+  TableHead,
+  TableRow,
+  TableHeaderCell,
+  TableBody,
+  TableCell,
+  Badge,
+  Flex,
+  ButtonInline,
+  TextInput,
+  Button,
+} from "@tremor/react";
 
 const Page: NextPage = () => {
   const [keyValue, setKeyValue] = useState("");
@@ -30,20 +58,30 @@ const Page: NextPage = () => {
   const setAllBaseStatus = trpc.base.setAllStatus.useMutation();
   const refetchBases = trpc.base.refetch.useMutation();
   const subscription = trpc.user.subscription.useQuery();
+  const requests = trpc.request.getAll.useQuery();
+
+  // Every 5 seconds, update the timestamps and refetch the requests
+  useEffect(() => {
+    const interval = setInterval(() => {
+      requests.refetch();
+      stats.refetch();
+    }, 5 * 1000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
-    <div>
+    <>
       <Head>
         <title>Airproxy | Airtable in production, fearlessly.</title>
       </Head>
 
       <Toaster />
-
       <NavBar />
 
       {/* Register key */}
       {bases.data?.length === 0 && (
-        <main className="mx-auto mt-16 max-w-3xl px-4 md:px-0">
+        <main className="mx-auto max-w-3xl px-4 pb-24 sm:mt-8">
           {/* Register a Token */}
           <div className="text-center">
             <KeyIcon className="mx-auto h-12 w-12 text-gray-400" />
@@ -61,19 +99,27 @@ const Page: NextPage = () => {
                 available here.
               </a>
             </p>
-            <div className="mx-auto mt-6 flex max-w-md rounded-md shadow-sm">
-              <div className="relative flex flex-grow items-stretch focus-within:z-10">
-                <input
-                  type="password"
-                  value={keyValue}
-                  onChange={(e) => setKeyValue(e.target.value)}
-                  className="block w-full rounded-none rounded-l-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                  placeholder="pat8jK..."
-                />
-              </div>
-              <button
+            <Flex
+              spaceX="space-x-3"
+              alignItems="items-center"
+              justifyContent="justify-center"
+              marginTop="mt-6"
+            >
+              <TextInput
+                onChange={(e) => setKeyValue(e.target.value)}
+                placeholder="pak..."
+                maxWidth="max-w-xs"
+              />
+              <Button
                 type="button"
+                text="Add key"
+                icon={PlusIcon}
+                iconPosition="left"
+                size="sm"
+                color="indigo"
+                importance="primary"
                 onClick={async () => {
+                  console.log(keyValue);
                   await toast.promise(
                     addPersonalAccessToken.mutateAsync({ token: keyValue }),
                     {
@@ -86,15 +132,8 @@ const Page: NextPage = () => {
                   setKeyValue("");
                   bases.refetch();
                 }}
-                className="relative -ml-px inline-flex items-center space-x-2 rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-              >
-                <PlusIcon
-                  className="h-5 w-5 text-gray-400"
-                  aria-hidden="true"
-                />
-                <span>Add key</span>
-              </button>
-            </div>
+              />
+            </Flex>
           </div>
           <div className="mx-auto mt-8 max-w-lg text-center">
             <p className="text-sm text-gray-500">
@@ -114,164 +153,175 @@ const Page: NextPage = () => {
       )}
 
       {bases.data && bases.data.length > 0 && (
-        <main className="mx-auto mt-6 grid max-w-3xl gap-y-12 pb-24 sm:mt-16">
+        <main className="mx-auto max-w-3xl px-4 pb-24 sm:mt-8">
+          <Title>Airproxy</Title>
+          <Text>
+            See an overview of all your bases, and stats over the last 30 days.
+          </Text>
+
           {/* Stats */}
-          <div className="px-4 md:px-0">
-            {/* Cards */}
-            <h3 className="text-lg font-medium leading-6 text-gray-900">
-              Last 30 days
-            </h3>
-            <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
-              <StatCard
-                name="Total Requests"
-                stat={
-                  stats.data
-                    ? millify(stats.data?.totalRequests, { precision: 2 })
-                    : "0"
-                }
-                limit={millify(
-                  subscription.data ? subscription.data.requestsPerMonth : 0,
-                  { precision: 2 }
-                )}
-              />
-              <StatCard
-                name="Unique Users"
-                stat={
-                  stats.data
-                    ? millify(stats.data.uniqueUsersCount, { precision: 2 })
-                    : "0"
-                }
-                limit={millify(
-                  subscription.data ? subscription.data.uniqueUsersPerMonth : 0,
-                  { precision: 2 }
-                )}
-              />
-              {/* <StatCard name="Something" stat="Add" /> */}
-            </dl>
-
-            {/* Chart */}
-            {/* <div className="mt-5 w-full overflow-hidden rounded-lg bg-white shadow">
-              <div className="px-4 py-5 sm:p-6">
-                <h3 className="text-base font-normal text-gray-900">
-                  Requests (Live)
-                </h3>
-              </div>
-
-              <ComposableMap
-                projection="geoMercator"
-                width={1000}
-                height={600}
-                projectionConfig={{
-                  rotate: [-10, 0, 0],
-                  scale: 147,
-                }}
+          <ColGrid numColsMd={3} gapX="gap-x-6" gapY="gap-y-6" marginTop="mt-6">
+            <Card decoration="top" decorationColor="indigo">
+              <Text>Total Requests</Text>
+              <Flex
+                justifyContent="justify-start"
+                alignItems="items-center"
+                spaceX="space-x-1.5"
               >
-                <Geographies geography={geoUrl}>
-                  {({ geographies }) =>
-                    geographies.map((geo) => (
-                      <Geography
-                        key={geo.rsmKey}
-                        geography={geo}
-                        fill="#FFF"
-                        stroke="#4f46e5"
-                        strokeWidth={1.25}
-                      />
-                    ))
-                  }
-                </Geographies>
-                {recentRequests &&
-                  recentRequests.map(({ id, latitude, longitude }) => (
-                    <Marker key={id} coordinates={[longitude, latitude]}>
-                      <circle
-                        r="12"
-                        className="animate-ping-once fill-indigo-600"
-                      />
-                    </Marker>
-                  ))}
-              </ComposableMap>
+                <Metric>
+                  {stats.data
+                    ? millify(stats.data?.totalRequests, { precision: 2 })
+                    : "0"}
+                </Metric>
+                <Text>
+                  /{" "}
+                  {subscription.data
+                    ? millify(subscription.data.requestsPerMonth)
+                    : "0"}
+                </Text>
+              </Flex>
+            </Card>
+            <Card decoration="top" decorationColor="indigo">
+              <Text>Unique Users</Text>
+              <Flex
+                justifyContent="justify-start"
+                alignItems="items-center"
+                spaceX="space-x-1.5"
+              >
+                <Metric>
+                  {stats.data
+                    ? millify(stats.data.uniqueUsersCount, { precision: 2 })
+                    : "0"}
+                </Metric>
+                <Text>
+                  /{" "}
+                  {subscription.data
+                    ? millify(subscription.data.uniqueUsersPerMonth)
+                    : "0"}
+                </Text>
+              </Flex>
+            </Card>
+            {/* TODO */}
+            {/* <Card decoration="top" decorationColor="indigo">
+              <Text>Coming Soon</Text>
+              <Metric>Something</Metric>
+            </Card> */}
+          </ColGrid>
 
-              {requests.data && requests.data.length > 0 && (
-                <div className="relative -mt-16 h-48">
-                  <ResponsiveContainer>
-                    <BarChart
-                      data={requests.data}
-                      margin={{
-                        top: 0,
-                        right: 0,
-                        bottom: 0,
-                        left: 0,
-                      }}
-                    >
-                      <Bar dataKey="requests" fill="#8884d8" />
-                      <ChartTooltip
-                        formatter={(value, name, props) => [value, "Requests"]}
-                      />
-                      <YAxis type="number" domain={[0, "dataMax"]} hide />
-                      <XAxis dataKey="time" hide />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-              )}
+          {/* Requests Charts */}
+          <Block marginTop="mt-6">
+            <Card>
+              <Title>Requests</Title>
+              <Text>
+                Live requests over the last 30 minutes. Time is in UTC.
+              </Text>
+
+              <AreaChart
+                data={requests.data as { Date: string; Requests: number }[]}
+                categories={["Requests"]}
+                dataKey="Date"
+                height="h-72"
+                colors={["indigo"]}
+                marginTop="mt-4"
+              />
 
               {requests.data && requests.data.length === 0 && (
-                <div className="rounded-md bg-blue-50 p-4">
-                  <div className="flex">
-                    <div className="flex-shrink-0">
-                      <InformationCircleIcon
-                        className="h-5 w-5 text-blue-400"
-                        aria-hidden="true"
-                      />
-                    </div>
-                    <div className="ml-3 flex-1 md:flex md:justify-between">
-                      <p className="text-sm text-blue-700">
-                        When you start receiving requests, you will be able to
-                        monitor them here.
-                      </p>
-                    </div>
-                  </div>
-                </div>
+                <Callout
+                  title="Where are my cool charts, dude?"
+                  text="When you start receiving requests, you will be able to monitor them here."
+                  icon={InformationCircleIcon}
+                  color="yellow"
+                  height=""
+                  marginTop="mt-5"
+                />
               )}
-            </div> */}
-          </div>
+
+              {/* TODO */}
+              {/* <ComposableMap
+                  projection="geoMercator"
+                  width={1000}
+                  height={600}
+                  projectionConfig={{
+                    rotate: [-10, 0, 0],
+                    scale: 147,
+                  }}
+                >
+                  <Geographies geography={geoUrl}>
+                    {({ geographies }) =>
+                      geographies.map((geo) => (
+                        <Geography
+                          key={geo.rsmKey}
+                          geography={geo}
+                          fill="#FFF"
+                          stroke="#4f46e5"
+                          strokeWidth={1.25}
+                        />
+                      ))
+                    }
+                  </Geographies>
+                  {recentRequests &&
+                    recentRequests.map(({ id, latitude, longitude }) => (
+                      <Marker key={id} coordinates={[longitude, latitude]}>
+                        <circle
+                          r="12"
+                          className="animate-ping-once fill-indigo-600"
+                        />
+                      </Marker>
+                    ))}
+                </ComposableMap> */}
+            </Card>
+          </Block>
 
           {/* Bases */}
-          <div>
-            {/* Header */}
-            <div className="px-4 sm:flex sm:items-center md:px-0">
-              <div className="sm:flex-auto">
-                <h1 className="text-xl font-semibold text-gray-900">Bases</h1>
-                <p className="mt-2 text-sm text-gray-700">
-                  A list of all the bases under your Personal Access Tokens, and
-                  their controls.
-                </p>
-              </div>
-              <div className="mt-4 flex sm:mt-0 sm:ml-16 sm:flex-none">
-                {/* @ts-ignore */}
-                <Tooltip
-                  title="Reimport Bases"
-                  placement="top"
-                  trigger="mouseenter"
-                >
-                  <button
-                    type="button"
-                    onClick={async () => {
-                      if (!bases.data) return;
-
-                      await toast.promise(refetchBases.mutateAsync(), {
-                        loading: "Refetching bases...",
-                        success: "Refetched bases",
-                        error: "Failed to fetch bases",
-                      });
-
-                      bases.refetch();
-                    }}
-                    className="mr-2 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                  >
-                    <ArrowPathIcon className="h-5 w-5" />
-                  </button>
-                </Tooltip>
-                <button
+          <Card marginTop="mt-6">
+            <Flex>
+              <Block>
+                <Title>Bases</Title>
+                <Text>A list of all the bases, and their controls.</Text>
+              </Block>
+              <Flex
+                alignItems="items-end"
+                justifyContent="justify-end"
+                spaceX="space-x-4"
+              >
+                {/* Refresh table list */}
+                <ButtonInline
                   type="button"
+                  text="Refresh List"
+                  value=""
+                  icon={ArrowPathIcon}
+                  iconPosition="left"
+                  color="indigo"
+                  onClick={async () => {
+                    if (!bases.data) return;
+
+                    await toast.promise(refetchBases.mutateAsync(), {
+                      loading: "Refetching bases...",
+                      success: "Refetched bases",
+                      error: "Failed to fetch bases",
+                    });
+
+                    bases.refetch();
+                  }}
+                />
+                {/* Toggle every table */}
+                <ButtonInline
+                  type="button"
+                  text={
+                    bases.data &&
+                    bases.data.filter((base) => base.active).length > 0
+                      ? "Disable all"
+                      : "Enable all"
+                  }
+                  value=""
+                  icon={
+                    bases.data &&
+                    bases.data.filter((base) => base.active).length > 0
+                      ? PauseCircleIcon
+                      : PlayCircleIcon
+                  }
+                  iconPosition="left"
+                  color="indigo"
                   onClick={async () => {
                     if (!bases.data) return;
 
@@ -294,208 +344,173 @@ const Page: NextPage = () => {
 
                     bases.refetch();
                   }}
-                  className="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                >
-                  {bases.data &&
-                  bases.data.filter((base) => base.active).length > 0
-                    ? "Disable all"
-                    : "Enable all"}
-                </button>
-              </div>
-            </div>
+                />
+              </Flex>
+            </Flex>
+            <Table marginTop="mt-5">
+              <TableHead>
+                <TableRow>
+                  <TableHeaderCell>Name</TableHeaderCell>
+                  <TableHeaderCell>Status</TableHeaderCell>
+                  <TableHeaderCell>Access</TableHeaderCell>
+                  <TableHeaderCell>Tables</TableHeaderCell>
+                  <TableHeaderCell>
+                    <span className="sr-only">Actions</span>
+                  </TableHeaderCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {bases.data.map((base, index) => (
+                  <TableRow key={base.id}>
+                    <TableCell>
+                      <Link
+                        href={`/app/bases/${base.id}`}
+                        className="text-indigo-600 hover:text-indigo-900"
+                      >
+                        <span className="mr-2">{base.name}</span>
+                      </Link>
+                    </TableCell>
+                    <TableCell>
+                      <Badge
+                        text={base.active ? "Active" : "Disabled"}
+                        color={base.active ? "emerald" : "gray"}
+                        icon={base.active ? SignalIcon : SignalSlashIcon}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <Badge
+                        text={base.apiToken ? "Protected" : "Public"}
+                        color={base.apiToken ? "emerald" : "yellow"}
+                        icon={base.apiToken ? LockClosedIcon : LockOpenIcon}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <Text>{base.tables.length} tables</Text>
+                    </TableCell>
+                    <TableCell>
+                      <Flex>
+                        {/* Bust cache */}
+                        {/* @ts-ignore */}
+                        <Tooltip
+                          title="Bust Cache"
+                          position="top"
+                          trigger="mouseenter"
+                        >
+                          <ButtonInline
+                            type="button"
+                            icon={ArrowPathIcon}
+                            iconPosition="left"
+                            size="xs"
+                            color="indigo"
+                            text=""
+                            onClick={async () => {
+                              await toast.promise(
+                                bustBaseCache.mutateAsync({
+                                  baseId: base.id,
+                                }),
+                                {
+                                  loading: "Busting...",
+                                  success: `Busted ${base.name}`,
+                                  error: "Whoops! Something went wrong.",
+                                }
+                              );
 
-            {/* Table */}
-            <div className="mt-8 block min-w-full overscroll-contain py-2 align-middle">
-              <div className="overflow-auto shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-                <table className="min-w-full divide-y divide-gray-300 overflow-x-auto">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th
-                        scope="col"
-                        className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                      >
-                        Name
-                      </th>
-                      <th
-                        scope="col"
-                        className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:inline-block"
-                      >
-                        Status
-                      </th>
-                      <th
-                        scope="col"
-                        className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:inline-block"
-                      >
-                        Access
-                      </th>
-                      <th
-                        scope="col"
-                        className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:inline-block"
-                      >
-                        Tables
-                      </th>
-                      <th
-                        scope="col"
-                        className="relative py-3.5 pl-3 pr-4 sm:pr-6"
-                      >
-                        <span className="sr-only">Edit</span>
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white">
-                    {bases.data.map((base, index) => (
-                      <tr
-                        key={base.id}
-                        className={index % 2 === 0 ? undefined : "bg-gray-50"}
-                      >
-                        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                          <Link
-                            href={`/app/bases/${base.id}`}
-                            className="text-indigo-600 hover:text-indigo-900"
-                          >
-                            <span className="mr-2">{base.name}</span>
-                          </Link>
-                          {base.active ? (
-                            <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800 sm:hidden">
-                              Active
-                            </span>
-                          ) : (
-                            <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-800 sm:hidden">
-                              Disabled
-                            </span>
-                          )}
-                        </td>
-                        <td className="hidden whitespace-nowrap px-3 py-4 text-sm text-gray-500 sm:inline-block">
-                          {base.active ? (
-                            <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
-                              Active
-                            </span>
-                          ) : (
-                            <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-800">
-                              Disabled
-                            </span>
-                          )}
-                        </td>
-                        <td className="hidden whitespace-nowrap px-3 py-4 text-sm text-gray-500 sm:inline-block">
-                          {base.apiToken ? "Protected" : "Public"}
-                        </td>
-                        <td className="hidden whitespace-nowrap px-3 py-4 text-sm text-gray-500 sm:inline-block">
-                          {base.tables.length} tables
-                        </td>
-                        <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                          <span className="flex items-center justify-center gap-2">
-                            {/* @ts-ignore */}
-                            <Tooltip
-                              title="Bust Cache"
-                              position="top"
-                              trigger="mouseenter"
-                            >
-                              <button
-                                onClick={async () => {
-                                  await toast.promise(
-                                    bustBaseCache.mutateAsync({
-                                      baseId: base.id,
-                                    }),
-                                    {
-                                      loading: "Busting...",
-                                      success: `Busted ${base.name}`,
-                                      error: "Whoops! Something went wrong.",
-                                    }
-                                  );
+                              bases.refetch();
+                            }}
+                          />
+                        </Tooltip>
+                        {/* Disable table */}
+                        {/* @ts-ignore */}
+                        <Tooltip
+                          title={base.active ? "Disable" : "Activate"}
+                          position="top"
+                          trigger="mouseenter"
+                        >
+                          <ButtonInline
+                            type="button"
+                            icon={base.active ? PauseIcon : PlayIcon}
+                            iconPosition="left"
+                            size="xs"
+                            color="indigo"
+                            text=""
+                            onClick={async () => {
+                              await toast.promise(
+                                toggleBase.mutateAsync({
+                                  baseId: base.id,
+                                }),
+                                {
+                                  loading: "Toggling...",
+                                  success: base.active
+                                    ? `Disabled ${base.name}`
+                                    : `Activated ${base.name}`,
+                                  error: "Whoops! Something went wrong.",
+                                }
+                              );
 
-                                  bases.refetch();
-                                }}
-                              >
-                                <ArrowPathIcon className="h-3 w-3" />
-                              </button>
-                            </Tooltip>
-                            {/* @ts-ignore */}
-                            <Tooltip
-                              title={base.active ? "Disable" : "Activate"}
-                              position="top"
-                              trigger="mouseenter"
-                            >
-                              <button
-                                onClick={async () => {
-                                  await toast.promise(
-                                    toggleBase.mutateAsync({
-                                      baseId: base.id,
-                                    }),
-                                    {
-                                      loading: "Toggling...",
-                                      success: base.active
-                                        ? `Disabled ${base.name}`
-                                        : `Activated ${base.name}`,
-                                      error: "Whoops! Something went wrong.",
-                                    }
-                                  );
+                              bases.refetch();
+                            }}
+                          />
+                        </Tooltip>
+                        {/* Copy API key */}
+                        {/* @ts-ignore */}
+                        <Tooltip
+                          title="Copy API Key"
+                          position="top"
+                          trigger="mouseenter"
+                          disabled={!base.apiToken}
+                        >
+                          <ButtonInline
+                            type="button"
+                            disabled={!base.apiToken}
+                            icon={KeyIcon}
+                            iconPosition="left"
+                            size="xs"
+                            color="indigo"
+                            text=""
+                            onClick={() => {
+                              if (!base.apiToken) return;
 
-                                  bases.refetch();
-                                }}
-                              >
-                                {base.active ? (
-                                  <PauseIcon className="h-3 w-3" />
-                                ) : (
-                                  <PlayIcon className="h-3 w-3" />
-                                )}
-                              </button>
-                            </Tooltip>
-                            {/* @ts-ignore */}
-                            <Tooltip
-                              title="Copy API Key"
-                              position="top"
-                              trigger="mouseenter"
-                              disabled={!base.apiToken}
-                            >
-                              <button
-                                disabled={!base.apiToken}
-                                onClick={() => {
-                                  if (!base.apiToken) return;
+                              navigator.clipboard.writeText(
+                                base.apiToken ?? ""
+                              );
 
-                                  navigator.clipboard.writeText(
-                                    base.apiToken ?? ""
-                                  );
-
-                                  toast.success("Copied API Key!");
-                                }}
-                              >
-                                <SolidKeyIcon
-                                  className={`h-3 w-3 ${
-                                    base.apiToken ? "" : "text-gray-300"
-                                  }`}
-                                />
-                              </button>
-                            </Tooltip>
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
+                              toast.success("Copied API Key!");
+                            }}
+                          />
+                        </Tooltip>
+                      </Flex>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </Card>
         </main>
       )}
-    </div>
+    </>
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
-  // If the user is not authenticated, redirect to the login page
-  const session = await unstable_getServerSession(req, res, authOptions);
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await unstable_getServerSession(
+    context.req,
+    context.res,
+    authOptions
+  );
 
   if (!session) {
     return {
       redirect: {
-        destination: "/",
+        destination: "/auth/signin",
         permanent: false,
       },
     };
   }
 
   return {
-    props: {},
+    props: {
+      session,
+    },
   };
 };
 

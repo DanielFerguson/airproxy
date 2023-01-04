@@ -3,11 +3,11 @@ import { Menu, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 const NavBar = () => {
   const { data: session } = useSession();
-
-  // const userHasSubscription = false;
+  const router = useRouter();
 
   return (
     <header className="mx-auto flex w-full max-w-3xl items-center justify-between px-4 pt-6 md:px-0">
@@ -109,7 +109,6 @@ const NavBar = () => {
                   <button
                     onClick={() => {
                       signOut();
-                      window.location.href = "/";
                     }}
                     className={`block w-full px-4 py-2 text-left text-sm text-gray-700 ${
                       active ? "bg-gray-100" : ""
