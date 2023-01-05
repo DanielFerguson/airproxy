@@ -25,7 +25,7 @@ const Page: NextPage = () => {
           <div className="grid grid-cols-3 gap-3">
             <div>
               <button
-                onClick={() => signIn("github", { callbackUrl: "/app" })}
+                onClick={() => signIn("github")}
                 className="group inline-flex w-full justify-center rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-500 shadow-sm hover:bg-gray-50"
               >
                 <span className="sr-only">Sign in with GitHub</span>
@@ -35,7 +35,7 @@ const Page: NextPage = () => {
 
             <div>
               <button
-                onClick={() => signIn("google", { callbackUrl: "/app" })}
+                onClick={() => signIn("google")}
                 className="group inline-flex w-full justify-center rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-500 shadow-sm hover:bg-gray-50"
               >
                 <span className="sr-only">Sign in with Google</span>
@@ -45,7 +45,7 @@ const Page: NextPage = () => {
 
             <div>
               <button
-                onClick={() => signIn("twitter", { callbackUrl: "/app" })}
+                onClick={() => signIn("twitter")}
                 className="group inline-flex w-full justify-center rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-500 shadow-sm hover:bg-gray-50"
               >
                 <span className="sr-only">Sign in with Twitter</span>
