@@ -51,4 +51,4 @@ _- Daniel Pugh, CDO @ Imperial Wealth_
 
 ## Can we help you?
 
-Are you in a similar position? We'd love to help you focus on your product, and not your infrastructure. [Reach out to our team](mailto:support@airproxy.app) to setup a call, or [get started with a free account](/api/auth/signin) and try Airproxy out for yourself!
+Are you in a similar position? We'd love to help you focus on your product, and not your infrastructure. [Reach out to our team](mailto:support@airproxy.app) to setup a call, or [get started with a free account](/auth/signin) and try Airproxy out for yourself!

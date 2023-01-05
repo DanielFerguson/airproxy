@@ -1,6 +1,6 @@
 import { type NextPage } from "next";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useState } from "react";
 import { Dialog } from "@headlessui/react";
 import { ComposableMap, Geographies, Geography } from "react-simple-maps";
@@ -191,12 +191,12 @@ const Home: NextPage = () => {
                     Dashboard
                   </Link>
                 ) : (
-                  <Link
-                    href="/auth/signin"
+                  <button
+                    onClick={() => signIn("auth0")}
                     className="inline-block rounded-lg px-3 py-1.5 text-sm font-semibold leading-6 text-gray-900 shadow-sm ring-1 ring-gray-900/10 hover:ring-gray-900/20"
                   >
                     Log in
-                  </Link>
+                  </button>
                 )}
               </div>
             </nav>
@@ -246,12 +246,12 @@ const Home: NextPage = () => {
                           Dashboard
                         </Link>
                       ) : (
-                        <Link
-                          href="/auth/signin"
+                        <button
+                          onClick={() => signIn("auth0")}
                           className="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-6 text-gray-900 hover:bg-gray-400/10"
                         >
                           Log in
-                        </Link>
+                        </button>
                       )}
                     </div>
                   </div>
@@ -301,12 +301,12 @@ const Home: NextPage = () => {
                         Go to Dashboard
                       </Link>
                     ) : (
-                      <Link
-                        href="/auth/signin"
+                      <button
+                        onClick={() => signIn("auth0")}
                         className="inline-block rounded-lg bg-[#544CE6] px-4 py-1.5 text-base font-semibold leading-7 text-white shadow-sm ring-1 ring-[#544CE6] hover:bg-indigo-700 hover:ring-indigo-700"
                       >
                         Get started today!
-                      </Link>
+                      </button>
                     )}
                     {/* <Link
                         href="#"
@@ -475,7 +475,9 @@ const Home: NextPage = () => {
                       <div className="mt-8">
                         {feature.comingSoon && (
                           <span className="mb-2 inline-flex items-center rounded-full bg-indigo-100 px-2.5 py-0.5 text-xs font-medium text-indigo-800">
-                            Coming Soon
+                            {typeof feature.comingSoon === "boolean"
+                              ? "Coming soon"
+                              : feature.comingSoon}
                           </span>
                         )}
                         <h3 className="text-lg font-semibold leading-8 tracking-tight text-gray-900">
@@ -620,8 +622,8 @@ const Home: NextPage = () => {
                   Get Started
                 </a>
               ) : (
-                <Link
-                  href="/auth/signin"
+                <button
+                  onClick={() => signIn("auth0")}
                   className={classNames(
                     tier.mostPopular
                       ? "bg-[#544CE6] text-white hover:bg-[#544CE6]"
@@ -630,7 +632,7 @@ const Home: NextPage = () => {
                   )}
                 >
                   Get Started
-                </Link>
+                </button>
               )}
             </div>
           ))}

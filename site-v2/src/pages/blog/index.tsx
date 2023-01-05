@@ -1,5 +1,5 @@
 import { NextSeo, ArticleJsonLd } from "next-seo";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
 import { Dialog } from "@headlessui/react";
@@ -128,14 +128,21 @@ const Page = ({ articles }: { articles: Article[] }) => {
                 ))}
               </div>
               <div className="hidden lg:flex lg:min-w-0 lg:flex-1 lg:justify-end">
-                <Link
-                  href={
-                    session.status === "authenticated" ? "/app" : "/auth/signin"
-                  }
-                  className="inline-block rounded-lg px-3 py-1.5 text-sm font-semibold leading-6 text-gray-900 shadow-sm ring-1 ring-gray-900/10 hover:ring-gray-900/20"
-                >
-                  {session.status === "authenticated" ? "Dashboard" : "Log in"}
-                </Link>
+                {session.status === "authenticated" ? (
+                  <Link
+                    href="/app"
+                    className="inline-block rounded-lg px-3 py-1.5 text-sm font-semibold leading-6 text-gray-900 shadow-sm ring-1 ring-gray-900/10 hover:ring-gray-900/20"
+                  >
+                    Dashboard
+                  </Link>
+                ) : (
+                  <button
+                    onClick={() => signIn("auth0")}
+                    className="inline-block rounded-lg px-3 py-1.5 text-sm font-semibold leading-6 text-gray-900 shadow-sm ring-1 ring-gray-900/10 hover:ring-gray-900/20"
+                  >
+                    Log in
+                  </button>
+                )}
               </div>
             </nav>
             <Dialog as="div" open={mobileMenuOpen} onClose={setMobileMenuOpen}>
@@ -174,18 +181,21 @@ const Page = ({ articles }: { articles: Article[] }) => {
                       ))}
                     </div>
                     <div className="py-6">
-                      <Link
-                        href={
-                          session.status === "authenticated"
-                            ? "/app"
-                            : "/auth/signin"
-                        }
-                        className="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-6 text-gray-900 hover:bg-gray-400/10"
-                      >
-                        {session.status === "authenticated"
-                          ? "Dashboard"
-                          : "Log in"}
-                      </Link>
+                      {session.status === "authenticated" ? (
+                        <Link
+                          href="/app"
+                          className="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-6 text-gray-900 hover:bg-gray-400/10"
+                        >
+                          Dashboard
+                        </Link>
+                      ) : (
+                        <button
+                          onClick={() => signIn("auth0")}
+                          className="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-6 text-gray-900 hover:bg-gray-400/10"
+                        >
+                          Dashboard
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>

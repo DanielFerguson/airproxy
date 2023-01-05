@@ -5,12 +5,19 @@ import {
   ChartBarIcon,
   UsersIcon,
   GlobeAsiaAustraliaIcon,
+  MoonIcon,
+  SignalIcon,
+  CloudArrowDownIcon,
+  BeakerIcon,
+  LockClosedIcon,
+  PhotoIcon,
 } from "@heroicons/react/24/outline";
 
 export const navigation = [
   { name: "Features", href: "/#features" },
   { name: "Pricing", href: "/#pricing" },
   { name: "Blog", href: "/blog" },
+  { name: "Docs", href: "/documentation" },
 ];
 
 export const dummyData = [
@@ -55,14 +62,14 @@ export const features = [
     comingSoon: false,
   },
   {
-    name: "Protect Everything",
+    name: "Protect Your Data",
     description:
       "Your data is your edge. We help you protect what's important so you can innovate quickly.",
     icon: ShieldCheckIcon,
     comingSoon: false,
   },
   {
-    name: "Observe Ability",
+    name: "Observability",
     description:
       "Location, location, location - it's not just for real estate. Gain deeper insights of your users.",
     icon: ChartBarIcon,
@@ -76,10 +83,10 @@ export const features = [
     comingSoon: false,
   },
   {
-    name: "CDNs For Days",
+    name: "Serve Static Files",
     description:
-      "Did Airtable removing its file serving capabilities really suck for you, too? We've got you covered.",
-    icon: GlobeAsiaAustraliaIcon,
+      "Did Airtable removing its file serving capabilities really suck for you, too? We'll be your CDN.",
+    icon: CloudArrowDownIcon,
     comingSoon: false,
   },
   {
@@ -87,7 +94,49 @@ export const features = [
     description:
       "Share schemas with your developers, generate test data, and get TypeScript types to build your UIs safely.",
     icon: UsersIcon,
-    comingSoon: true,
+    comingSoon: "Q1 2023",
+  },
+  {
+    name: "Dark Mode",
+    description:
+      "Doing some late night coding? No longer will you need to burn out your retinas.",
+    icon: MoonIcon,
+    comingSoon: "Q1 2023",
+  },
+  {
+    name: "Type Generator",
+    description:
+      "Generate TypeScript types and interfaces from your Airtable schemas.",
+    icon: BeakerIcon,
+    comingSoon: "Q1 2023",
+  },
+  {
+    name: "Private CDNs",
+    description:
+      "Protect your static assets with private CDNs, secured with API keys.",
+    icon: LockClosedIcon,
+    comingSoon: "Q1 2023",
+  },
+  {
+    name: "Image Optimisations",
+    description:
+      "Compress, resize, and optimise your images on the fly with our CDN.",
+    icon: PhotoIcon,
+    comingSoon: "Q1 2023",
+  },
+  {
+    name: "Typesafe APIs",
+    description:
+      "Move faster with type-safe APIs that are generated from your Airtable schemas.",
+    icon: ShieldCheckIcon,
+    comingSoon: "Q2 2023",
+  },
+  {
+    name: "Webhooks",
+    description:
+      "Get notified when your data changes with webhooks, and power your user interfaces in real time.",
+    icon: SignalIcon,
+    comingSoon: "Q2 2023",
   },
 ];
 
