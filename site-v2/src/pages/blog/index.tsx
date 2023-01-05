@@ -197,7 +197,7 @@ const Page = ({ articles }: { articles: Article[] }) => {
         {/* Content */}
         <main>
           <div className="relative px-6 lg:px-8">
-            <div className="mx-auto max-w-3xl pt-20 sm:pt-48">
+            <div className="mx-auto max-w-3xl pt-20 sm:pt-24">
               <div>
                 {/* Announcement */}
                 <div className="hidden sm:mb-8 sm:flex sm:justify-center">
