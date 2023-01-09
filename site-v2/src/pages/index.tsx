@@ -298,7 +298,7 @@ const Home: NextPage = () => {
                         href="/app"
                         className="inline-block rounded-lg bg-[#544CE6] px-4 py-1.5 text-base font-semibold leading-7 text-white shadow-sm ring-1 ring-[#544CE6] hover:bg-indigo-700 hover:ring-indigo-700"
                       >
-                        Go to Dashboard
+                        Go to the Dashboard
                       </Link>
                     ) : (
                       <button

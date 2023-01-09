@@ -15,6 +15,9 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         <loc>https://www.airproxy.app</loc>
     </url>
     <url>
+        <loc>https://www.airproxy.app/documentation</loc>
+    </url>
+    <url>
         <loc>https://www.airproxy.app/blog</loc>
     </url>
     ${articleSlugs

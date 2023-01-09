@@ -1,7 +1,5 @@
 import NextAuth, { type NextAuthOptions } from "next-auth";
-import TwitterProvider from "next-auth/providers/twitter";
-import GithubProvider from "next-auth/providers/github";
-import GoogleProvider from "next-auth/providers/google";
+import Auth0Provider from "next-auth/providers/auth0";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 
 import { env } from "../../../env/server.mjs";
@@ -9,12 +7,11 @@ import { prisma } from "../../../server/db/client";
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
-  pages: {
-    signIn: "/auth/signin",
-    // newUser: '/auth/new-user' // New users will be directed here on first sign in (leave the property out if not of interest)
-  },
+  // pages: {
+  //   signIn: "/auth/signin",
+  // },
   callbacks: {
-    async signIn({ user, account, profile, email, credentials }) {
+    async signIn({ user }) {
       await fetch("https://app.loops.so/api/v1/contacts/update", {
         method: "PUT",
         headers: {
@@ -39,17 +36,10 @@ export const authOptions: NextAuthOptions = {
     },
   },
   providers: [
-    TwitterProvider({
-      clientId: env.TWITTER_CLIENT_ID,
-      clientSecret: env.TWITTER_CLIENT_SECRET,
-    }),
-    GithubProvider({
-      clientId: env.GITHUB_ID,
-      clientSecret: env.GITHUB_SECRET,
-    }),
-    GoogleProvider({
-      clientId: env.GOOGLE_CLIENT_ID,
-      clientSecret: env.GOOGLE_CLIENT_SECRET,
+    Auth0Provider({
+      clientId: env.AUTH0_ID,
+      clientSecret: env.AUTH0_SECRET,
+      issuer: env.AUTH0_DOMAIN,
     }),
   ],
 };
