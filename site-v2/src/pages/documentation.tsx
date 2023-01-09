@@ -283,8 +283,8 @@ const Page = ({ articles }: { articles: Article[] }) => {
         <h3 id="what-is-airproxy">What is Airproxy?</h3>
         <p>
           Airproxy is a service that allows you to connect to your Airtable
-          account, and use your data in your application. It's a great way to
-          get started with Airtable, and start building your application.
+          account, and use your data in your application. It&apos;s a great way
+          to get started with Airtable, and start building your application.
         </p>
         <h3 id="add-a-personal-access-token">Add a Personal Access Token</h3>
         <p>
@@ -292,8 +292,8 @@ const Page = ({ articles }: { articles: Article[] }) => {
           <button onClick={() => signIn("auth0")} className="inline-block">
             signing up for a free account
           </button>
-          . Once you've signed up, you'll be able to connect to your Airtable
-          account, and start using your data in your application.
+          . Once you&apos;ve signed up, you&apos;ll be able to connect to your
+          Airtable account, and start using your data in your application.
         </p>
         <p>
           You will need to create a Personal Access Token in your Airtable
@@ -311,9 +311,10 @@ const Page = ({ articles }: { articles: Article[] }) => {
           .
         </p>
         <p>
-          Then, click on "Developer hub" in the dropdown menu. Then, click on
-          "Personal access tokens" on the left sidebar. Then, click on "Create
-          new token". Then, give your token a name, and click on "Create token".
+          Then, click on &quot;Developer hub&qout; in the dropdown menu. Then,
+          click on &quot;Personal access tokens&qout; on the left sidebar. Then,
+          click on &quot;Create new token&quot;. Then, give your token a name,
+          and click on &quot;Create token&quot;.
         </p>
         <p>
           In order to use Airproxy, you will need to select the following
