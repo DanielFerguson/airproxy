@@ -146,7 +146,8 @@ export const pricing = {
       title: "Hobby",
       price: 27,
       frequency: "/month",
-      description: "The essentials to provide your best work for clients.",
+      description:
+        "The essentials to get up and running immediately with Airtable.",
       features: [
         "Unlimited bases",
         "Unlimited tables",
@@ -158,7 +159,7 @@ export const pricing = {
     },
     {
       title: "Team",
-      price: 69,
+      price: 67,
       frequency: "/month",
       description: "A plan that scales with your rapidly growing business.",
       features: [
@@ -175,7 +176,7 @@ export const pricing = {
     },
     {
       title: "Business",
-      price: 179,
+      price: 177,
       frequency: "/month",
       description: "Dedicated support and infrastructure for your company.",
       features: [
