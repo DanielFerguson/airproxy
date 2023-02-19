@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { router, protectedProcedure } from "../trpc";
 import type { BaseApiResponse, TableApiResponse } from "../../../types/custom";
+import { PersonalAccessToken } from "@prisma/client";
 
 export const personalAccessKeyRouter = router({
   add: protectedProcedure
@@ -18,12 +19,18 @@ export const personalAccessKeyRouter = router({
       }
 
       // Save the key to the database
-      const personalAccessToken = await ctx.prisma.personalAccessToken.create({
-        data: {
-          token: input.token,
-          userId: ctx.session.user.id,
-        },
-      });
+      let personalAccessToken: PersonalAccessToken;
+
+      try {
+        personalAccessToken = await ctx.prisma.personalAccessToken.create({
+          data: {
+            token: input.token,
+            userId: ctx.session.user.id,
+          },
+        });
+      } catch (error) {
+        throw new Error("Token already exists");
+      }
 
       const data: BaseApiResponse = await response.json();
 

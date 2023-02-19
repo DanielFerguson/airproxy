@@ -210,6 +210,7 @@ export const baseRouter = router({
       },
     });
 
+    // TODO Turn into Promise.all
     // For each personalAccessToken, fetch the bases
     await personalAccessTokens.forEach(async (token) => {
       const response = await fetch("https://api.airtable.com/v0/meta/bases", {

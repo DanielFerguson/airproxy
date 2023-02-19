@@ -1,5 +1,7 @@
 import NextAuth, { type NextAuthOptions } from "next-auth";
-import Auth0Provider from "next-auth/providers/auth0";
+import GithubProvider from "next-auth/providers/github";
+import GoogleProvider from "next-auth/providers/google";
+import TwitterProvider from "next-auth/providers/twitter";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 
 import { env } from "../../../env/server.mjs";
@@ -36,10 +38,25 @@ export const authOptions: NextAuthOptions = {
     },
   },
   providers: [
-    Auth0Provider({
-      clientId: env.AUTH0_ID,
-      clientSecret: env.AUTH0_SECRET,
-      issuer: env.AUTH0_DOMAIN,
+    TwitterProvider({
+      clientId: env.TWITTER_CLIENT_ID,
+      clientSecret: env.TWITTER_CLIENT_SECRET,
+      style: {
+        text: "Sign in with Twitter",
+        textDark: "Sign in with Twitter",
+        bg: "#fff",
+        bgDark: "#fff",
+        logo: "/twitter.svg",
+        logoDark: "/twitter.svg",
+      },
+    }),
+    GithubProvider({
+      clientId: env.GITHUB_ID,
+      clientSecret: env.GITHUB_SECRET,
+    }),
+    GoogleProvider({
+      clientId: env.GOOGLE_CLIENT_ID,
+      clientSecret: env.GOOGLE_CLIENT_SECRET,
     }),
   ],
 };

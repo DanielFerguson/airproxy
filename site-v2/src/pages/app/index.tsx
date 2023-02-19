@@ -65,6 +65,8 @@ const Page: NextPage = () => {
     const interval = setInterval(() => {
       requests.refetch();
       stats.refetch();
+
+      console.log(bases.data);
     }, 5 * 1000);
 
     return () => clearInterval(interval);
@@ -287,7 +289,7 @@ const Page: NextPage = () => {
                 {/* Refresh table list */}
                 <ButtonInline
                   type="button"
-                  text="Refresh List"
+                  text="Refresh list"
                   value=""
                   icon={ArrowPathIcon}
                   iconPosition="left"
@@ -501,7 +503,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   if (!session) {
     return {
       redirect: {
-        destination: "/auth/signin",
+        destination: "/api/auth/signin",
         permanent: false,
       },
     };
